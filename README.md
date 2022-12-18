@@ -1,4 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## プロジェクトタイトル
+hotels-site
+
+## プロジェクトの概要
+ホテルの価格比較サイト(楽天・じゃらん)
+
+## 使用言語
+- React
+- TypeScript
+- Tailwind CSS
+- Firebase(Authentication)
+- Docker
+
+### 機能一覧
+- 検索機能
+- おすすめ表示機能
+- 人気ランキング表示
+- ログイン/ログアウト機能
+- 会員登録機能
+- お気に入り一覧表示機能
+- 検索/閲覧履歴表示機能
+
+## ブランチ運用
+- main          : リリース用のソースコード
+- develop       : 開発中のソースコード
+- feather/機能名 : 各機能のソースコード
+
+
+## ディレクトリ構造
+
+
+
+## プロジェクトのスクリーンショット
+
+
+
+
+
+
+<!-- This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
@@ -31,4 +70,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details. -->
