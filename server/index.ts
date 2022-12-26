@@ -17,14 +17,4 @@ app.prepare().then(() => {
     if (err) throw err;
     console.log(`> Ready on localhost:${port} - env ${process.env.NODE_ENV}`);
   });
-
-	// server.use(express.json());
-	// //message情報を全て取得するapi(シンさん)
-	// server.get("/message", (req, res)=> {
-	// 	sqlExecuter.query("SELECT * FROM message", (error:any, results:any)=>{
-	// 		if(error) throw error;
-	// 		return res.status(200).json(results.rows);
-	// 	})
-	// })
-  // server.use('/message', require('./routes/message'));
 });

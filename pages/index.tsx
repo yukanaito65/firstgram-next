@@ -7,15 +7,11 @@ import { getRequestInstance } from "../modules/request"
 import useSWR from "swr";
 import { features } from 'process'
 
-// const inter = Inter({ subsets: ['latin'] })
 
-// const Page: NextPage = ( {data} ) => {
-//   return data.map(
-//      (d: any, index:number) => <div>{index}番目のデータ: {d.any_column}</div>
-//   )
-// }
-const Page:NextPage = ({data})=> {
-  return <p>{data}</p>
+const Page: NextPage = ( {data} ) => {
+  return data.map(
+     (d: any, index:number) => <div>{index}番目のデータ: {d.any_column}</div>
+  )
 }
 Page.getInitialProps = async (ctx: any) => {
  const request = getRequestInstance(Boolean(ctx.req));
@@ -142,52 +138,3 @@ export default Page
 //     </>
 //   )
 // }
-
-
-
-
-	// // モジュールを準備
-  // let http = require('http')
-  // let {Client} = require('pg');
-
-  // http.createServer(function (req, res) {
-  //     // PostgreSQLに接続
-  //     let client = new Client({
-  //         user: 'postgres',
-  //         host: '127.0.0.1',
-  //         database: 'db',
-  //         password: 'password',
-  //         port: 5432
-  //     })
-  //     client.connect()
-
-  //     // HTTPレスポンスヘッダを出力
-  //     res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-
-  //     // クエリを実行してTABLEタグで出力
-  //     let query = client.query(
-  //         "select messageId, message, timestamp,userId, withUserId from persons;",
-  //          function(err, result) {
-  //         res.write('<html><head></head><body><table>');
-  //         for(lc = 0; lc < result.rows.length; lc++){
-  //             res.write('<tr>');
-  //             res.write("<td>"+result.rows[lc].person_id+"</td>" );
-  //             res.write("<td>"+result.rows[lc].name+"</td>" );
-  //             res.write("<td>"+result.rows[lc].kana+"</td>" );
-  //             res.write("<td>"+result.rows[lc].gender+"</td>" );
-  //             res.write('</tr>');
-  //         }
-  //         res.end('</table></body></html>')
-  //     });
-  // }).listen(8989)
-
-  // export const fetcher = (resource: any, init: any) =>
-  // fetch(resource, init).then((res) => res.json());
-
-  // export default function Home() {
-  //   const {data, error, isLoading} = useSWR('127.0.0.1:5432/db/postgres', fetcher)
-  //   if (error) return <div>failed to load</div>
-  // if (isLoading) return <div>loading...</div>
-
-  // return <div>{data.message}</div>
-  // }
