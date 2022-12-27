@@ -9,7 +9,7 @@ var pgp = (0, pg_promise_1.default)({});
 var config = {
     db: {
         // 設定項目: https://github.com/vitaly-t/pg-promise/wiki/Connection-Syntax
-        host: "127.0.0.1",
+        host: process.env.DATABASE_HOST,
         port: 5432,
         database: "postgres",
         // message: "message",

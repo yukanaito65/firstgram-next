@@ -14,7 +14,8 @@ services:
     container_name: "db-1"
     image: postgres:14.2
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - ./.pg-data:/var/lib/postgresql/data
+      - ./data/db/initdb:/docker-entrypoint-initdb.d
     env_file:
       - .env
     ports:
