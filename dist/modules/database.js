@@ -15,7 +15,7 @@ var config = {
         // message: "message",
         // user: "user",
         user: "postgres",
-        password: "password",
+        password: "mizu0096",
         max: 10,
         query_timeout: 60000 // 60sec
     }
