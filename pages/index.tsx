@@ -3,21 +3,34 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import { NextPage } from 'next'
-import { getRequestInstance } from "../modules/request"
+import { clientRequestInstance } from "../modules/request"
 import useSWR from "swr";
 import { features } from 'process'
 
+interface Message {
+  messageId:string;
+  message:string;
+  timestamp: Date;
+  userId: string;
+  withUserId: string;
+}
 
-const Page: NextPage = ( {data} ) => {
-  return data.map(
-     (d: any, index:number) => <div>{index}番目のデータ: {d.any_column}</div>
+const fetcher =(resource:string)=> fetch(resource).then((res)=>res.json());
+
+const Page: NextPage = () => {
+  const { data:messages, error } = useSWR("/api/data", fetcher);
+  if(error){
+    return <p>error!</p>
+  }
+  if(!messages) {
+    return <p>loading...</p>
+  }
+  console.log("data",messages)
+  return messages.map(
+     (d: Message, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
   )
 }
-Page.getInitialProps = async (ctx: any) => {
- const request = getRequestInstance(Boolean(ctx.req));
- const res = await request.get("data").then(res => res);
- return res.data;
-}
+
 export default Page
 
 

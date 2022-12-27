@@ -6,13 +6,6 @@ const requestInstance = axios.create({
 	baseURL: serverSideBaseURL
 });
 
-const clientRequestInstance = axios.create({
+export const clientRequestInstance = axios.create({
 	baseURL: clientSideBaseURL
 });
-
-export const getRequestInstance = (isServerSide: boolean) => {
-	if (isServerSide) {
-		return requestInstance;
-	}
-	return clientRequestInstance;
-};
