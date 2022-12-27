@@ -7,8 +7,6 @@ const config = {
 		host: process.env.DATABASE_HOST,
 		port: 5432,
 		database: "postgres",
-		// message: "message",
-		// user: "user",
     user: "postgres",
     password: "password",
 		max: 10, // size of the connection pool

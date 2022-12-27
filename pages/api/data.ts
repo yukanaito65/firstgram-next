@@ -1,6 +1,5 @@
 import { sqlExecuter } from "../../modules/database";
 
-// const apiRoutes = async (req: any, res: any) => {
  export default async (req: any, res: any) => {
 
 	const messages = await sqlExecuter.any(
@@ -11,4 +10,3 @@ import { sqlExecuter } from "../../modules/database";
 		messages
 	);
 };
-// export default apiRoutes;
