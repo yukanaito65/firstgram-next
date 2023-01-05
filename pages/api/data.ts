@@ -1,4 +1,4 @@
-import { sqlExecuter } from "../../modules/database";
+import { sqlExecuter } from "../../modules/database"
 
  export default async (req: any, res: any) => {
 
