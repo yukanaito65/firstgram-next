@@ -10,3 +10,4 @@ import { sqlExecuter } from "../../modules/database";
 		messages
 	);
 };
+// export default apiRoutes;
