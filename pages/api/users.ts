@@ -6,7 +6,7 @@ import { sqlExecuter } from "../../modules/database"
               //  "select 'DB参照したデータ' as any_column"
               "SELECT * FROM users"
         );	
-	
+
 	res.status(200).json(
 		users
 	);
