@@ -19,6 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // 今回はfirestoreを使う、これでdbにfirebaseに保存されたデータが格納される
+
 // const db = getFirestore(app);
 const storage = getStorage(app);
 //Firebaseの認証機能を使う場合に必要な記述
