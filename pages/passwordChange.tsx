@@ -2,10 +2,11 @@ import React from "react";
 import useSWR from "swr";
 import { User } from "../types/types";
 import data from "./api/data";
+import SettingMenu from "../src/components/organisms/SettingMenu";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
-const Setting = () => {
+const PasswordChange = () => {
   const { data: users, error } = useSWR("/api/users", fetcher);
   if (error) {
     return <p>error!</p>;
@@ -18,28 +19,31 @@ const Setting = () => {
   //   (d: User, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
   // )
   return (
-    <div>
-      <div>
+    <div className="flex gap-12 border border-solid border-neutral-300">
+    <SettingMenu />
+    <div className="flex flex-col gap-2.5 w-full">
+      <div className="flex items-center gap-8">
         <p>icon</p>
         <p>{users[0].userName}</p>
       </div>
       <div>
-        <div>
-          <p>現在のパスワード</p>
-          <input type="password" />
+        <div className="flex items-center gap-8">
+          <p className="font-bold">現在のパスワード</p>
+          <input type="password" className="h-8 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"/>
         </div>
-        <div>
-          <p>新しいパスワード</p>
-          <input type="password" />
+        <div className="flex items-center gap-8">
+          <p className="font-bold">新しいパスワード</p>
+          <input type="password" className="h-8 border-gray-300 border-solid border bg-gray-50 rounded w-7/12" />
         </div>
-        <div>
-          <p>新しいパスワードを確認</p>
-          <input type="password" />
+        <div className="flex items-center gap-8">
+          <p className="font-bold text-right">新しいパスワード<br/>を確認</p>
+          <input type="password" className="h-8 border-gray-300 border-solid border bg-gray-50 rounded w-7/12" />
         </div>
       </div>
-      <button>パスワード変更</button>
+      <button className="w-32">パスワード変更</button>
+    </div>
     </div>
   );
 };
 
-export default Setting;
+export default PasswordChange;
