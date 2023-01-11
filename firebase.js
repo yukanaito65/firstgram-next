@@ -7,7 +7,8 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage"
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_NOT_SECRET_CODE,
+  apiKey: "AIzaSyBk1p9MOdJwUAtFk6XnBoBNMZR5XnCtKuQ",
+  // apiKey: process.env.REACT_APP_NOT_SECRET_CODE,
   authDomain: process.env.REACT_APP_AUTHDOMAIN,
   projectId: process.env.REACT_APP_PROJECT_ID,
   storageBucket: "firstgram-next.appspot.com",
