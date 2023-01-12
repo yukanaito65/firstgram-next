@@ -118,7 +118,6 @@ export default function PostDetails() {
           </div>
         </div>
       </div>
-      <button onClick={imageUpload}>画像表示</button>
     </div>
   );
 }
