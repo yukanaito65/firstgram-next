@@ -57,4 +57,3 @@ ALTER TABLE ONLY public.message
 --
 -- PostgreSQL database dump complete
 --
-
