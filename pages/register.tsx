@@ -65,12 +65,24 @@ useEffect(() => {
         </div>
       ) : (
         <>
-        <div className="mx-auto my-10 w-96 "></div>
+        <div className="mx-auto my-10 w-96 ">
             <form onSubmit={handleSubmit}>
+            <div className="border border-gray-300">
+            <div className="w-48 mx-auto">
+                <Image src="/logo_transparent.png" alt="ロゴ" width={192} height={192} />
+              </div>
+
+              <div className="text-xs text-red-500 px-10 mb-3 ml-3">
+              ＊必須項目
+              </div>
+
+
+              <div className="px-10 flex flex-col h-80 justify-between">
+
             <InputEmail
           emailChange={emailChange}
           valueEmail={registerEmail}
-          requiredIcon={<span>＊</span>}
+          requiredIcon={"＊"}
         />
 
 <InputRequiredRegister
@@ -101,11 +113,17 @@ useEffect(() => {
         />
 
         <RegisterButton />
-
+        </div>
+        </div>
             </form>
-        <p>アカウントをお持ちですか？
-        <Link href="/login">ログインする</Link>
-        </p>
+            </div>
+            <div className="mx-auto my-10 w-96 ">
+            <div className="border border-gray-300 mt-3 h-16 flex">
+            <div className="mx-auto my-auto">アカウントをお持ちですか？
+        <Link className="text-blue-600 ml-1"   href="/login">ログインする</Link>
+        </div>
+        </div>
+        </div>
         </>
       )}
 

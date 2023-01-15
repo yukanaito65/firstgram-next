@@ -10,9 +10,10 @@ function InputCPass(props: any) {
   };
 
   return (
-    <div>
-      <span>＊</span>
+    <div className="flex">
+<div className="text-xs text-red-500 my-auto">＊</div>
       <input
+        className="border border-gray-300 rounded w-full h-8 pl-2"
         type={isRevealConfirmPassword ? "text" : "password"}
         name="Cpassword"
         placeholder="確認用パスワード"
@@ -26,9 +27,9 @@ function InputCPass(props: any) {
       >
         {isRevealConfirmPassword ? <span>●</span> : <span>×</span>}
       </span>
-      <span>
+      {/* <span>
         パスワードが一致しません
-      </span>
+      </span> */}
     </div>
   );
 }

@@ -9,9 +9,10 @@ function InputRegisterPass(props: any) {
   };
 
   return (
-    <div >
-      <span>＊</span>
+    <div className="flex">
+      <div className="text-xs text-red-500 my-auto">＊</div>
       <input
+        className="border border-gray-300 rounded w-full h-8 pl-2"
         type={isRevealConfirmPassword ? "text" : "password"}
         name="password"
         value={props.valuePassword}
@@ -27,10 +28,10 @@ function InputRegisterPass(props: any) {
         {isRevealConfirmPassword ? <span>○</span>: <span>×</span>}
       </span>
 
-      <span>
+      {/* <span>
         正しい形式で入力してください<br />
         (半角英小文字、数字を含む6文字以上)
-      </span>
+      </span> */}
       {/* <span className="input-ok-message messageBox">OK!</span> */}
     </div>
   );

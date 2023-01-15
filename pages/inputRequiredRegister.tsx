@@ -1,8 +1,9 @@
 function InputRequiredRegister(props: any) {
     return (
-      <div>
-        <span>＊</span>
+      <div className="flex">
+        <div className="text-xs text-red-500 my-auto">＊</div>
         <input
+                className="border border-gray-300 rounded w-full h-8 pl-2"
           type={props.type}
           name={props.name}
           placeholder={props.placeholder}
@@ -10,11 +11,10 @@ function InputRequiredRegister(props: any) {
           data-equal-to={props.equal}
           required
         />
-        {/* <span className="input-error-message messageBox"> */}
-        <span>
+        {/* <span>
           正しい形式で入力してください({props.message})
           {props.errorMessage}
-        </span>
+        </span> */}
       </div>
     );
   }
