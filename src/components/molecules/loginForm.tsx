@@ -1,9 +1,9 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth } from "../firebase";
-import InputEmail from "./inputEmail";
-import InputPass from "./inputPass";
-import LoginButton from "./loginButton";
+import { auth } from "../../../firebase";
+import InputEmail from "../atoms/input/inputEmail";
+import InputPass from "../atoms/input/inputPass";
+import LoginButton from "../atoms/button/loginButton";
 
 function LoginForm() {
   const [loginEmail, setLoginEmail] = useState("");

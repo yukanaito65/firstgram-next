@@ -19,7 +19,7 @@ const fetcher =(resource:string)=> fetch(resource).then((res)=>res.json());
 
 const Page: NextPage = () => {
   const { data:messages, error } = useSWR("/api/data", fetcher);
-  "INSERTINTO Message(messageId, message,timestamp,userId,withUserId) VALUES(abcdefg456,おはよう,2022-12-22T03:20:30.000Z,ijklmn22,abcdeffff)"
+  // "INSERTINTO Message(messageId, message,timestamp,userId,withUserId) VALUES(abcdefg456,おはよう,2022-12-22T03:20:30.000Z,ijklmn22,abcdeffff)"
 
   if(error){
     return <p>error!</p>
@@ -29,7 +29,9 @@ const Page: NextPage = () => {
   }
   console.log("data",messages)
   return messages.map(
-     (d: Message, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
+     (d: Message, index:number) => 
+    //  <div>{index}番目のデータ: {JSON.stringify(d)}</div>
+     <div>{index}番目のデータ: {d.userId}</div>
 
      )
 }

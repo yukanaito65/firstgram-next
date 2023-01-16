@@ -8,9 +8,9 @@ import Image from 'next/image';
 import React, { useEffect, useState } from "react";
 import { useWindowSize } from "react-use";
 import { auth } from "../firebase";
-import InputEmail from "./inputEmail";
-import InputPass from "./inputPass";
-import LoginButton from "./loginButton";
+import InputEmail from "../src/components/atoms/input/inputEmail";
+import InputPass from "../src/components/atoms/input/inputPass";
+import LoginButton from "../src/components/atoms/button/loginButton";
 
 function login() {
   const [user, setUser] = useState();
@@ -30,6 +30,8 @@ function login() {
     // signInWithEmailAndPasswordを実行することでログインを行う
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+    //   signOut(auth);
+    // navigate("/myPage/");
     } catch (error) {
       alert("メールアドレスまたはパスワードが間違っています");
     }
@@ -52,7 +54,7 @@ function login() {
     <div>
       {user ? (
         <div>
-          <Link href="/">Home</Link>
+          <Link href="/myPage">myPage</Link>
           <br />
           <button onClick={logout}>ログアウト</button>
         </div>

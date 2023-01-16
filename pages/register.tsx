@@ -3,12 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase';
-import InputCPass from './inputCPass';
-import InputEmail from './inputEmail';
-import InputRegister from './inputRegister';
-import InputRegisterPass from './inputRegisterPass';
-import InputRequiredRegister from './inputRequiredRegister';
-import RegisterButton from './registerButton';
+
+import InputEmail from '../src/components/atoms/input/inputEmail';
+import InputRegister from '../src/components/atoms/input/inputRegister';
+import InputRegisterPass from '../src/components/atoms/input/inputRegisterPass';
+import InputRequiredRegister from '../src/components/atoms/input/inputRequiredRegister';
+import RegisterButton from '../src/components/atoms/button/registerButton';
+import InputCPass from '../src/components/atoms/input/inputCPass';
 
 function register() {
 //ログイン状態保持(userが値を持てばログイン状態)
@@ -21,7 +22,7 @@ const [user, setUser] = useState<any>("");
 //ログアウトが成功するとログインページにリダイレクトする
     const logout = async () => {
         await signOut(auth);
-        navigate("/login/");
+        navigate("/myPage/");
       };
 
       const emailChange = (e: { target: HTMLButtonElement }) => {
