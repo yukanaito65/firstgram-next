@@ -48,6 +48,7 @@ function login2() {
         {user ? (
            <div>
         <Link href="/">Home</Link>
+        <Link href="profileChange">設定</Link>
         <button onClick={logout}>ログアウト</button>
         </div>
                 ) : (
