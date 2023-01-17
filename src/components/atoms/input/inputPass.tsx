@@ -14,13 +14,13 @@ function InputPass(props: Props) {
   };
 
   return (
-    <div className="passForm">
+    <div className="w-full mt-1">
       <input
+        className="border border-gray-300 rounded w-full h-8 pl-2"
         type={isRevealConfirmPassword ? "text" : "password"}
         name="password"
         value={props.valuePassword}
         placeholder="パスワード"
-        className="form-input"
         onChange={props.passChange}
         required
       />
