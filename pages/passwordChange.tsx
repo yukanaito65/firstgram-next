@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Header from "../src/components/organisms/header";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -127,8 +128,11 @@ const PasswordChange = () => {
       }),
     }).then((res) => res.json());
   };
+
   return (
-    <div className="flex gap-12 border border-solid border-neutral-300">
+    <div className="flex">
+      <Header />
+    <div className="flex gap-12 border border-solid border-neutral-300 ml-96 mr-3 my-6 w-3/4">
     <SettingMenu />
     <div className="flex flex-col gap-2.5 w-full">
       <div className="flex items-center gap-8">
@@ -209,6 +213,7 @@ const PasswordChange = () => {
         </div>
       </div>
       <button className="w-32" onClick={dataUpdate}>パスワード変更</button>
+    </div>
     </div>
     </div>
   );

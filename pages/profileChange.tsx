@@ -12,6 +12,7 @@ import {
   updatePassword as firebaseUpdatePassword,
 } from "firebase/auth";
 import { sqlExecuter } from "../modules/database";
+import Header from "../src/components/organisms/header";
 
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
@@ -92,16 +93,15 @@ if (!users) {
   //   (d: User, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
   // )
 
-// console.log(users[0])
+console.log(users)
   //登録情報反映ボタン(db.jsonに登録されている情報をフォームに表示)
   const onCLickData = () => {
-    setName(users[0].name)
-    setUserName(users[0].username);
-    setProfile(users[0].profile);
+    setName(users[3].name)
+    setUserName(users[3].username);
+    setProfile(users[3].profile);
   };
 
   const onClickCreate = () => {
-    // console.log("変更しました")
     return fetch(`/api/userUpdate`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -110,17 +110,24 @@ if (!users) {
         name: name,
         username: userName,
         profile: profile,
+        icon:users[3].icon,
+        email:users[3].email,
+        password:users[3].password,
+        Cpassword:users[3].Cpassword,
+        follow:users[3].follow,
+        follower:users[3].follower,
+        favoritePosts:users[3].favoritePosts,
+        keepPosts:users[3].keepPosts,
       }),
     })
-    //  sqlExecuter.any(`UPDATE users SET name=${name}, username=${userName}, profile=${profile} WHERE userid='mJr5Sh743bavx0WkLhFALfjJ0Av1'`)
-    // res.status(200).json();
     .then((res) => res.json());
-
   };
 
 
   return (
-    <div className="flex gap-12 border border-solid border-neutral-300">
+    <div className="flex">
+      <Header />
+    <div className="flex gap-12 border border-solid border-neutral-300 ml-96 mr-32 my-6 w-3/4">
     <SettingMenu />
     <div  className="flex flex-col gap-2.5 w-full">
       <div className="flex items-center gap-8">
@@ -158,6 +165,7 @@ if (!users) {
       </div>
       <button onClick={()=>onClickCreate()} className="w-32">変更</button>
       <button type="button" onClick={() => onCLickData()} className="w-32">データ取得</button>
+    </div>
     </div>
     </div>
   );

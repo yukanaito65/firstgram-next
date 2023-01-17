@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react'
 import useSWR,{useSWRConfig} from 'swr';
+import Header from '../src/components/organisms/header';
 
 
 const fetcher = (resource:any) => fetch(resource).then((res) => res.json());
@@ -16,6 +17,7 @@ const Mypage = ()=> {
 
   return (
     <>
+    <Header />
     <div>mypage</div>
     {data.map((item:any)=>{
             return(
