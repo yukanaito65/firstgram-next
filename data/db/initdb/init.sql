@@ -27,11 +27,11 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.message (
-    "messageId" character(20) NOT NULL,
+    "messageid" serial NOT NULL,
     message character varying(500) NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
-    "userId" character(20) NOT NULL,
-    "withUserId" character(20) NOT NULL
+    "userid" character(20) NOT NULL,
+    "withuserid" character(20) NOT NULL
 );
 
 
@@ -41,8 +41,8 @@ ALTER TABLE public.message OWNER TO postgres;
 -- Data for Name: message; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.message ("messageId", message, "timestamp", "userId", "withUserId") FROM stdin;
-abcdefg123          	こんにちは	2022-12-22 12:20:30	hijklmn11           	abcdeffff           
+COPY public.message ("messageid", message, "timestamp", "userid", "withUserid") FROM stdin;
+abcdefg123          	こんにちは	2022-12-22 12:20:30	hijklmn11           	abcdeffff
 \.
 
 
@@ -51,10 +51,9 @@ abcdefg123          	こんにちは	2022-12-22 12:20:30	hijklmn11           	ab
 --
 
 ALTER TABLE ONLY public.message
-    ADD CONSTRAINT message_pkey PRIMARY KEY ("messageId");
+    ADD CONSTRAINT message_pkey PRIMARY KEY ("messageid");
 
 
 --
 -- PostgreSQL database dump complete
 --
-
