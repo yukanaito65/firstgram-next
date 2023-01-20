@@ -68,27 +68,28 @@ function register() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: "1234567890123456999",
-        userName: "emiri",
+        user_id: "1234567890123456789012345678",
+        user_name: "emiri",
         name: "emiri",
-        email: registerEmail,
+        // email: registerEmail,
+        email:"emiri@gmail.com",
         password: "emiri123",
-        Cpassword: "emiri123",
-        follow:[],
-        follower:[],
-        favoritePosts:[],
+        cpassword: "emiri123",
+        follow:"",
+        follower:"",
+        favorite_posts:"",
         profile:"",
-        posts:[],
-        keepPosts:[]
+        posts:"",
+        keep_posts:""
       }),
     }).then((res) => res.json());
   };
 
   //ログアウトが成功するとログインページにリダイレクトする
-  const logout = async () => {
-    await signOut(auth);
-    navigate("/myPage/");
-  };
+  // const logout = async () => {
+  //   await signOut(auth);
+  //   navigate("/myPage/");
+  // };
 
   const emailChange = (e: { target: HTMLButtonElement }) => {
     setRegisterEmail(e.target.value);
@@ -127,7 +128,7 @@ function register() {
         <div>
           <Link href="/">Home</Link>
           <br />
-          <button onClick={logout}>ログアウト</button>
+          {/* <button onClick={logout}>ログアウト</button> */}
         </div>
       ) : (
         <>

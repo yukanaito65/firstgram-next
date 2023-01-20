@@ -30,8 +30,8 @@ const Page: NextPage = () => {
   console.log("data",messages)
   return messages.map(
      (d: Message, index:number) => 
-    //  <div>{index}番目のデータ: {JSON.stringify(d)}</div>
-     <div>{index}番目のデータ: {d.userId}</div>
+     <div>{index}番目のデータ: {JSON.stringify(d)}</div>
+    //  <div>{index}番目のデータ: {d.user_id}</div>
 
      )
 }
