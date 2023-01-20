@@ -1,0 +1,13 @@
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 3%;
+  background-color: #ffff;
+  --tw-border-opacity: 1;
+  border-bottom: 1px solid rgba(212, 212, 212, var(--tw-border-opacity));
+  padding: 0 45px;
+}
+#title_link {
+  text-decoration: none;
+  color: black;
+}
