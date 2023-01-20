@@ -10,7 +10,7 @@ const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 function SearchPage() {
 
   const [userData, setUserData] = useState([]);
-  const [searchQuery,setSearchQuery] = useState<{userid: string; name: string; username: string; icon: string}[]>([]);
+  const [searchQuery,setSearchQuery] = useState<{user_id: string; name: string; user_name: string; icon: string}[]>([]);
   const ref = useRef();
 
 
@@ -49,7 +49,7 @@ function SearchPage() {
     console.log(ref.current.value)
 
     setSearchQuery(
-      users.filter((user)=>user.name.toLowerCase().includes(ref.current.value.toLowerCase())||user.username.toLowerCase().includes(ref.current.value.toLowerCase()))
+      users.filter((user)=>user.name.toLowerCase().includes(ref.current.value.toLowerCase())||user.user_name.toLowerCase().includes(ref.current.value.toLowerCase()))
     )
     // console.log(searchQuery)
   }
@@ -79,10 +79,10 @@ function SearchPage() {
         <div>
           {searchQuery.map((user)=>(
             // <Link href="/mypage">
-            <div key={user.userid} className="flex gap-5 items-center my-5">
+            <div key={user.user_id} className="flex gap-5 items-center my-5">
               <Image src="/noIcon.png" alt="icon" width={80} height={80} className="bg-gray-200 rounded-full"/>
               <div>
-              <p className="font-bold m-0">{user.username}</p>
+              <p className="font-bold m-0">{user.user_name}</p>
               <p className='text-gray-500 m-0'>{user.name}</p>
               </div>
             </div>

@@ -44,9 +44,21 @@ const ProfileChange = ({ itemData }: { itemData: any }) => {
 
   console.log(user.uid)
 
-  const { data: users, error } = useSWR(`/api/users`, fetcher);
+  // const getData = () => {
+    // fetch(`/api/userUpdate`, {
+    //   method: 'GET',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     userid: user.uid
+    //   }),
+    // })
+    // .then((res) => res.json());
 
-  // console.log(users);
+// }
+
+  const { data: users, error } = useSWR(`/api/loginUser`, fetcher);
+
+  console.log(users);
 
 
   const [name, setName] = useState("");
@@ -88,36 +100,25 @@ if (!users) {
   return <p>loading...</p>;
 }
 
-  // console.log("data", users);
-  // return users.map(
-  //   (d: User, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
-  // )
+  console.log("data", users);
 
-console.log(users)
   //登録情報反映ボタン(db.jsonに登録されている情報をフォームに表示)
-  const onCLickData = () => {
-    setName(users[3].name)
-    setUserName(users[3].username);
-    setProfile(users[3].profile);
+  const onClickData = () => {
+
+    setName(users[0].name)
+    setUserName(users[0].user_name);
+    setProfile(users[0].profile);
   };
 
   const onClickCreate = () => {
-    return fetch(`/api/userUpdate`, {
+     fetch(`/api/userUpdate`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        userid: user.uid,
+        user_id: user.uid,
         name: name,
-        username: userName,
+        user_name: userName,
         profile: profile,
-        icon:users[3].icon,
-        email:users[3].email,
-        password:users[3].password,
-        Cpassword:users[3].Cpassword,
-        follow:users[3].follow,
-        follower:users[3].follower,
-        favoritePosts:users[3].favoritePosts,
-        keepPosts:users[3].keepPosts,
       }),
     })
     .then((res) => res.json());
@@ -164,7 +165,8 @@ console.log(users)
         </div>
       </div>
       <button onClick={()=>onClickCreate()} className="w-32">変更</button>
-      <button type="button" onClick={() => onCLickData()} className="w-32">データ取得</button>
+      <button type="button" onClick={() => onClickData()} className="w-32">データ取得</button>
+      {/* <button type="button" onClick={() => getData()} className="w-32"></button> */}
     </div>
     </div>
     </div>
