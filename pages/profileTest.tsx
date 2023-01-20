@@ -4,7 +4,7 @@ import useSWR,{ useSWRConfig } from 'swr';
 
 const fetcher = (resource:any,init:any) => fetch(resource,init).then((res) => res.json());
 
-function ProfilePage() {
+function ProfileTest() {
   const router = useRouter();
   const [userId, setUserId] = useState();
   const {data, error} = useSWR(()=>`/api/userData?user_id=zH0MYM3RrZWusExUypzX5SGZHaI3`,fetcher);
@@ -31,4 +31,4 @@ function ProfilePage() {
   )
 }
 
-export default ProfilePage
+export default ProfileTest
