@@ -17,7 +17,7 @@ import Header from "../src/components/organisms/header";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
-const ProfileChange = ({ itemData }: { itemData: any }) => {
+const ProfileChange = () => {
 
 
   //ログインユーザーのメアドとuid
@@ -56,7 +56,7 @@ const ProfileChange = ({ itemData }: { itemData: any }) => {
 
 // }
 
-  const { data: users, error } = useSWR(`/api/loginUser`, fetcher);
+  const { data: users, error } = useSWR(()=>`/api/userData?user_id=${user.uid}`, fetcher);
 
   console.log(users);
 

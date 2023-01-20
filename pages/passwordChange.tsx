@@ -47,10 +47,7 @@ const PasswordChange = () => {
         // setLoading(false);
       }
     })
-  })
-
-  // UPDATE table_name SET column_name = value WHERE 条件式
-  //UPDATE users SET password = newPassValue, CpassWord= CNewPassValue WHERE userid = uid
+  },[])
 
   // パスワードの変更関数を定義(Authentication)
   const updatePassword = (
@@ -81,19 +78,6 @@ const PasswordChange = () => {
   };
 
 
-  // const onClickCreate = () => {
-  //   return fetch(`/api/users`, {
-  //     method: 'PUT',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({
-  //       password: newPassValue,
-  //       cPassword: cNewPassValue,
-  //     }),
-  //   }).then((res) => res.json());
-  // };
-
-
-
   // 目のアイコン
   const [isRevealConfirmPassword, setIsRevealConfirmPassword] = useState(false);
 
@@ -102,25 +86,22 @@ const PasswordChange = () => {
   };
 
   // apiからデータ取得
-  const { data: users, error } = useSWR("/api/users", fetcher);
+  const { data: userData, error } = useSWR(()=>`/api/userData?user_id=${user.uid}`, fetcher);
 
   if (error) {
     return <p>error!</p>;
   }
-  if (!users) {
+  if (!userData) {
     return <p>loading...</p>;
   }
-  console.log("data", users);
-  // return users.map(
-  //   (d: User, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
-  // )
+  console.log("data", userData);
 
    //   Authenticationを更新(クリックした時の関数)
    const dataUpdate: () => void = () => {
     // パスワード変更関数呼び出し
     updatePassword(nowPassValue, newPassValue);
 
-    return fetch(`/api/passwordUpdate`, {
+    fetch(`/api/passwordUpdate`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -129,6 +110,9 @@ const PasswordChange = () => {
         cpassword: cNewPassValue,
       }),
     }).then((res) => res.json());
+    setNowPassValue("")
+    setNewPassValue("")
+    setCNewPassValue("")
   };
 
   return (
@@ -139,7 +123,7 @@ const PasswordChange = () => {
     <div className="flex flex-col gap-5 w-full my-7">
       <div className="flex items-center gap-8 mx-20">
         <Image src="/noIcon.png" alt="icon" width={40} height={40} className="bg-gray-200 rounded-full"></Image>
-        <p>{users[1].user_name}</p>
+        <p>{userData[0].user_name}</p>
       </div>
       <div>
         <div className="flex items-start gap-8 my-4">
@@ -150,7 +134,7 @@ const PasswordChange = () => {
           type={isRevealConfirmPassword ? "text" : "password"}
           value={nowPassValue}
           onChange={onChangePassword}
-          pattern={users[1].password}
+          pattern={userData[0].password}
           className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
           required
           />

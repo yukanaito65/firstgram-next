@@ -10,14 +10,14 @@ import styles from "./anotherUser.module.css"
 const fetcher = (resource: any, init: any) =>
   fetch(resource, init).then((res) => res.json());
 
-function AnotherUser() {
+function AnotherUser(props:any) {
   const [anotherIcon, setAnotherIcon] = useState<string>("");
   const [anotherName, setAnotherName] = useState<string>("");
   const [anotherUserName, setAnotherUserName] = useState<string>("");
   const [anotherUserId, setAnotherUserId] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<string>("");
 
-  const { data: users, error } = useSWR("/api/users", fetcher);
+  const { data, error } = useSWR(`/api/userData?user_id=${props.userId}`, fetcher);
 
   useEffect(() => {
     //ログイン判定
@@ -28,33 +28,32 @@ function AnotherUser() {
         // ログインユーザーのid取得
         setCurrentUser(user.uid);
 
-        if (error) {
-          return <p>error!</p>;
-        }
-        if (!users) {
-          return <p>loading...</p>;
-        }
 
-        const anotherUser = users.filter(
-          (user: User) => user.user_id === "zH0MYM3RrZWusExUypzX5SGZHaI3"
-        );
-        console.log(anotherUser);
-        if (!anotherUser) {
-          <></>;
-        } else {
-          // setAnotherIcon(anotherUser[0].icon);
-          setAnotherName(anotherUser[0].name);
-          setAnotherUserName(anotherUser[0].user_name);
-          setAnotherUserId(anotherUser[0].user_id);
-        }
+        // const anotherUser = users.filter(
+        //   (user: User) => user.user_id === "zH0MYM3RrZWusExUypzX5SGZHaI3"
+        // );
+        // console.log(anotherUser);
+        // if (!anotherUser) {
+        //   <></>;
+        // } else {
+        //   // setAnotherIcon(anotherUser[0].icon);
+        //   setAnotherName(anotherUser[0].name);
+        //   setAnotherUserName(anotherUser[0].user_name);
+        //   setAnotherUserId(anotherUser[0].user_id);
+        // }
       }
     });
   }, []);
 
-  console.log(anotherName)
+
+  if (error) {
+    return <p>error!</p>;
+  }
+  if (!data) {
+    return <p>loading...</p>;
+  }
 
   return (
-    // <div>
         <div className={styles.titleWrapper}>
         {/* // "flex items-center gap-3 px-8 bg-white border-b border-gray-300 border-solid" */}
            <Link href="">
@@ -70,12 +69,10 @@ function AnotherUser() {
           </Link>
           <Link href="" id={styles.title_link}>
           <div>
-            <p className="font-bold">{anotherName}さん</p>
+            <p className="font-bold">{data[0].name}さん</p>
           </div>
           </Link>
         </div>
-
-    // </div>
   );
 }
 
