@@ -1,9 +1,10 @@
 import { onAuthStateChanged } from "firebase/auth";
+import { getDownloadURL, ref } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
-import { auth } from "../../../firebase";
+import { auth, storage } from "../../../firebase";
 import { User } from "../../../types/types";
 import styles from "./anotherUser.module.css"
 
@@ -16,17 +17,31 @@ function AnotherUser(props:any) {
   const [anotherUserName, setAnotherUserName] = useState<string>("");
   const [anotherUserId, setAnotherUserId] = useState<string>("");
   const [currentUser, setCurrentUser] = useState<string>("");
+  const [iconImgUrl, setIconImgUrl] = useState("");
 
   const { data, error } = useSWR(`/api/userData?user_id=${props.userId}`, fetcher);
 
   useEffect(() => {
-    //ログイン判定
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        <></>;
-      } else {
-        // ログインユーザーのid取得
-        setCurrentUser(user.uid);
+    const imageUpload = async () => {
+      const fileRef = ref(
+        storage,
+        `user_icons/1234567890qwertyuiopyukayuka/icon_users.png`
+      );
+      const url = await getDownloadURL(fileRef);
+      setIconImgUrl(url);
+      console.log(url);
+    };
+    imageUpload();
+  }, []);
+
+  // useEffect(() => {
+  //   //ログイン判定
+  //   onAuthStateChanged(auth, async (user) => {
+  //     if (!user) {
+  //       <></>;
+  //     } else {
+  //       // ログインユーザーのid取得
+  //       setCurrentUser(user.uid);
 
 
         // const anotherUser = users.filter(
@@ -41,9 +56,9 @@ function AnotherUser(props:any) {
         //   setAnotherUserName(anotherUser[0].user_name);
         //   setAnotherUserId(anotherUser[0].user_id);
         // }
-      }
-    });
-  }, []);
+  //     }
+  //   });
+  // }, []);
 
 
   if (error) {
