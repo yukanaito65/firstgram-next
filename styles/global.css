@@ -1,24 +1,19 @@
-/*
-! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com
-*/
+/* @import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities"; */
 
-/*
-1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
-2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
-*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* *,
-::before,
-::after {
-  box-sizing: border-box; */
-  /* 1 */
-  /* border-width: 0; */
-  /* 2 */
-  /* border-style: solid; */
-  /* 2 */
-  /* border-color: #e5e7eb; */
-  /* 2 */
-/* } */
+*,
+*:before,
+*:after {
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+}
 
 html {
   font-size: 62.5%;
@@ -32,25 +27,17 @@ body {
   font-size: 1.6rem;
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
     "Hiragino Sans", Meiryo, sans-serif;
-  min-width: 350px;
-  max-width: 600px;
-  margin: 0 auto;
+  /* min-width: 350px;
+  max-width: 600px; */
+  margin-left: 250px;
   overflow-x: hidden;
-  padding-top: 77px;
-  padding-bottom: 120px;
   min-height: 100vh;
   position: relative;
   box-sizing: border-box;
-  margin: 0;
-  /* 1 */
-  line-height: inherit;
-  /* 2 */
-  background-color: #f7f7f7;
   @media screen {
     font-size: 16px;
     padding-top: 55px;
   }
-  
 }
 
 img,
@@ -90,4 +77,8 @@ input, textarea {
 
 li {
   list-style: none;
+}
+
+button:hover {
+  opacity: 0.6;
 }

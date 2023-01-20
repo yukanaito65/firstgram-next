@@ -1,50 +1,83 @@
-import useSWR from 'swr';
+import { useState } from "react";
+import PostDetails from "../src/components/templates/PostDetails";
+import { useModal } from "react-hooks-use-modal";
+import { Modal } from "flowbite";
+import Header from "../src/components/organisms/header";
 
-export type Posts = {
-    postId: string;
-    userId: string;
-    imageUrl:string[];
-    caption: string;
-    timestamp: Date;
-    favorites: string[];
-    keeps: string[];
-}
+export default function MypagePost() {
+  // const [modalIsOpen, setModalIsOpen] = useState(false);
+  // const [Modal, open, close, isOpen] = useModal("__next", {
+  //   preventScroll: false,
+  // });
 
-const fetcher =(resource:string)=> fetch(resource).then((res)=>res.json());
-  
-export default function PostDetails() {
-        const { data:posts, error } = useSWR("/api/posts", fetcher);
-        if(error){
-          return <p>error!</p>
-        }
-        if(!posts) {
-          return <p>loading...</p>
-        }
-        console.log("posts",posts)
-        console.log(posts[0].userId)
-        return (
-           <>
-           <h1 className='w-24 m-4 p-4'>投稿詳細</h1>
-           <p className='w-24 m-4 p-4'>画像</p>
-           <p>ユーザーアイコン</p>
-           <p>{posts[0].userId}</p>
-           <p>・</p>
+  // useMOdal使用
+  // return (
+  //   <>
+  //     <p>Modal is Open? {isOpen ? "Yes" : "No"}</p>
+  //     <button onClick={open}>Post1</button>
+  //     {console.log(isOpen)}
+  //     <Modal>
+  //       <p>opnen now</p>
+  //       <PostDetails props={close} />
+  //     </Modal>
+  //   </>
+  // );
 
-           <button>フォロー中</button>
-           <button>３点アイコン</button>
-           <hr />
-           <p>ユーザーアイコン</p>
-           <p>{posts[0].userId}</p>
-           <p>{posts[0].caption}</p>
-           <hr />
-           <button>♡</button>
-           <button>コメントアイコン</button>
-           <button>DMアイコン</button>
-           <button>保存アイコン</button>
-           <p>{posts[0].timestamp}</p>
-           <hr />
-            <input id='name' placeholder='コメントを入力' />
-            <button>投稿する</button>
-           </>
-        )
+  // モーダルの管理
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  if (typeof document === 'object'){
+    const body: HTMLBodyElement | null = document.querySelector('body')
+    if (body && isOpenModal) {
+        body.style.overflow = 'hidden'
+    }}
+
+  // const openModal = (e:any) => {
+  //   if (isOpenModal === false) {
+  //     setIsOpenModal(true);
+  //   }
+  // };
+
+  // const closeModal = (e:any) => {
+  //   if(isOpenModal === true) {
+  //     setIsOpenModal(false);
+  //   }
+  // }
+
+  const toggleModal = (e:any) => {
+    if (e.target === e.currentTarget) {
+      setIsOpenModal(!isOpenModal);
+    }
+  };
+
+  return(
+    <>
+    <Header />
+    <div>
+
+    <button type="button" onClick={toggleModal} className="w-full">
+    Post1
+  </button>
+  {/* <button type="button" className="w-full">
+    Post2
+  </button>
+  <button type="button" className="w-full">
+    Post3
+  </button>
+  <button type="button" className="w-full">
+    Post4
+  </button>
+  <button type="button" className="w-full">
+    Post5
+  </button> */}
+  {isOpenModal && (
+    <div className="bg-black bg-opacity-70">
+      <PostDetails close={toggleModal} />
+      </div>
+  )}
+  </div>
+  </>
+  )
+
+  // Tailwindcssのmodalコンポーネント
 }

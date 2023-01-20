@@ -11,12 +11,30 @@ import { BsPlusSquare, BsPlusSquareFill } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 import styles from "./header.module.css";
 import Nav from "../molecules/Nav";
+import NewPost from "../../../pages/newPost";
 
 function Header() {
   const router = useRouter();
   const currentPath = router.pathname;
 
   const [navDisplay, setNavDisplay] = useState<boolean>(false);
+
+  // 新規投稿のモーダルの管理
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  if (typeof document === "object") {
+    const body: HTMLBodyElement | null = document.querySelector("body");
+    if (body && isOpenModal) {
+      body.style.overflow = "hidden";
+    }
+  }
+
+  const toggleModal = (e: any) => {
+    // if (e.target === e.currentTarget) {
+      setIsOpenModal(!isOpenModal);
+    // }
+    console.log(isOpenModal)
+  };
 
   const navActive = () => {
     setNavDisplay(!navDisplay);
@@ -86,12 +104,12 @@ function Header() {
           ) : (
             //クリックされてない方
             <li className={styles.header_li}>
-              <Link href="/newPost" id={styles.link}>
+              <button type="button" onClick={toggleModal} className={styles.listContent}>
                 <div className={styles.listContent}>
                   <BsPlusSquare size={30} />
                   <p>作成</p>
                 </div>
-              </Link>
+              </button>
             </li>
           )}
 
@@ -141,6 +159,11 @@ function Header() {
         )}
       </header>
       {navDisplay ? <Nav /> : <></>}
+      {isOpenModal && (
+        <div className="bg-black bg-opacity-70">
+          <NewPost close={toggleModal} />
+        </div>
+      )}
     </>
   );
 }
