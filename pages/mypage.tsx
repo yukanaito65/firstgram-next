@@ -2,7 +2,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import useSWR from "swr";
-import Image from 'next/image';
+import Image from "next/image";
 
 interface Users {
   userId: string;
@@ -23,7 +23,8 @@ const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 function myPage() {
   // データ取得
-  const { data: users, error } = useSWR("/api/users", fetcher);
+  // const { data: users, error } = useSWR("/api/users", fetcher);
+  const { data: users, error } = useSWR("/api/test", fetcher);
 
   //ログインしているとログイン情報を持つ
   const [user, setUser] = useState<any>("");
@@ -55,34 +56,38 @@ function myPage() {
         setUser(currentUser);
         //ログイン判定が終わったタイミングでloadingはfalseに変わる
         setLoading(false);
-
-        // データ取得
-        // const { data:users, error } = useSWR("/api/users", fetcher);
-
-        if (error) {
-          return <p>error!</p>;
-        }
-        if (!users) {
-        //   // users.map(
-        //   //     (user: Users)=>{JSON.stringify(user)}
-        //   // )
-        //   setFollowList([1,2]);
-        //   setFollowerList([1]);
-
-        //   // const postDataArray = users[0].posts.map((users[0].userid) => users[0].userid);
-        //   // setPosts(postDataArray);
-
-        //   setPosts([1,2]);
-        <p>loading</p>
-        }
       }
     });
   }, []);
 
   //ログインページにリダイレクトする
-  const login = async () => {
-    await signOut(auth);
-    navigate("/myPage/");
+  // const login = async () => {
+  //   await signOut(auth);
+  //   navigate("/myPage/");
+  // };
+
+  if (error) {
+    return <p>error!</p>;
+  }
+  if (!users) {
+    //   // users.map(
+    //   //     (user: Users)=>{JSON.stringify(user)}
+    //   // )
+    //   setFollowList([1,2]);
+    //   setFollowerList([1]);
+
+    //   // const postDataArray = users[0].posts.map((users[0].userid) => users[0].userid);
+    //   // setPosts(postDataArray);
+
+    //   setPosts([1,2]);
+    return <p>loading</p>;
+  }
+
+  const data = () => {
+    setFollowList(users[0].userId);
+    setFollowerList(users[0].userId);
+    setPosts(users[0].userId);
+    console.log(users[0].userId);
   };
 
   return (
@@ -94,34 +99,56 @@ function myPage() {
           {!user ? (
             <>
               <p>ログインしてないです</p>
-              <button onClick={login}>login</button>
+              {/* <button onClick={login}>login</button> */}
               {/* {login} */}
             </>
           ) : (
             <>
-            {/* {users.map(
+              {/* {users.map(
             <div>{users[0].userName}</div>
             )} */}
-            <div className="flex">
-            <div className="bg-gray-300 border-rounded-2xl mt-7 ">
-               <Image src="/noIcon.png" alt="アイコン" width={55} height={55} />
-            </div>
-            <div className="ml-2">userName</div>
-            <button className="border border-gray-300">プロフィール編集</button>
-            <button>設定</button>
-            </div>
-          
+              <div className="flex pt-7 mx-auto w-max ">
+                <div className="border-border-rounded-fullmt-7 pt-3">
+                  <Image
+                    src="/noIcon.png"
+                    alt="アイコン"
+                    width={145}
+                    height={145}
+                    className=" border border-gray-300 bg-gray-300 rounded-full "
+                  />
+                </div>
 
-            <div className="flex ml-16">
-            <div>投稿{posts.length}件</div>
-            <div>フォロー{followList.length}人</div>
-            <div>フォロワー{followerList.length}人</div>
-            </div>
+                <div className="pl-16 py-3 flex flex-col max-h-145 justify-between">
+                  <div className="flex">
+                    <div className="h-8 pt-1 text-xl">ringo_yasuo</div>
+                    <button
+                      className="
+            border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
+            "
+                    >
+                      プロフィールを編集
+                    </button>
+                    <button className="ml-2">○</button>
+                  </div>
 
-            <div className="ml-16">name</div>
-         
+                  <div className="flex">
+                    <div>投稿{posts.length}件</div>
+                    <div className="ml-9">フォロー{followList.length}人</div>
+                    <div className="ml-9">
+                      フォロワー{followerList.length}人
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-bold">えみり </div>
+                    <div className="text-sm">Tokyo 1996</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button onClick={data}>データ取得</button>
+              </div>
             </>
-
           )}
         </>
       )}
