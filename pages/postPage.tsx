@@ -2,6 +2,7 @@ import { useState } from "react";
 import PostDetails from "../src/components/templates/PostDetails";
 import { useModal } from "react-hooks-use-modal";
 import { Modal } from "flowbite";
+import Header from "../src/components/organisms/header";
 
 export default function MypagePost() {
   // const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -50,7 +51,10 @@ export default function MypagePost() {
   };
 
   return(
-    <div className="">
+    <>
+    <Header />
+    <div>
+
     <button type="button" onClick={toggleModal} className="w-full">
     Post1
   </button>
@@ -72,6 +76,7 @@ export default function MypagePost() {
       </div>
   )}
   </div>
+  </>
   )
 
   // Tailwindcssのmodalコンポーネント

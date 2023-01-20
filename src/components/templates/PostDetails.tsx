@@ -33,16 +33,10 @@ export default function PostDetails(props: any) {
   const [favbtn, setFavbtn] = useState(1);
 
   const { data: posts, error } = useSWR("/api/posts", fetcher);
-  console.log("test", posts);
-  const { data: session } = useSession();
+  // /const { data: comments } = useSWR("/api/getCommentsData?postId=mhbukjdi84ndhsu8eijt", fetcher);
+  const { data: comments } = useSWR(() => '/api/getCommentsData?post_id=mhbukjdi84ndhsu8eijt', fetcher)
 
-  // モーダル
-  const submit = (e:any) => {
-    e.preventDefault();
-    if (props.close) {
-      props.close(e);
-    }
-  };
+  const { data: session } = useSession();
 
   // Storageデータ表示
   useEffect(() => {
@@ -50,14 +44,16 @@ export default function PostDetails(props: any) {
     const imageUpload = async () => {
       const fileRef = ref(
         storage,
-        `image/${posts[0].postId}/onepiece01_luffy.png`
+        `image/${posts[0].post_id}/onepiece01_luffy.png`
       );
       const url = await getDownloadURL(fileRef);
       setImageUrl(url);
       console.log(url);
     };
     imageUpload();
+    
   }, [posts]);
+  console.log(comments)
 
   // // お気に入りボタンがクリックされたら
   // const Favorite = async (e:any) => {
@@ -87,7 +83,7 @@ export default function PostDetails(props: any) {
     return <p>loading...</p>;
   }
   console.log("posts", posts);
-  console.log(posts[0].userId);
+  console.log(posts[0].user_id);
   if (session) {
     return (
       <>

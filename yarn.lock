@@ -1107,11 +1107,7 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-<<<<<<< HEAD
-"@babel/runtime@^7.16.3":
-=======
-"@babel/runtime@^7.1.2":
->>>>>>> 2e228ab67fcafb0fbbfaa85e4b8fda19f5e29683
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.16.3":
   version "7.20.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.7.tgz#fcb41a5a70550e04a7b708037c7c32f7f356d8fd"
   integrity sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==
@@ -10132,17 +10128,15 @@ join-path@^1.1.1:
     url-join "0.0.1"
     valid-url "^1"
 
-<<<<<<< HEAD
 jose@^4.10.0, jose@^4.9.3:
   version "4.11.2"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.11.2.tgz#d9699307c02e18ff56825843ba90e2fae9f09e23"
   integrity sha512-njj0VL2TsIxCtgzhO+9RRobBvws4oYyCM8TpvoUQwl/MbIM3NFJRR9+e6x0sS5xXaP1t6OCBkaBME98OV9zU5A==
-=======
+
 js-cookie@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
   integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
->>>>>>> 2e228ab67fcafb0fbbfaa85e4b8fda19f5e29683
 
 js-sdsl@^4.1.4:
   version "4.2.0"
@@ -13045,7 +13039,6 @@ react-element-to-jsx-string@^14.3.4:
     is-plain-object "5.0.0"
     react-is "17.0.2"
 
-<<<<<<< HEAD
 react-hooks-use-modal@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-hooks-use-modal/-/react-hooks-use-modal-3.2.0.tgz#a999b689aa45aa3d3bd69c17de13660eab97ec52"
@@ -13054,8 +13047,6 @@ react-hooks-use-modal@^3.2.0:
     body-scroll-lock "^3.1.5"
     focus-trap "^7.0.0"
 
-=======
->>>>>>> 2e228ab67fcafb0fbbfaa85e4b8fda19f5e29683
 react-icons@^4.7.1:
   version "4.7.1"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.7.1.tgz#0f4b25a5694e6972677cb189d2a72eabea7a8345"

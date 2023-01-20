@@ -19,6 +19,7 @@
 
 .inputCaption {
     background-color: #262626;
+    resize: none;
 }
 
 .inputCaption:focus {

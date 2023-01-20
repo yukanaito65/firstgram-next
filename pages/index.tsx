@@ -7,6 +7,8 @@ import { clientRequestInstance } from "../modules/request"
 import useSWR from "swr";
 import { features } from 'process'
 import Link from 'next/link'
+import Header from '../src/components/organisms/header'
+import { getAuth } from '@firebase/auth'
 
 interface Message {
   messageId:string;
@@ -19,25 +21,26 @@ interface Message {
 const fetcher =(resource:string)=> fetch(resource).then((res)=>res.json());
 
 const Page: NextPage = () => {
-  const { data:messages, error } = useSWR("/api/data", fetcher);
+  // const { data:messages, error } = useSWR("/api/data", fetcher);
   // "INSERTINTO Message(messageId, message,timestamp,userId,withUserId) VALUES(abcdefg456,おはよう,2022-12-22T03:20:30.000Z,ijklmn22,abcdeffff)"
+ // /const { data: comments } = useSWR("/api/getCommentsData?postId=mhbukjdi84ndhsu8eijt", fetcher);
+ const { data: comments } = useSWR(() => '/api/getCommentsData?postId=mhbukjdi84ndhsu8eijt', fetcher)
+ console.log(comments)
 
-  if(error){
-    return <p>error!</p>
-  }
-  if(!messages) {
-    return <p>loading...</p>
-  }
-  console.log("data",messages)
   // return messages.map(
   //    (d: Message, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
   // )
+  const auth = getAuth()
+  const currentUserId = auth.currentUser?.uid;
+  console.log(currentUserId)
   return (
     <>
     <Head>
       <title>secondgram</title>
     </Head>
+    <Header />
     <p>トップ</p>
+
     {/* <>
       <div className="postlook">
         {postData.length === 0 ? (
@@ -230,12 +233,6 @@ const Page: NextPage = () => {
     </> */}
     </>
   )
-  return messages.map(
-     (d: Message, index:number) => 
-    //  <div>{index}番目のデータ: {JSON.stringify(d)}</div>
-     <div>{index}番目のデータ: {d.userId}</div>
-
-     )
 }
 
 export default Page
