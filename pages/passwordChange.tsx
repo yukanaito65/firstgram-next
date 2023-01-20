@@ -13,6 +13,7 @@ import {
 import { auth } from "../firebase";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Header from "../src/components/organisms/header";
+import Image from "next/image";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -119,12 +120,13 @@ const PasswordChange = () => {
     // パスワード変更関数呼び出し
     updatePassword(nowPassValue, newPassValue);
 
-    return fetch(`/api/users`, {
+    return fetch(`/api/passwordUpdate`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        user_id:user.uid,
         password: newPassValue,
-        Cpassword: cNewPassValue,
+        cpassword: cNewPassValue,
       }),
     }).then((res) => res.json());
   };
@@ -134,13 +136,13 @@ const PasswordChange = () => {
       <Header />
     <div className="flex gap-12 border border-solid border-neutral-300 ml-96 mr-3 my-6 w-3/4">
     <SettingMenu />
-    <div className="flex flex-col gap-2.5 w-full">
-      <div className="flex items-center gap-8">
-        <p>icon</p>
-        <p>{users[0].username}</p>
+    <div className="flex flex-col gap-5 w-full my-7">
+      <div className="flex items-center gap-8 mx-20">
+        <Image src="/noIcon.png" alt="icon" width={40} height={40} className="bg-gray-200 rounded-full"></Image>
+        <p>{users[1].user_name}</p>
       </div>
       <div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-start gap-8 my-4">
           <label htmlFor="settingPassword" className="font-bold">現在のパスワード</label>
           <input
           name="settingPassword"
@@ -148,8 +150,8 @@ const PasswordChange = () => {
           type={isRevealConfirmPassword ? "text" : "password"}
           value={nowPassValue}
           onChange={onChangePassword}
-          pattern={users[0].password}
-          className="h-8 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
+          pattern={users[1].password}
+          className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
           required
           />
           <span
@@ -163,7 +165,7 @@ const PasswordChange = () => {
         パスワードが一致しません
       </span> */}
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-start gap-8 my-4">
           <label htmlFor="settingPassword" className="font-bold">新しいパスワード</label>
           <input
           name="settingPassword"
@@ -172,7 +174,7 @@ const PasswordChange = () => {
           value={newPassValue}
           onChange={onChangeNewPassword}
           pattern="(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}"
-          className="h-8 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
+          className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
           required
           />
           <span
@@ -188,7 +190,7 @@ const PasswordChange = () => {
         (半角英小文字、数字を含む6文字以上)
       </span> */}
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-start gap-8 my-4">
           <label htmlFor="settingPassword" className="font-bold text-right">新しいパスワード<br/>を確認</label>
           <input
           name="settingPassword"
@@ -197,7 +199,7 @@ const PasswordChange = () => {
           value={cNewPassValue}
           onChange={onChangeCNewPassword}
           pattern={newPassValue}
-          className="h-8 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
+          className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-7/12"
           required
           />
           <span
@@ -212,7 +214,7 @@ const PasswordChange = () => {
       </span> */}
         </div>
       </div>
-      <button className="w-32" onClick={dataUpdate}>パスワード変更</button>
+      <button className="w-32 bg-blue-300 border-none text-white rounded-lg font-bold py-1.5 my-0 mx-auto" onClick={dataUpdate}>パスワード変更</button>
     </div>
     </div>
     </div>

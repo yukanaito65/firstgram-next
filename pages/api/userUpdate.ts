@@ -1,13 +1,10 @@
 import { sqlExecuter } from "../../modules/database"
 
 export default async (req: any, res: any) => {
+  const data = req.body;
 
-	const users = await sqlExecuter.any(
-              //  "select 'DB参照したデータ' as any_column"
-              // "SELECT * FROM users"
-							// `SELECT * FROM users WHERE userid='mJr5Sh743bavx0WkLhFALfjJ0Av1'`
-              // "UPDATE users SET userid = users.userid, name = name, username = username, profile = profile WHERE userid = 'mJr5Sh743bavx0WkLhFALfjJ0Av1'"
-              "UPDATE public.users SET userid = 'mJr5Sh743bavx0WkLhFALfjJ0Av1', name = name, username = username, profile = profile WHERE userid = 'mJr5Sh743bavx0WkLhFALfjJ0Av1'"
+	const userUpdate = await sqlExecuter.any(
+              `UPDATE users SET name = $2, user_name = $3, profile = $4 WHERE user_id = $1`,[data.user_id, data.name, data.user_name, data.profile]
         );
-	res.status(200).json(users);
+	res.status(200).json(userUpdate);
 };
