@@ -80,7 +80,7 @@ function myPage() {
     //   // setPosts(postDataArray);
 
     //   setPosts([1,2]);
-    return <p>loading</p>;
+    <p>loading</p>;
   }
 
   const data = () => {
