@@ -6,7 +6,8 @@ import { sqlExecuter } from "../../modules/database"
 
 	const test = await sqlExecuter.any(
               //  "select 'DB参照したデータ' as any_column"
-              `INSERT INTO test VALUES($1)`, [data.testid]
+            //   `INSERT INTO test VALUES($1)`, [data.testid]
+			`SELECT * FROM users `  
         );
 	res.status(200).json(
 		test

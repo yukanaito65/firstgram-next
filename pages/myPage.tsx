@@ -23,7 +23,8 @@ const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 function myPage() {
   // データ取得
-  const { data: users, error } = useSWR("/api/users", fetcher);
+  // const { data: users, error } = useSWR("/api/users", fetcher);
+  const { data: users, error } = useSWR("/api/test", fetcher);
 
   //ログインしているとログイン情報を持つ
   const [user, setUser] = useState<any>("");

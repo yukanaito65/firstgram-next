@@ -73,12 +73,12 @@ function register() {
         name: "emiri",
         // email: registerEmail,
         email:"emiri@gmail.com",
+        profile:"",
         password: "emiri123",
         cpassword: "emiri123",
         follow:"",
         follower:"",
         favorite_posts:"",
-        profile:"",
         posts:"",
         keep_posts:""
       }),
