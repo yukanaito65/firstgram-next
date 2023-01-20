@@ -21,19 +21,26 @@ function AnotherUser(props:any) {
 
   const { data, error } = useSWR(`/api/userData?user_id=${props.userId}`, fetcher);
 
-  useEffect(() => {
+  if (error) {
+    return <p>error!</p>;
+  }
+  if (!data) {
+    return <p>loading...</p>;
+  }
+
+  // useEffect(() => {
     const imageUpload = async () => {
       const fileRef = ref(
         storage,
-        `user_icons/1234567890qwertyuiopyukayuka/icon_users.png`
+        `user_icons/${data[0].user_id}/user_icon.png`
       );
       const url = await getDownloadURL(fileRef);
       setIconImgUrl(url);
-      console.log(url);
+      // console.log(url);
     };
     imageUpload();
-  }, []);
-
+  // }, []);
+console.log(iconImgUrl);
   // useEffect(() => {
   //   //ログイン判定
   //   onAuthStateChanged(auth, async (user) => {
@@ -61,24 +68,19 @@ function AnotherUser(props:any) {
   // }, []);
 
 
-  if (error) {
-    return <p>error!</p>;
-  }
-  if (!data) {
-    return <p>loading...</p>;
-  }
+
 
   return (
         <div className={styles.titleWrapper}>
         {/* // "flex items-center gap-3 px-8 bg-white border-b border-gray-300 border-solid" */}
            <Link href="">
           <div>
-            <Image
-              src="/noIcon.png"
+            <img
+              src={iconImgUrl}
               alt="icon"
-              width={25}
-              height={25}
-              className="bg-gray-200 rounded-full"
+              // width={25}
+              // height={25}
+              className="rounded-full border border-solid border-gray-200 w-full bg-white"
             />
           </div>
           </Link>
