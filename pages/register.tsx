@@ -15,6 +15,7 @@ import InputRequiredRegister from "../src/components/atoms/input/inputRequiredRe
 import RegisterButton from "../src/components/atoms/button/registerButton";
 import InputCPass from "../src/components/atoms/input/inputCPass";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Header from '../src/components/organisms/header';
 
 function register() {
   //ログイン状態保持(userが値を持てばログイン状態)
@@ -124,6 +125,7 @@ function register() {
 
   return (
     <div>
+         <Header />
       {user ? (
         <div>
           <Link href="/">Home</Link>
@@ -185,7 +187,9 @@ function register() {
                     placeholder={"自己紹介"}
                   />
 
-                  <RegisterButton dataPush={dataPush} />
+                  <RegisterButton
+                   dataPush={dataPush} 
+                   />
                 </div>
               </div>
             </form>
