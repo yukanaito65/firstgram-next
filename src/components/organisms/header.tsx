@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { HiOutlineHome, HiHome } from "react-icons/hi";
 import { FiSearch, FiPlusSquare } from "react-icons/fi";
@@ -12,10 +12,27 @@ import { FaSearch } from "react-icons/fa";
 import styles from "./header.module.css";
 import Nav from "../molecules/Nav";
 import NewPost from "../../../pages/newPost";
+import { getDownloadURL, ref } from "firebase/storage";
+import { auth, storage } from "../../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Header() {
   const router = useRouter();
   const currentPath = router.pathname;
+
+  const [user, setUser] = useState<any>([]);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async (currentUser: any) => {
+      if (!currentUser) {
+        console.log("ログアウト状態");
+      } else {
+        setUser(currentUser);
+        //ログイン判定が終わったタイミングでloadingはfalseに変わる
+        // setLoading(false);
+      }
+    });
+  },[]);
 
   const [navDisplay, setNavDisplay] = useState<boolean>(false);
 
@@ -39,6 +56,22 @@ function Header() {
   const navActive = () => {
     setNavDisplay(!navDisplay);
   };
+
+  //icon表示用URL
+  const [iconImgUrl, setIconImgUrl] = useState("");
+
+  // useEffect(() => {
+    const imageUpload = async () => {
+      const fileRef = ref(
+        storage,
+        `user_icons/${user.uid}/user_icon.png`
+      );
+      const url = await getDownloadURL(fileRef);
+      setIconImgUrl(url);
+      console.log(url);
+    };
+    imageUpload();
+  // }, []);
 
   return (
     <>
@@ -117,13 +150,31 @@ function Header() {
             //クリックされた方
             <li className={styles.header_li}>
               <div className={styles.onListContent}>
-                <Image
+              {iconImgUrl !== "" ? (
+              <img
+              src={iconImgUrl}
+              alt="icon"
+              // width={40}
+              // height={40}
+              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+            />
+                ) : (
+                  <Image
+                  src="/noIcon.png"
+                  alt="icon"
+                  width={40}
+                  height={40}
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+                  />
+                )
+              }
+                {/* <Image
                   src="/noIcon.png"
                   alt="icon"
                   width={30}
                   height={30}
                   className="bg-gray-300"
-                />
+                /> */}
                 <p>プロフィール</p>
               </div>
             </li>
@@ -132,13 +183,31 @@ function Header() {
             <li className={styles.header_li}>
               <Link href="/mypage" id={styles.link}>
                 <div className={styles.listContent}>
+                  {iconImgUrl !== "" ? (
+              <img
+              src={iconImgUrl}
+              alt="icon"
+              // width={40}
+              // height={40}
+              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+            />
+                ) : (
                   <Image
+                  src="/noIcon.png"
+                  alt="icon"
+                  width={40}
+                  height={40}
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+                  />
+                )
+              }
+                  {/* <Image
                     src="/noIcon.png"
                     alt="icon"
                     width={30}
                     height={30}
                     className="bg-gray-300"
-                  />
+                  /> */}
                   <p>プロフィール</p>
                 </div>
               </Link>

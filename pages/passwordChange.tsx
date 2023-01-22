@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
-import { User } from "../types/types";
-import data from "./api/data";
 import SettingMenu from "../src/components/organisms/SettingMenu";
 import {
   getAuth,
@@ -49,8 +47,6 @@ const PasswordChange = () => {
   //エラーメッセージ
   const [errMessage, setErrMessage] = useState<string>("");
 
-
-
   //ログイン認証、uid取得
   useEffect(() => {
     onAuthStateChanged(auth, async (currentUser: any) => {
@@ -59,17 +55,10 @@ const PasswordChange = () => {
       } else {
         setUser(currentUser);
     //     //ログイン判定が終わったタイミングでloadingはfalseに変わる
-    //     setLoading(false);
-
-
+        setLoading(false);
       }
     });
   }, []);
-
-
-  // useEffect(()=>{
-
-  // },[])
 
   // パスワードの変更関数を定義(Authentication)
   const updatePassword = (
@@ -143,10 +132,13 @@ const PasswordChange = () => {
   imageUpload();
 
   //   Authenticationを更新(クリックした時の関数)
-  const dataUpdate: () => void = () => {
+  const dataUpdate = (e:any) => {
+    e.preventDefault();
+
     // パスワード変更関数呼び出し
     updatePassword(nowPassValue, newPassValue);
 
+    //DBのデータ更新
     fetch(`/api/passwordUpdate`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -162,6 +154,8 @@ const PasswordChange = () => {
   };
 
   return (
+    <>
+    {!loading && (
     <div className="flex">
       <Header />
       <div className="flex gap-12 border border-solid border-neutral-300 ml-96 mr-3 my-6 w-3/4">
@@ -178,7 +172,7 @@ const PasswordChange = () => {
             <p>{userData[0].user_name}</p>
           </div>
 
-          <div>
+          <form onSubmit={dataUpdate}>
             <div className="flex items-start gap-8 my-4 relative">
               <label htmlFor="settingPassword" className="font-bold">
                 現在のパスワード
@@ -225,9 +219,9 @@ const PasswordChange = () => {
                   type={isRevealConfirmNewPassword ? "text" : "password"}
                   value={newPassValue}
                   onChange={onChangeNewPassword}
-                  pattern="(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,}"
+                  pattern="(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,15}"
                   className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-full"
-                  placeholder="パスワード(半角英小文字、数字を含む6文字以上)"
+                  placeholder="パスワード(半角英小文字、数字を含む6文字以上15文字以内)"
                   required
                 />
                 <span
@@ -235,7 +229,7 @@ const PasswordChange = () => {
                 >
                   正しい形式で入力してください
                   <br />
-                  (半角英小文字、数字を含む6文字以上)
+                  (半角英小文字、数字を含む6文字以上15文字以内)
                 </span>
               </div>
               <span
@@ -287,17 +281,17 @@ const PasswordChange = () => {
                 )}
               </span>
             </div>
-          </div>
-
-          <button
+            <button
             className="w-32 bg-blue-300 border-none text-white rounded-lg font-bold py-1.5 my-0 mx-auto"
-            onClick={dataUpdate}
           >
             パスワード変更
           </button>
+          </form>
         </div>
       </div>
     </div>
+    )}
+    </>
   );
 };
 
