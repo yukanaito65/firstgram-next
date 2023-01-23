@@ -20,6 +20,8 @@ function InputCPass(props: any) {
         data-equal-to="email"
         pattern={props.passwordValue}
         required
+        value={props.value}
+        onChange={props.onChange}
       />
       <span
         onClick={toggleConfirmPassword}

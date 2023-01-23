@@ -27,9 +27,6 @@ const Page: NextPage = () => {
  const { data: comments } = useSWR(() => '/api/getCommentsData?postId=mhbukjdi84ndhsu8eijt', fetcher)
  console.log(comments)
 
-  // return messages.map(
-  //    (d: Message, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
-  // )
   const auth = getAuth()
   const currentUserId = auth.currentUser?.uid;
   console.log(currentUserId)
