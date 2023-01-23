@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  getAuth,
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
@@ -16,7 +17,7 @@ import RegisterButton from "../src/components/atoms/button/registerButton";
 import InputCPass from "../src/components/atoms/input/inputCPass";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Header from "../src/components/organisms/header";
-import { setuid } from "process";
+
 
 function register() {
   //ログイン状態保持(userが値を持てばログイン状態)
@@ -29,48 +30,55 @@ function register() {
   const [valueName, setValueName] = useState("");
   const [cpass, setCpass] = useState("");
   const [valueProfile, setValueProfile] = useState("");
-  const [uid, setUid] = useState("");
 
   //loadingしているかしてないか監視する
   const [loading, setLoading] = useState(false);
-
   // 画像のアップロードが完了したか確認する
   const [isUploaded, setIsUploaded] = useState(false);
-
   //画像のURL
   const [imgSrc, setImgSrc] = useState("");
 
+    //ログインしているかどうかを判断する
+    useEffect(() => {
+      onAuthStateChanged(auth, (currentUser: any) => {
+        setUser(currentUser);
+      });
+    }, []);
+
+
+
   //画像アップロード＆URL取得
-  const InputImage = (e: any) => {
-    const file = e.target.files[0];
+  // const InputImage = (e: any) => {
+  //   const file = e.target.files[0];
 
-    // パスと名前で参照を作成
-    const storageRef = ref(storage, "image/" + file.name);
+  //   console.log(userId);
+  //   // const router = useRouter();
 
-    // 画像のアップロード
-    const uploadImage = uploadBytesResumable(storageRef, file);
-    uploadImage.on(
-      "state_changed",
-      // upload開始したらloading中になる(loadingがtrueになる)
-      (snapshot) => {
-        setLoading(true);
-      },
-      (err) => {
-        <></>;
-      },
-      //upload完了したらloadedになる(loadingがfalse,loadedがtrue)
-      () => {
-        setLoading(false);
-        setIsUploaded(true);
+  //   // パスと名前で参照を作成
+  //   const storageRef = ref(storage, `user_icons/${userId}/user_icon`);
 
-        getDownloadURL(storageRef).then((url) => {
-          setImgSrc(url);
-        });
-      }
-    );
-  };
+  //   // 画像のアップロード
+  //   const uploadImage = uploadBytesResumable(storageRef, file);
+  //   uploadImage.on(
+  //     "state_changed",
+  //     // upload開始したらloading中になる(loadingがtrueになる)
+  //     (snapshot) => {
+  //       setLoading(true);
+  //     },
+  //     (err) => {
+  //       <></>;
+  //     },
+  //     //upload完了したらloadedになる(loadingがfalse,loadedがtrue)
+  //     () => {
+  //       setLoading(false);
+  //       setIsUploaded(true);
 
-  console.log(uid);
+  //       getDownloadURL(storageRef).then((url) => {
+  //         setImgSrc(url);
+  //       });
+  //     }
+  //   );
+  // };
 
   //ログアウトが成功するとログインページにリダイレクトする
   const logout = async () => {
@@ -101,15 +109,9 @@ function register() {
     setValueProfile(e.target.value);
   };
 
-  //ログインしているかどうかを判断する
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser: any) => {
-      setUser(currentUser);
-      setUid(user.uid);
-    });
-  }, []);
 
-  //Authenticationへのユーザー登録、FireStoreへのデータ新規追加
+
+  //Authenticationへのユーザー登録、データベースへのデータ新規追加
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
@@ -171,7 +173,6 @@ function register() {
                 <div className="text-xs text-red-500 px-10 mb-3 ml-3">
                   ＊必須項目
                 </div>
-
                 <div className="px-10 flex flex-col h-80 justify-between">
                   <InputEmail
                     emailChange={emailChange}

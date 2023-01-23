@@ -90,7 +90,6 @@ function myPage() {
     setFollowList(users[0].user_id);
     setFollowerList(users[0].user_id);
     setPosts(users[0].user_id);
-    console.log(users[0].user_id);
   };
 
   return (
