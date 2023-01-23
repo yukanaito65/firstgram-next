@@ -12,7 +12,6 @@ import IconModal from "../src/components/organisms/IconModal";
 import Panel from "../src/components/molecules/Panel";
 import { getDownloadURL, ref, StorageReference } from "firebase/storage";
 import Image from "next/image";
-import * as admin from "firebase-admin";
 
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
@@ -49,38 +48,26 @@ const ProfileChange = () => {
   //ログインユーザーの情報取得
   const { data: users, error } = useSWR(() => `/api/userData?user_id=${user.uid}`,fetcher);
 
-  if (error) {
-    return <p>error!</p>;
-  }
-  if (!users) {
-    return <p>loading...</p>;
-  }
-
   console.log("data", users);
 
 //icon表示するためにURL取得
-const imageUpload = async () => {
-  const fileRef = ref(
-    storage,
-    `user_icons/${user.uid}/user_icon.png`
-  );
-  const url = await getDownloadURL(fileRef);
+// const imageUpload =  async() => {
+//   const fileRef = ref(
+//     storage,
+//     `user_icons/${user.uid}/user_icon.png`
+//   );
+//  const url = await getDownloadURL(fileRef);
+//     setIconImgUrl(url)
+//   };
+  // imageUpload();
 
-//   const admin = require("firebase-admin");
-//   // storageのbucketのインスタンスを取得
-// const bucket = admin.storage().bucket();
-//  const exists = await bucket.file(uploadedPath).exists();
-// const file = await admin.storage().bucket("gs://firstgram-next.appspot.com/").file(`user_icons`).exists();
-// const isFileExists = await bucket.file(fileName).exists();
-// if (isFileExists && isFileExists[0]) {
-//      // do something
-// }
-  // if (exists(url)){
-    // console.log(file);
-  setIconImgUrl(url);
-  // }
-};
-imageUpload();
+
+if (error) {
+  return <p>error!</p>;
+}
+if (!users) {
+  return <p>loading...</p>;
+}
 
   //icon変更モーダルウィンドウ
   const toggleModal = (e:any) => {
@@ -117,12 +104,15 @@ imageUpload();
             onSubmit={handleSubmit}
             >
               <div className="flex items-center gap-8">
-                {iconImgUrl !== "" ? (
+                {/* <p>{users[0].icon_img}</p> */}
+                {/* {iconImgUrl !== "" ? ( */}
+                {users[0].icon_img !== "" ? (
               <img
-              src={iconImgUrl}
+              // src={iconImgUrl}
+              src={users[0].icon_img}
               alt="icon"
-              // width={40}
-              // height={40}
+              width={40}
+              height={40}
               className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
             />
                 ) : (

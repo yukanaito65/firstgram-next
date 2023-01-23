@@ -15,12 +15,16 @@ import NewPost from "../../../pages/newPost";
 import { getDownloadURL, ref } from "firebase/storage";
 import { auth, storage } from "../../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import useSWR from "swr";
+
+const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 function Header() {
   const router = useRouter();
   const currentPath = router.pathname;
 
   const [user, setUser] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (currentUser: any) => {
@@ -29,7 +33,7 @@ function Header() {
       } else {
         setUser(currentUser);
         //ログイン判定が終わったタイミングでloadingはfalseに変わる
-        // setLoading(false);
+        setLoading(false);
       }
     });
   },[]);
@@ -58,23 +62,34 @@ function Header() {
   };
 
   //icon表示用URL
-  const [iconImgUrl, setIconImgUrl] = useState("");
+  // const [iconImgUrl, setIconImgUrl] = useState("");
 
-  // useEffect(() => {
-    const imageUpload = async () => {
-      const fileRef = ref(
-        storage,
-        `user_icons/${user.uid}/user_icon.png`
-      );
-      const url = await getDownloadURL(fileRef);
-      setIconImgUrl(url);
-      console.log(url);
-    };
-    imageUpload();
-  // }, []);
 
+  //   const imageUpload = async () => {
+  //     const fileRef = ref(
+  //       storage,
+  //       `user_icons/${user.uid}/user_icon.png`
+  //     );
+  //     const url = await getDownloadURL(fileRef);
+  //     setIconImgUrl(url);
+  //     console.log(url);
+  //   };
+  //   imageUpload();
+
+  //ログインユーザーの情報取得
+  const { data: users, error } = useSWR(() => `/api/userData?user_id=${user.uid}`,fetcher);
+
+  if (error) {
+    return <p>error!</p>;
+  }
+  if (!users) {
+    return <p>loading...</p>;
+  }
+// console.log(users);
+// console.log(props.users);
   return (
     <>
+    {!loading && (
       <header className={styles.header}>
         <div className={styles.logo}>
           <Image
@@ -150,9 +165,9 @@ function Header() {
             //クリックされた方
             <li className={styles.header_li}>
               <div className={styles.onListContent}>
-              {iconImgUrl !== "" ? (
+              {users[0].icon_img !== "" ? (
               <img
-              src={iconImgUrl}
+              src={users[0].icon_img}
               alt="icon"
               // width={40}
               // height={40}
@@ -168,13 +183,6 @@ function Header() {
                   />
                 )
               }
-                {/* <Image
-                  src="/noIcon.png"
-                  alt="icon"
-                  width={30}
-                  height={30}
-                  className="bg-gray-300"
-                /> */}
                 <p>プロフィール</p>
               </div>
             </li>
@@ -183,9 +191,9 @@ function Header() {
             <li className={styles.header_li}>
               <Link href="/mypage" id={styles.link}>
                 <div className={styles.listContent}>
-                  {iconImgUrl !== "" ? (
+                  {users[0].icon_img !== "" ? (
               <img
-              src={iconImgUrl}
+              src={users[0].icon_img}
               alt="icon"
               // width={40}
               // height={40}
@@ -201,13 +209,6 @@ function Header() {
                   />
                 )
               }
-                  {/* <Image
-                    src="/noIcon.png"
-                    alt="icon"
-                    width={30}
-                    height={30}
-                    className="bg-gray-300"
-                  /> */}
                   <p>プロフィール</p>
                 </div>
               </Link>
@@ -227,16 +228,16 @@ function Header() {
           </button>
         )}
       </header>
+    )}
       {navDisplay ? <Nav /> : <></>}
       {isOpenModal && (
         <div className="bg-black bg-opacity-70">
           <NewPost close={toggleModal} />
         </div>
       )}
+    {/* // )} */}
     </>
   );
 }
 
 export default Header;
-
-// FiPlusSquare

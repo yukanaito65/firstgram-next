@@ -58,8 +58,11 @@ function DmPage() {
         user_id: currentUser,
         with_user_id: userId,
       }),
-    }).then((res) => res.json());
-    mutate("/api/myMessage"), setMessage("");
+    }).then((res) => {
+      res.json();
+      mutate(`/api/myMessage?user_id=${currentUser}&&with_user_id=${userId}`);
+    });
+    setMessage("");
   };
 
   if (error) {
@@ -74,7 +77,7 @@ function DmPage() {
       <Header />
       <div className="border border-solid border-neutral-300 ml-96 mr-3 my-6 w-3/5">
         <AnotherUser userId={userId} />
-        <div className={styles.dmContent}>
+        <div className={styles.dmContent} id="container">
           {messages === undefined ? (
             <p>loading...</p>
           ) : (
@@ -105,14 +108,16 @@ function DmPage() {
         <form
           onSubmit={(e) => handleSendMessage(e)}
           className="my-2 mx-2 bg-white h-10 text-center"
+          id="form"
         >
           <input
             className="w-10/12 border border-solid border-neutral-200 rounded-2xl py-0.5 px-2.5 h-8"
             placeholder="メッセージを入力..."
             onChange={(e) => setMessage(e.target.value)}
             value={message}
+            id="input"
           />
-          <button className="bg-transparent border-none text-blue-500 font-bold">
+          <button className="bg-transparent border-none text-blue-500 font-bold" id="button">
             送信
           </button>
         </form>

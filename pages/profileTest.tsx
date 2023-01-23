@@ -26,7 +26,7 @@ function ProfileTest() {
   return (
     <div>
       <p>{data[0].name}</p>
-      <button onClick={clickButton}></button>
+      <button onClick={clickButton}>DM</button>
     </div>
   )
 }

@@ -12,7 +12,21 @@ const fetcher = (resource: any, init: any) =>
   fetch(resource, init).then((res) => res.json());
 
 function AnotherUser(props: any) {
+  const [loading, setLoading] = useState(true);
+
   const [iconImgUrl, setIconImgUrl] = useState("");
+
+
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, async (currentUser: any) => {
+  //     if (!currentUser) {
+  //       console.log("ログアウト状態");
+  //     } else {
+  //       //ログイン判定が終わったタイミングでloadingはfalseに変わる
+  //       setLoading(false);
+  //     }
+  //   });
+  // },[]);
 
   const { data, error } = useSWR(
     `/api/userData?user_id=${props.userId}`,
@@ -37,20 +51,34 @@ function AnotherUser(props: any) {
   imageUpload();
   // }, []);
   console.log(iconImgUrl);
+  console.log(data);
 
   return (
+    <>
+    {/* {!loading && ( */}
     <div
       className={`${styles.titleWrapper} flex items-center gap-3 px-8 bg-white py-0 px-11`}
     >
       <Link href="">
-        <div>
+        <div className="w-20">
+          {iconImgUrl !== "" ? (
           <img
             src={iconImgUrl}
             alt="icon"
             // width={25}
             // height={25}
-            className="rounded-full border border-solid border-gray-200 w-full bg-white"
+            className="rounded-full border border-solid border-gray-200 w-full bg-white object-cover"
           />
+          ) : (
+            <img
+            src="/noIcon.png"
+            alt="icon"
+            // width={100}
+            // height={100}
+            className="bg-gray-200 rounded-full border border-solid border-gray-200 w-full object-cover"
+            />
+          )
+        }
         </div>
       </Link>
       <Link href="" id={styles.title_link}>
@@ -59,6 +87,8 @@ function AnotherUser(props: any) {
         </div>
       </Link>
     </div>
+    {/* )} */}
+    </>
   );
 }
 

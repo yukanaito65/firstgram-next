@@ -1,6 +1,7 @@
-import { deleteObject, ref, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { mutate } from "swr";
+import { mutate, useSWRConfig } from "swr";
 import { storage } from "../../../firebase";
 import styles from "./panel.module.css";
 
@@ -27,44 +28,92 @@ const Panel: React.FC<Props> = (props) => {
   // };
   // imageUpload();
 
-  const [image, setImage] = useState(true);
+  //storageから取得したURLを格納
+  const [iconSrc, setIconSrc] = useState("");
 
+  //データ更新のため
+  const { mutate } = useSWRConfig();
+
+  //URLを取得
   const gsReference = ref(
     storage,
     `user_icons/${props.uid}/user_icon.png`
-    // `gs://firstgram-next.appspot.com/user_icons/${props.uid}/user_icon.png`
   );
+  getDownloadURL(gsReference).then((url)=>{
+    setIconSrc(url)
+  });
 
+  const router = useRouter()
+
+  //写真をアップデートボタン
   const updateClick = (e: any) => {
     //モーダルを閉じる
     e.preventDefault();
     if (props.close) {
       props.close(e);
     }
-    //写真をアップロードする
+    //写真をstorageにアップロードする
     const file = e.target.files[0];
-    // const storageRef = ref(storage, `user_icons/${props.uid}/user_icon.png`);
     uploadBytesResumable(gsReference, file);
+
+     //profileから飛んできたstateを更新する
+     props.setIconImgUrl(iconSrc)
+    //  props.setIconImgUrl(iconSrc)
+
+    //dbを更新する
+    fetch(`/api/iconUpdate`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: props.uid,
+        icon_img: iconSrc,
+      }),
+    }).then((res) => {
+      res.json();
+      mutate(`/api/userData?user_id=${props.uid}`)
+    });
+    // mutate(
+    //   `/api/userData`
+    // );
+    // router.reload()
   };
 
+  //削除ボタン
   const deleteClick = (e: any) => {
     //モーダルを閉じる
     e.preventDefault();
     if (props.close) {
       props.close(e);
     }
-    //写真を削除する
+
+    //写真をstorageから削除する
     deleteObject(gsReference)
       .then(() => {
         console.log("削除しました");
+
+        //profileから飛んできたstateを更新する
         props.setIconImgUrl("")
+
+        //dbからも削除する(空文字に更新する)
+        fetch(`/api/removeIcon`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: props.uid,
+            icon_img: "",
+          }),
+        }).then((res) => {
+          res.json();
+          mutate(`/api/userData?user_id=${props.uid}`)
+        });
       })
       .catch((err) => {
         console.log(err);
       });
-    mutate(
-      `gs://firstgram-next.appspot.com/user_icons/${props.uid}/user_icon.png`
-    );
+    // mutate(
+    //   `/api/userData`
+    // );
+    // router.reload()
   };
 
   return (
