@@ -19,7 +19,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Header from "../src/components/organisms/header";
 
 
-function register() {
+function Register() {
   //ログイン状態保持(userが値を持てばログイン状態)
   const [user, setUser] = useState<any>("");
 
@@ -235,4 +235,4 @@ function register() {
   );
 }
 
-export default register;
+export default Register;
