@@ -15,7 +15,8 @@ import InputRequiredRegister from "../src/components/atoms/input/inputRequiredRe
 import RegisterButton from "../src/components/atoms/button/registerButton";
 import InputCPass from "../src/components/atoms/input/inputCPass";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import Header from '../src/components/organisms/header';
+import Header from "../src/components/organisms/header";
+import { setuid } from "process";
 
 function register() {
   //ログイン状態保持(userが値を持てばログイン状態)
@@ -24,6 +25,11 @@ function register() {
   //Authenticationに登録するemailとpassword
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [valueUserName, setValueUserName] = useState("");
+  const [valueName, setValueName] = useState("");
+  const [cpass, setCpass] = useState("");
+  const [valueProfile, setValueProfile] = useState("");
+  const [uid, setUid] = useState("");
 
   //loadingしているかしてないか監視する
   const [loading, setLoading] = useState(false);
@@ -64,33 +70,13 @@ function register() {
     );
   };
 
-  const dataPush = () => {
-    return fetch(`api/users`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: "1234567890123456789012345678",
-        user_name: "emiri",
-        name: "emiri",
-        // email: registerEmail,
-        email:"emiri@gmail.com",
-        profile:"",
-        password: "emiri123",
-        cpassword: "emiri123",
-        follow:"",
-        follower:"",
-        favorite_posts:"",
-        posts:"",
-        keep_posts:""
-      }),
-    }).then((res) => res.json());
-  };
+  console.log(uid);
 
   //ログアウトが成功するとログインページにリダイレクトする
-  // const logout = async () => {
-  //   await signOut(auth);
-  //   navigate("/myPage/");
-  // };
+  const logout = async () => {
+    await signOut(auth);
+    navigate("/login/");
+  };
 
   const emailChange = (e: { target: HTMLButtonElement }) => {
     setRegisterEmail(e.target.value);
@@ -99,10 +85,33 @@ function register() {
     setRegisterPassword(e.target.value);
   };
 
+  const userNameChange = (e: { target: HTMLButtonElement }) => {
+    setValueUserName(e.target.value);
+  };
+
+  const nameChange = (e: { target: HTMLButtonElement }) => {
+    setValueName(e.target.value);
+  };
+
+  const CpassChange = (e: { target: HTMLButtonElement }) => {
+    setCpass(e.target.value);
+  };
+
+  const profileChange = (e: { target: HTMLButtonElement }) => {
+    setValueProfile(e.target.value);
+  };
+
+  //ログインしているかどうかを判断する
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser: any) => {
+      setUser(currentUser);
+      setUid(user.uid);
+    });
+  }, []);
+
   //Authenticationへのユーザー登録、FireStoreへのデータ新規追加
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     try {
       //Authenticationへのユーザー登録
       //登録するのと同時にログインされる
@@ -111,26 +120,39 @@ function register() {
         registerEmail,
         registerPassword
       );
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          <></>;
+        } else {
+          fetch(`api/registerUsers`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: user.uid,
+              user_name: valueUserName,
+              name: valueName,
+              email: registerEmail,
+              profile: valueProfile,
+              password: registerPassword,
+              cpassword: cpass,
+            }),
+          }).then((res) => res.json());
+        }
+      });
     } catch (error) {
       alert("正しく入力してください");
     }
   };
 
-  //ログインしているかどうかを判断する
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser: any) => {
-      setUser(currentUser);
-    });
-  }, []);
-
   return (
     <div>
-         <Header />
+      <Header />
       {user ? (
         <div>
-          <Link href="/">Home</Link>
+          <Link href="myPage">myPage</Link>
           <br />
-          {/* <button onClick={logout}>ログアウト</button> */}
+          <button onClick={logout}>ログアウト</button>
         </div>
       ) : (
         <>
@@ -150,10 +172,7 @@ function register() {
                   ＊必須項目
                 </div>
 
-              
-
-
-<div className="px-10 flex flex-col h-80 justify-between">
+                <div className="px-10 flex flex-col h-80 justify-between">
                   <InputEmail
                     emailChange={emailChange}
                     valueEmail={registerEmail}
@@ -166,12 +185,16 @@ function register() {
                     placeholder={"ユーザーID(半角英数字4文字以上) 例:taro123"}
                     pattern={"^([a-zA-Z0-9]{4,})$"}
                     message={"半角英数字4文字以上"}
+                    value={valueUserName}
+                    onChange={userNameChange}
                   />
 
                   <InputRequiredRegister
                     type={"text"}
                     name={"name"}
                     placeholder={"ネーム"}
+                    value={valueName}
+                    onChange={nameChange}
                   />
 
                   <InputRegisterPass
@@ -179,17 +202,17 @@ function register() {
                     passChange={passChange}
                   />
 
-                  <InputCPass passwordValue={registerPassword} />
+                  <InputCPass value={cpass} onChange={CpassChange} />
 
                   <InputRegister
                     type={"textarea"}
                     name={"profile"}
                     placeholder={"自己紹介"}
+                    value={valueProfile}
+                    onChange={profileChange}
                   />
 
-                  <RegisterButton
-                   dataPush={dataPush} 
-                   />
+                  <RegisterButton />
                 </div>
               </div>
             </form>

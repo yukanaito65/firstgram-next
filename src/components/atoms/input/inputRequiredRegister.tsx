@@ -9,6 +9,8 @@ function InputRequiredRegister(props: any) {
           placeholder={props.placeholder}
           pattern={props.pattern}
           data-equal-to={props.equal}
+          value={props.value}
+          onChange={props.onChange}
           required
         />
         {/* <span>
