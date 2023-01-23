@@ -3,6 +3,8 @@ import PostDetails from "../src/components/templates/PostDetails";
 import { useModal } from "react-hooks-use-modal";
 import { Modal } from "flowbite";
 import Header from "../src/components/organisms/header";
+import NewPostModal from "../src/components/molecules/NewPostModal";
+import PostDetailsModal from "../src/components/molecules/PostDetailsModal";
 
 export default function MypagePost() {
   // const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -58,22 +60,13 @@ export default function MypagePost() {
     <button type="button" onClick={toggleModal} className="w-full">
     Post1
   </button>
-  {/* <button type="button" className="w-full">
-    Post2
-  </button>
-  <button type="button" className="w-full">
-    Post3
-  </button>
-  <button type="button" className="w-full">
-    Post4
-  </button>
-  <button type="button" className="w-full">
-    Post5
-  </button> */}
+
   {isOpenModal && (
-    <div className="bg-black bg-opacity-70">
-      <PostDetails close={toggleModal} />
-      </div>
+    // <div className="bg-black bg-opacity-70">
+    <PostDetailsModal close={toggleModal}>
+      <PostDetails post_id={22} close={toggleModal} />
+      </PostDetailsModal>
+      // </div>
   )}
   </div>
   </>

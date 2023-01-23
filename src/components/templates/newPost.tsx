@@ -1,13 +1,13 @@
-import { storage } from "../firebase";
+import { storage } from "../../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { BsImages } from "react-icons/bs";
-import styles from "../src/styles/newPost.module.css";
+import styles from "../../styles/newPost.module.css";
 import { IoClose } from "react-icons/io5";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import Header from "../src/components/organisms/header";
+import Header from "../organisms/header";
 import { getAuth } from "@firebase/auth";
 import { useRouter } from "next/router";
 
@@ -46,6 +46,7 @@ export default function NewPost(props: any) {
     `/api/getCurrentUserData?user_id=${currentUserId}`,
     fetcher
   );
+  console.log
   const router = useRouter();
 
 
@@ -128,11 +129,12 @@ export default function NewPost(props: any) {
         caption: caption,
         favorites: null,
         keeps: null,
+        post_img: postImgSrc
       }),
     })
       .then((res) => console.log(res.json()))
       .catch((e) => console.log(e));
-    getPostsId();
+    
     // onFileUploadToFirebase(preview);
     router.push('/');
   };
@@ -227,7 +229,7 @@ export default function NewPost(props: any) {
       />
 
       <div className="flex h-screen">
-        <div className={`w-5/12 text-white ${styles.container}  m-auto h-3/4`}>
+        <div className={` text-white ${styles.container}  m-auto h-3/4`}>
           <div className="">
             <div className="w-full">
               <p className={`text-center font-semibold ${styles.title}`}>

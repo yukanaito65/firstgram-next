@@ -1,238 +1,167 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
-import { NextPage } from 'next'
-import { clientRequestInstance } from "../modules/request"
+import Head from "next/head";
+import Image from "next/image";
+import { Inter } from "@next/font/google";
+import styles from "../src/styles/home.module.css";
+import { NextPage } from "next";
+import { clientRequestInstance } from "../modules/request";
 import useSWR from "swr";
-import { features } from 'process'
-import Link from 'next/link'
-import Header from '../src/components/organisms/header'
-import { getAuth } from '@firebase/auth'
+import { features } from "process";
+import Link from "next/link";
+import Header from "../src/components/organisms/header";
+import { getAuth } from "@firebase/auth";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaRegComment,
+  FaTelegramPlane,
+  FaBookmark,
+  FaRegBookmark,
+} from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 interface Message {
-  messageId:string;
-  message:string;
+  messageId: string;
+  message: string;
   timestamp: Date;
   userId: string;
   withUserId: string;
 }
 
-const fetcher =(resource:string)=> fetch(resource).then((res)=>res.json());
+const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 const Page: NextPage = () => {
-  // const { data:messages, error } = useSWR("/api/data", fetcher);
-  // "INSERTINTO Message(messageId, message,timestamp,userId,withUserId) VALUES(abcdefg456,おはよう,2022-12-22T03:20:30.000Z,ijklmn22,abcdeffff)"
- // /const { data: comments } = useSWR("/api/getCommentsData?postId=mhbukjdi84ndhsu8eijt", fetcher);
- const { data: comments } = useSWR(() => '/api/getCommentsData?postId=mhbukjdi84ndhsu8eijt', fetcher)
- console.log(comments)
+  const [favorites, setFavorites] = useState<any>([
+    "aaa",
+    "bbb",
+    "ccc",
+    "ddd",
+    "LjUrxuIgfwbbmOgoLQXLGQ7GkZs2",
+  ]); //これは消す予定
+  const [keeps, setKeeps] = useState<any>([
+    "aaa",
+    "bbb",
+    "ccc",
+    "ddd",
+    "LjUrxuIgfwbbmOgoLQXLGQ7GkZs2",
+  ]); //これは消す予定
+  const [commentData, setCommentData] = useState<any>("comments");
+  const [tableConnectData, setTableConnectData] = useState<any>(null);
 
-  // return messages.map(
-  //    (d: Message, index:number) => <div>{index}番目のデータ: {JSON.stringify(d)}</div>
-  // )
-  const auth = getAuth()
+  // ログインユーザー情報取得
+  const auth = getAuth();
   const currentUserId = auth.currentUser?.uid;
-  console.log(currentUserId)
+  console.log(currentUserId);
+
+  // currentユーザーのfollw配列取得
+  const { data: user } = useSWR(
+    `/api/getUserData?user_id=${currentUserId}`,
+    fetcher
+  );
+  // if(user){
+  // console.log(user[0].follow)}
+  // console.log(user);
+  // const userIds: string[] = user[0].follow
+
+  // follow配列の中のuser_idのpost情報を取得
+  const { data: posts } = useSWR(`/api/getUserData?user_id=userIds`, fetcher);
+  console.log(posts);
+
+  useEffect(() => {
+    // 結合テーブル情報取得
+    fetch("/api/getAllUserId", {
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        post_id: 22,
+      }),
+    })
+      .then((data) => {
+        setTableConnectData(data)
+        console.log(tableConnectData)
+      })
+      .catch((e) => console.log(e));
+  },[])
+
+  console.log(tableConnectData)
+
   return (
-    <>
-    <Head>
-      <title>secondgram</title>
-    </Head>
-    <Header />
-    <p>トップ</p>
+    <div id="root">
+      <Head>
+        <title>secondgram</title>
+      </Head>
+      <Header />
+      
 
-    {/* <>
-      <div className="postlook">
-        {postData.length === 0 ? (
-          <>
+      <div className="flex mt-5">
+      {tableConnectData && tableConnectData.map((data: any, index: number) => {
+        <div className="mr-auto ml-auto w-3/5" key={index}>
+        <div className="flex">
+          <Image width={30} src="" alt="${name_name}のアイコン" className={`mr-1 w-1/12 bg-white ${styles.userIcon}`} />
+          <p className="font-semibold mr-1">ユーザーネーム</p>
+          <p className={styles.timestamp}>・timestamp</p>
+        </div>
+        <Image objectFit="contain" width={300} src="" alt="投稿画像" className="w-full" />
+        <div className="flex pt-3 ">
+          {favorites.includes(currentUserId) ? (
+            <button className="my-2 mr-2">
+              <FaHeart size={25} color={"red"} />
+            </button>
+          ) : (
+            <button className="my-2 mr-2">
+              <FaRegHeart size={25} />
+            </button>
+          )}
 
-            <div className="lead_article"
-            >
-                <p className="lead_center"
-                >投稿がありません</p>
-              <div className="lead_center"
-              >
-                <Link href="/SearchPage">
-                  <button className="btn">検索してみよう！</button>
-                </Link>
-              </div>
-</div>
-          </>
-        ) : (
-          <>
-            <div>
-              {postData.map((data: Post, index: string) => {
-                const favos = [...data.favorites];
-                const com = [...data.comments];
-                return (
-                  <>
-                    <div key={index}>
-                      <div
-                        className="postlook__iconusername"
-                      >
-                        <div className="postlook__postIcon">
-                          <Link
-                            href={data.userId === userId ? "/mypage" : "/profile"}
-                            state={{ userId: data.userId }}
-                          >
-                            <PostIcon icon={data.icon} />
-                          </Link>
-                        </div>
+          <button className="m-2">
+            <FaRegComment size={25} />
+          </button>
+          {"otherUserId" === currentUserId ? (
+            <></>
+          ) : (
+            <Link href="/dmPage?user_id=otherUserId">
+              <button className="m-2">
+                <FaTelegramPlane size={25} />
+              </button>
+            </Link>
+          )}
 
-                        <p
-                          className="postlook__username"
-                        >
-                          <Link
-                            href={data.userId === userId ? "/mypage" : "/profile"}
-                            state={{ userId: data.userId }}
-                          >
-                            {data.userName}
-                          </Link>
-                        </p>
-                      </div>
-
-                      <Link
-                        href="/PostDetails"
-                        state={{ postid: data.postId, userid: data.userId }}
-                      >
-                        <img src={data.imageUrl} />
-                      </Link>
-
-                      <div className="postlook__favocomkeep"
-                      >
-                        <div
-                          className="postlook__favo"
-                        >
-                          {data.favorites.includes(loginUserName) ? (
-                            <AiFillHeart
-                            className="postlook__favBtn"
-                              size={30}
-                              color={"red"}
-                              onClick={(e: React.MouseEvent) => {
-                                updateDoc(
-                                  doc(collection(db, "post"), data.postId),
-                                  {
-                                    favorites: arrayRemove(loginUserName),
-                                  }
-                                );
-                                setFavbtn(favbtn + 1);
-                              }}
-                            />
-                          ) : (
-                            <AiOutlineHeart
-                            className="postlook__favBtn"
-                              size={30}
-                              color={"black"}
-                              onClick={(e: React.MouseEvent) => {
-                                updateDoc(
-                                  doc(collection(db, "post"), data.postId),
-                                  {
-                                    favorites: arrayUnion(loginUserName),
-                                  }
-                                );
-                                setFavbtn(favbtn + 1);
-                              }}
-                            />
-                          )}
-                        </div>
-
-                        <div
-                          className="postlook__com"
-                        >
-                          <AiOutlineMessage
-                          className="postlook__commentBtn"
-                            size={30}
-                            color={"black"}
-                            onClick={CommentDisplay}
-                          />
-                        </div>
-
-                        <div
-                          className="postlook__keep"
-                        >
-                          <KeepButton
-                            loginUserKeep={loginUserKeep}
-                            data={data.postId}
-                          />
-                        </div>
-                      </div>
-
-                      <div
-                        className="postlook__favolengthtime"
-                      >
-                        <FavoLength favos={favos} />
-                        <Time data={data.postDate} />
-                      </div>
-
-                      <Caption data={data.caption} />
-
-                      <div>
-                        {commentDisplay ? (
-                          <>
-                            <CommentsDisplay displayComment={com} />
-
-                            <div
-                              className="postlook__comdisplay"
-                            >
-                              <div
-                                className="postlook__cominput"
-                              >
-                                <input
-                                  className="postlook__input"
-                                  type="text"
-                                  value={inputComment}
-                                  onChange={(e) => {
-                                    setInputComment(e.target.value);
-                                  }}
-                                />
-                              </div>
-
-                              <div
-                                className="postlook__btn"
-                              >
-                                <button
-                                  className="btn"
-                                  onClick={async (e: React.MouseEvent) => {
-                                    // 押された投稿のcommentにinputCommentを配列で追加
-                                    updateDoc(
-                                      doc(collection(db, "post"), data.postId),
-                                      {
-                                        comments: arrayUnion({
-                                          userName: loginUserName,
-                                          commentText: inputComment,
-                                        }),
-                                      }
-                                    );
-                                    setFavbtn(favbtn + 1);
-                                    setInputComment("");
-                                  }}
-                                >
-                                  投稿する
-                                </button>
-                              </div>
-                              <AiOutlineClose
-                                className="postlook__closebtn"
-                                size={15}
-                                color={"rgb(38, 38, 38)"}
-                                onClick={CommentBack}
-                              />
-                            </div>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
-            </div>
-          </>
-        )}
+          <p className="mt-auto mb-auto mx-1">いいね：{favorites.length}人</p>
+          {keeps.includes(currentUserId) ? (
+            <button className="ml-auto m-2">
+              <FaBookmark size={25} />
+            </button>
+          ) : (
+            <button className="ml-auto m-2">
+              <FaRegBookmark size={25} />
+            </button>
+          )}
+        </div>
+        <div>
+          {/* {comments &&
+              comments.map((comment: Comment, index: number) => {
+                return ( */}
+          <div key={"index"} className="flex py-1 mb-2.5">
+            <p className="mr-1 font-semibold">comment.user_name</p>
+            <p>comment.comment</p>
+          </div>
+          {/* );
+              })} */}
+        </div>
+        <hr />
       </div>
-    </> */}
-    </>
-  )
-}
+      })}
+        
+      
+        <div className="flex ml-5">
+          <Image width={30} src="" alt="自分のアイコン"  className={`mr-1 w-1/12 bg-white ${styles.userIcon}`} />
+          <div>
+            <p className="font-semibold mr-1">ユーザーネーム</p>
+            <p className="timestamp">ネーム</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default Page
+export default Page;

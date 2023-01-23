@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import styles from "./Modal.module.scss";
+import styles from "../../styles/NewPostModal.module.css";
 
 type Props = {
   close: (e: any) => void;
   children: React.ReactNode;
 };
 
-const Modal: React.FC<Props> = props => {
+const PostDetailsModal: React.FC<Props> = props => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   const onMouseDown = (e:any) => {
@@ -37,4 +37,4 @@ const Modal: React.FC<Props> = props => {
   );
 };
 
-export default Modal;
+export default PostDetailsModal;
