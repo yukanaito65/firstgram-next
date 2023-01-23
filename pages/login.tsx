@@ -11,6 +11,7 @@ import { auth } from "../firebase";
 import InputEmail from "../src/components/atoms/input/inputEmail";
 import InputPass from "../src/components/atoms/input/inputPass";
 import LoginButton from "../src/components/atoms/button/loginButton";
+import Header from "../src/components/organisms/header";
 
 function login() {
   const [user, setUser] = useState();
@@ -50,15 +51,21 @@ function login() {
     });
   });
 
+  
+
   return (
     <div>
       {user ? (
         <div>
+           <Header />
           <Link href="/myPage">myPage</Link>
           <br />
           <button onClick={logout}>ログアウト</button>
         </div>
+          
       ) : (
+        <>
+           <Header />
         <div className="mx-auto my-10 w-96 ">
           <form onSubmit={handleSubmit}>
             <div className="border border-gray-300">
@@ -79,8 +86,10 @@ function login() {
             </div>
           </div>
         </div>
+        </>
       )}
     </div>
+ 
   );
 }
 

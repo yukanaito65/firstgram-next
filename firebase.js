@@ -6,7 +6,8 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage"
 // Your web app's Firebase configuration
-  const firebaseConfig = {
+
+const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_NOT_SECRET_CODE,
   authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
