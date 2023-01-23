@@ -61,7 +61,7 @@ const Panel: React.FC<Props> = (props) => {
     //  props.setIconImgUrl(iconSrc)
 
     //dbを更新する
-    fetch(`/api/iconUpdate`, {
+    fetch(`/api/iconChange`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -95,7 +95,7 @@ const Panel: React.FC<Props> = (props) => {
         props.setIconImgUrl("")
 
         //dbからも削除する(空文字に更新する)
-        fetch(`/api/removeIcon`, {
+        fetch(`/api/iconChange`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

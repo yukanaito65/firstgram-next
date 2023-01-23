@@ -3,8 +3,8 @@ import { sqlExecuter } from "../../modules/database"
 export default async (req: any, res: any) => {
   const data = req.body;
 
-	const iconUpdate = await sqlExecuter.any(
+	const iconChange = await sqlExecuter.any(
               `UPDATE users SET icon_img = $2 WHERE user_id = $1`,[data.user_id, data.icon_img]
         );
-	res.status(200).json(iconUpdate);
+	res.status(200).json(iconChange);
 };
