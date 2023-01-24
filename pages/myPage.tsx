@@ -1,7 +1,7 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -44,11 +44,13 @@ function MyPage() {
 
   const [userId,setUserId] = useState("");
 
+  // const { mutate } = useSWRConfig();
 
   // ログインしているかどうか判定
   //ログインしていればuserにユーザー情報が代入される
   //currentUserプロパティを使用して、現在サインインしているユーザーを取得する(サインインしていなければnull)
   useEffect(() => {
+    
     onAuthStateChanged(auth, async (currentUser: any) => {
       if (!currentUser) {
         <></>;
@@ -59,6 +61,7 @@ function MyPage() {
         setUserId(user.uid)
       }
     });
+
   }, []);
 
   //ログインページにリダイレクトする
@@ -91,7 +94,7 @@ function MyPage() {
   
 
   // useEffect (() =>{
-
+  //   mutate(`/api/test?user_id=${userId}`)
   const data = () => {
     setUserName(users[0].user_name)
     setName(users[0].name)
