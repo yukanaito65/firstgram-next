@@ -1,7 +1,6 @@
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { mutate, useSWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 import { storage } from "../../../firebase";
 import styles from "./panel.module.css";
 
@@ -31,19 +30,19 @@ const Panel: React.FC<Props> = (props) => {
   //storageから取得したURLを格納
   const [iconSrc, setIconSrc] = useState("");
 
-  //データ更新のため
+  //ボタンクリック後データ更新のため
   const { mutate } = useSWRConfig();
 
   //URLを取得
-  const gsReference = ref(
-    storage,
-    `user_icons/${props.uid}/user_icon.png`
-  );
-  getDownloadURL(gsReference).then((url)=>{
-    setIconSrc(url)
-  });
+  // const gsReference = ref(
+  //   storage,
+  //   `user_icons/${props.uid}/user_icon.png`
+  // );
+  // getDownloadURL(gsReference).then((url)=>{
+  //   setIconSrc(url)
+  // });
 
-  const router = useRouter()
+  console.log(iconSrc)
 
   //写真をアップデートボタン
   const updateClick = (e: any) => {
@@ -52,31 +51,68 @@ const Panel: React.FC<Props> = (props) => {
     if (props.close) {
       props.close(e);
     }
+
+    const gsReference = ref(
+      storage,
+      `user_icons/${props.uid}/user_icon.png`
+    );
+    // getDownloadURL(gsReference).then((url)=>{
+    //   setIconSrc(url)
+    //   console.log(url)
+    // });
+    // const url = getDownloadURL(gsReference).then((url)=>console.log(url))
+    // console.log(gsReference);
+    // console.log(url);
+
+
+
     //写真をstorageにアップロードする
-    const file = e.target.files[0];
-    uploadBytesResumable(gsReference, file);
+    // const file = e.target.files[0];
+    // uploadBytesResumable(gsReference, file)
 
-     //profileから飛んできたstateを更新する
-     props.setIconImgUrl(iconSrc)
-    //  props.setIconImgUrl(iconSrc)
+    //  //profileから飛んできたstateを更新する
+    // //  props.setIconImgUrl(iconSrc)
 
-    //dbを更新する
-    fetch(`/api/iconChange`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: props.uid,
-        icon_img: iconSrc,
-      }),
-    }).then((res) => {
-      res.json();
-      mutate(`/api/userData?user_id=${props.uid}`)
-    });
-    // mutate(
-    //   `/api/userData`
-    // );
-    // router.reload()
+    // //dbを更新する
+    //   fetch(`/api/iconChange`, {
+    //     method: "PUT",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       user_id: props.uid,
+    //       icon_img: "iconSrc",
+    //     }),
+    //   })
+    //   .then((res) => res.json())
+
+      // mutate(`/api/userData?user_id=${props.uid}`)
+
+      const file = e.target.files[0];
+    uploadBytesResumable(gsReference, file)
+    .then(()=>{
+      console.log("更新しました")
+      getDownloadURL(gsReference).then((url)=>{
+        //   setIconSrc(url)
+          console.log(url)
+
+      fetch(`/api/iconChange`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: props.uid,
+              icon_img: url,
+            }),
+          })
+          .then((res) => {
+            res.json()
+            mutate(`/api/userData?user_id=${props.uid}`)
+          })
+        });
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
   };
+
 
   //削除ボタン
   const deleteClick = (e: any) => {
@@ -86,13 +122,21 @@ const Panel: React.FC<Props> = (props) => {
       props.close(e);
     }
 
+    const gsReference = ref(
+      storage,
+      `user_icons/${props.uid}/user_icon.png`
+    );
+    getDownloadURL(gsReference).then((url)=>{
+      setIconSrc(url)
+    });
+
     //写真をstorageから削除する
     deleteObject(gsReference)
       .then(() => {
         console.log("削除しました");
 
         //profileから飛んできたstateを更新する
-        props.setIconImgUrl("")
+        // props.setIconImgUrl("")
 
         //dbからも削除する(空文字に更新する)
         fetch(`/api/iconChange`, {
