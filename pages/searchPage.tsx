@@ -10,7 +10,7 @@ const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 function SearchPage() {
 
   const [userData, setUserData] = useState([]);
-  const [searchQuery,setSearchQuery] = useState<{user_id: string; name: string; user_name: string; icon: string}[]>([]);
+  const [searchQuery,setSearchQuery] = useState<{user_id: string; name: string; user_name: string; icon_img: string}[]>([]);
   const ref = useRef();
 
 
@@ -80,7 +80,26 @@ function SearchPage() {
           {searchQuery.map((user)=>(
             // <Link href="/mypage">
             <div key={user.user_id} className="flex gap-5 items-center my-5">
-              <Image src="/noIcon.png" alt="icon" width={80} height={80} className="bg-gray-200 rounded-full"/>
+              <div>
+                {user.icon_img !== "" ? (
+                  <img
+                  src={user.icon_img}
+                  alt="icon"
+                  width={80}
+                  height={80}
+                  className="bg-gray-200 rounded-full"
+                  />
+                ) : (
+                  <Image
+                  src="/noIcon.png"
+                  alt="icon"
+                  width={40}
+                  height={40}
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+                  />
+                )
+               }
+              </div>
               <div>
               <p className="font-bold m-0">{user.user_name}</p>
               <p className='text-gray-500 m-0'>{user.name}</p>
