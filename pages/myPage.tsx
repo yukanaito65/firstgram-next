@@ -1,7 +1,7 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,10 +22,8 @@ interface Users {
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
-function myPage() {
-  // データ取得
-  // const { data: users, error } = useSWR("/api/users", fetcher);
-  const { data: users, error } = useSWR("/api/test", fetcher);
+function MyPage() {
+
 
   //ログインしているとログイン情報を持つ
   const [user, setUser] = useState<any>("");
@@ -44,11 +42,15 @@ function myPage() {
   const [name,setName] = useState("");
   const [profile,setProfile] = useState("");
 
+  const [userId,setUserId] = useState("");
+
+  // const { mutate } = useSWRConfig();
 
   // ログインしているかどうか判定
   //ログインしていればuserにユーザー情報が代入される
   //currentUserプロパティを使用して、現在サインインしているユーザーを取得する(サインインしていなければnull)
   useEffect(() => {
+    
     onAuthStateChanged(auth, async (currentUser: any) => {
       if (!currentUser) {
         <></>;
@@ -56,8 +58,10 @@ function myPage() {
         setUser(currentUser);
         //ログイン判定が終わったタイミングでloadingはfalseに変わる
         setLoading(false);
+        setUserId(user.uid)
       }
     });
+
   }, []);
 
   //ログインページにリダイレクトする
@@ -65,6 +69,10 @@ function myPage() {
   //   await signOut(auth);
   //   navigate("/myPage/");
   // };
+
+    // データ取得
+  // const { data: users, error } = useSWR("/api/users", fetcher);
+  const { data: users, error } = useSWR(`/api/test?user_id=${userId}`, fetcher);
 
   if (error) {
     return <p>error!</p>;
@@ -83,14 +91,33 @@ function myPage() {
     <p>loading</p>;
   }
 
+  
+
+  // useEffect (() =>{
+  //   mutate(`/api/test?user_id=${userId}`)
   const data = () => {
     setUserName(users[0].user_name)
     setName(users[0].name)
     setProfile(users[0].profile)
-    setFollowList(users[0].user_id);
-    setFollowerList(users[0].user_id);
-    setPosts(users[0].user_id);
-  };
+    {users[0].follow ? (
+      setFollowList(users[0].follow)
+    ):(
+      setFollowList([])
+    )}
+
+    {users[0].follower ? (
+      setFollowerList(users[0].follower)
+    ):(
+      setFollowerList([])
+    )}
+  
+    {users[0].follower ? (
+      setPosts(users[0].posts)
+    ):(
+      setPosts([])
+    )}
+  }
+  // },[]);
 
   return (
     <>
@@ -158,4 +185,4 @@ function myPage() {
   );
 }
 
-export default myPage;
+export default MyPage;
