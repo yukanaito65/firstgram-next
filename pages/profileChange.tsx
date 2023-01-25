@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
-import { auth, storage } from "../firebase";
+import { auth } from "../firebase";
 import SettingMenu from "../src/components/organisms/SettingMenu";
 import {
   onAuthStateChanged,
@@ -10,9 +10,8 @@ import Header from "../src/components/organisms/header";
 import UpdateInput from "../src/components/atoms/input/UpdateInput";
 import IconModal from "../src/components/organisms/IconModal";
 import Panel from "../src/components/molecules/Panel";
-import { getDownloadURL, ref, StorageReference } from "firebase/storage";
 import Image from "next/image";
-
+import styles from "./profileChange.module.css";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -28,6 +27,11 @@ const ProfileChange = () => {
   //モーダルウィンドウ
   const [isOpenModal, setIsOpenModal] = useState(false);
 
+  //子コンポーネントのinputのvalueを受けとる
+  const [nameValue, setNameValue] = useState("");
+  const [userNameValue, setUserNameValue] = useState("");
+  const [profileValue, setProfileValue] = useState("");
+
   // ログインしているかどうか判定
   //ログインしていればuserにユーザー情報が代入される
   //currentUserプロパティを使用して、現在サインインしているユーザーを取得する(サインインしていなければnull)
@@ -41,45 +45,51 @@ const ProfileChange = () => {
         setLoading(false);
       }
     });
-  },[]);
+  }, []);
 
   console.log(user.uid);
 
   //ログインユーザーの情報取得
-  const { data: users, error } = useSWR(() => `/api/userData?user_id=${user.uid}`,fetcher);
+  const { data: users, error } = useSWR(
+    () => `/api/userData?user_id=${user.uid}`,
+    fetcher
+  );
 
   console.log("data", users);
 
-//icon表示するためにURL取得
-// const imageUpload =  async() => {
-//   const fileRef = ref(
-//     storage,
-//     `user_icons/${user.uid}/user_icon.png`
-//   );
-//  const url = await getDownloadURL(fileRef);
-//     setIconImgUrl(url)
-//   };
+  //icon表示するためにURL取得
+  // const imageUpload =  async() => {
+  //   const fileRef = ref(
+  //     storage,
+  //     `user_icons/${user.uid}/user_icon.png`
+  //   );
+  //  const url = await getDownloadURL(fileRef);
+  //     setIconImgUrl(url)
+  //   };
   // imageUpload();
 
-
-if (error) {
-  return <p>error!</p>;
-}
-if (!users) {
-  return <p>loading...</p>;
-}
+  if (error) {
+    return <p>error!</p>;
+  }
+  if (!users) {
+    return <p>loading...</p>;
+  }
 
   //icon変更モーダルウィンドウ
-  const toggleModal = (e:any) => {
+  const toggleModal = (e: any) => {
     if (e.target === e.currentTarget) {
       setIsOpenModal(!isOpenModal);
     }
   };
 
   //ボタンがクリックされたときの処理(データ更新)
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    //valueの値を取得
     const { name, userName, profile } = e.target.elements;
+
+    //db更新
     fetch(`/api/userUpdate`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -97,69 +107,83 @@ if (!users) {
       {!loading && (
         <div className="flex" id="root">
           <Header />
-          <div className="flex gap-12 border border-solid border-neutral-300 ml-96 mr-32 my-6 w-3/4">
+          <div className="flex gap-12 border border-solid border-neutral-300 ml-64  my-28 w-3/4 bg-white h-1/2">
             <SettingMenu />
             <form
-            className="flex flex-col gap-2.5 w-full"
-            onSubmit={handleSubmit}
+              className="flex flex-col gap-2.5 w-full mt-16"
+              onSubmit={handleSubmit}
             >
-              <div className="flex items-center gap-8">
-                {/* <p>{users[0].icon_img}</p> */}
-                {/* {iconImgUrl !== "" ? ( */}
-                {users[0].icon_img !== "" ? (
-              <img
-              // src={iconImgUrl}
-              src={users[0].icon_img}
-              alt="icon"
-              width={40}
-              height={40}
-              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
-            />
-                ) : (
-                  <Image
-                  src="/noIcon.png"
-                  alt="icon"
-                  width={40}
-                  height={40}
-                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
-                  />
-                )
-              }
-                <button type="button" onClick={toggleModal}>プロフィール写真を変更</button>
+              <div className="flex items-center gap-12 h-20 mb-6">
+                <div className="w-48">
+                  {users[0].icon_img !== "" ? (
+                    <img
+                      src={users[0].icon_img}
+                      alt="icon"
+                      // width={30}
+                      // height={30}
+                      className="bg-white rounded-full border border-solid border-gray-200 w-16 h-16 object-cover mr-0 ml-auto my-0"
+                    />
+                  ) : (
+                    <Image
+                      src="/noIcon.png"
+                      alt="icon"
+                      width={40}
+                      height={40}
+                      className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover mr-0 ml-auto my-0"
+                    />
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={toggleModal}
+                  className={styles.iconChangeBtn}
+                >
+                  プロフィール写真を変更
+                </button>
                 {isOpenModal && (
                   <IconModal close={toggleModal}>
-                    <Panel uid={user.uid} setIconImgUrl={setIconImgUrl}/>
+                    <Panel uid={user.uid} setIconImgUrl={setIconImgUrl} />
                   </IconModal>
                 )}
               </div>
 
               <div>
                 <UpdateInput
-                data={users[0].name}
-                title={"名前"}
-                name={"name"}
-                pattern={"{,30}"}
-                errorMessage={"1文字以上30文字以内"}
+                  data={users[0].name}
+                  title={"名前"}
+                  name={"name"}
+                  pattern={"[!-~]{1,30}"}
+                  message={
+                    "周りから知られている名前(氏名、ニックネーム)を使用すると、他の人があなたのアカウントを見つけやすくなります。(1文字以上30文字以内)"
+                  }
+                  setValue={setNameValue}
                 />
                 <UpdateInput
-                data={users[0].user_name}
-                title={"ユーザーネーム"}
-                name={"userName"}
-                pattern={"^([a-zA-Z0-9]{4,15})$"}
-                errorMessage={"半角英数字4文字以上15文字以内"}
+                  data={users[0].user_name}
+                  title={"ユーザーネーム"}
+                  name={"userName"}
+                  pattern={"^([a-zA-Z0-9]{4,15})$"}
+                  message={"半角英数字4文字以上15文字以内で入力して下さい"}
+                  setValue={setUserNameValue}
                 />
                 <UpdateInput
-                data={users[0].profile}
-                title={"プロフィール"}
-                name={"profile"}
-                pattern={"{,200}"}
-                errorMessage={"200文字以内"}
+                  data={users[0].profile}
+                  title={"プロフィール"}
+                  name={"profile"}
+                  pattern={"{,200}"}
+                  message={"200文字以内で自由に記述できます"}
+                  setValue={setProfileValue}
                 />
               </div>
 
-              <button className="w-32">
-                変更
-              </button>
+              {users[0].name === nameValue &&
+              users[0].user_name === userNameValue &&
+              users[0].profile === profileValue ? (
+                <button className={styles.beforeUpdateBtn}>変更</button>
+              ) : (
+                <button className={styles.afterUpdateBtn}>変更</button>
+              )}
+
             </form>
           </div>
         </div>
