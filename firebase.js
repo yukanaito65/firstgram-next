@@ -6,6 +6,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage"
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_NOT_SECRET_CODE,
   authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
@@ -19,8 +20,6 @@ console.log(process.env)
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// 今回はfirestoreを使う、これでdbにfirebaseに保存されたデータが格納される
 
 // const db = getFirestore(app);
 const storage = getStorage(app);

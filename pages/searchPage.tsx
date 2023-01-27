@@ -1,18 +1,32 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react'
+import { onAuthStateChanged } from "firebase/auth";
+import Image from "next/image";
+import Link from "next/link";
+import React, {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useSWR from "swr";
-import Header from '../src/components/organisms/header';
-
+import { auth } from "../firebase";
+import Header from "../src/components/organisms/header";
+import { User } from "../types/types";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 function SearchPage() {
-
+  //uid
+  const [currentUser, setCurrentUser] = useState<string>("");
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
-  const [searchQuery,setSearchQuery] = useState<{user_id: string; name: string; user_name: string; icon_img: string}[]>([]);
-  const ref = useRef();
+  const [searchQuery, setSearchQuery] = useState<
+    { user_id: string; name: string; user_name: string; icon_img: string }[]
+  >([]);
+  // const [searchQuery, setSearchQuery] = useState<any[]>([]);
 
+  const ref: any = useRef();
 
   const { data: users, error } = useSWR(`/api/users`, fetcher);
   // console.log(users)
@@ -23,8 +37,6 @@ function SearchPage() {
   //   console.log(userData)
   //   console.log(users)
   // },[])
-
-
 
   // const userDataArray: {
   //   userid: string;
@@ -42,18 +54,37 @@ function SearchPage() {
   //     username: element.username,
   //   });
   // });
+  useEffect(() => {
+    //ログイン判定
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        <></>;
+      } else {
+        // ログインユーザーのid取得
+        setCurrentUser(user.uid);
+        setLoading(false);
+
+      }
+    });
+  }, []);
 
 
+  const handleSearch = () => {
+    // 検索フォームに入力される内容
+    console.log(ref.current.value);
 
-  const handleSearch = ()=>{
-    console.log(ref.current.value)
-
+    //usersテーブルの中のnameもしくはuser_nameが入力された内容と等しいデータを探してsearchQueryに格納
     setSearchQuery(
-      users.filter((user)=>user.name.toLowerCase().includes(ref.current.value.toLowerCase())||user.user_name.toLowerCase().includes(ref.current.value.toLowerCase()))
-    )
-    // console.log(searchQuery)
-  }
+      users.filter(
+        (user: User) =>
+          user.name.toLowerCase().includes(ref.current.value.toLowerCase()) ||
+          user.user_name.toLowerCase().includes(ref.current.value.toLowerCase())
+      )
+    );
 
+    console.log(searchQuery);
+  };
+  console.log(searchQuery);
 
   if (error) {
     return <p>error!</p>;
@@ -63,55 +94,73 @@ function SearchPage() {
   }
 
   return (
-    <div className='flex'>
-    <Header />
-    <div className='ml-96 mr-3 my-6 w-3/4'>
-      <div>
-        <div className="font-bold text-2xl">検索</div>
+    <>
+    {!loading && (
+    <div className="flex">
+      <Header />
+      <div
+        className="ml-96 my-8 w-3/5 bg-white border border-solid border-neutral-300 items-center"
+        style={{ height: "650px" }}
+      >
+        <div className="font-bold text-4xl mt-10 ml-10">検索</div>
         <input
-        type="text"
-        ref={ref}
-        onChange={()=>handleSearch()}
-        placeholder="検索"
-        className="h-8 border-none bg-gray-100 rounded w-7/12 mt-12 mb-4"
+          type="text"
+          ref={ref}
+          onChange={() => handleSearch()}
+          placeholder="検索"
+          className="h-16 border-none bg-gray-100 rounded-lg w-7/12 mt-12 mb-4 ml-10 text-xl"
         />
-          <hr className="border-gray-300 border border-solid" />
-        <div>
-          {searchQuery.map((user)=>(
-            // <Link href="/mypage">
-            <div key={user.user_id} className="flex gap-5 items-center my-5">
-              <div>
-                {user.icon_img !== "" ? (
-                  <img
-                  src={user.icon_img}
-                  alt="icon"
-                  width={80}
-                  height={80}
-                  className="bg-gray-200 rounded-full"
-                  />
-                ) : (
-                  <Image
-                  src="/noIcon.png"
-                  alt="icon"
-                  width={40}
-                  height={40}
-                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
-                  />
-                )
-               }
-              </div>
-              <div>
-              <p className="font-bold m-0">{user.user_name}</p>
-              <p className='text-gray-500 m-0'>{user.name}</p>
-              </div>
+        <hr className="border-gray-300 border border-solid" />
+        <div className="overflow-y-scroll overflow-x-hidden">
+          {searchQuery.length > 0 ? (
+            <>
+              {searchQuery.map((user: any) => (
+                <>
+                <Link href={{ pathname:user.user_id === currentUser ? "/myPage" :"/profile",
+                query: {userId : user.user_id}}}>
+                <div
+                  key={user.user_id}
+                  className="flex gap-5 items-center my-5 ml-10"
+                >
+                  <div className="w-28 h-28">
+                    {user.icon_img !== "" ? (
+                      <img
+                        src={user.icon_img}
+                        alt="icon"
+                        // width={80}
+                        // height={80}
+                        className="bg-white rounded-full border border-solid border-gray-200 object-cover w-full h-full"
+                      />
+                    ) : (
+                      <Image
+                        src="/noIcon.png"
+                        alt="icon"
+                        width={30}
+                        height={30}
+                        className="bg-gray-200 rounded-full border border-solid border-gray-200  object-cover w-full h-full"
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-bold m-0">{user.user_name}</p>
+                    <p className="text-gray-500 m-0">{user.name}</p>
+                  </div>
+                </div>
+                </Link>
+                </>
+              ))}
+            </>
+          ) : (
+            <div className="text-center mt-20">
+              <p>該当するユーザーがいません</p>
             </div>
-            // </Link>
-          ))}
+          )}
         </div>
       </div>
     </div>
-    </div>
-  )
+    )}
+    </>
+  );
 }
 
-export default SearchPage
+export default SearchPage;

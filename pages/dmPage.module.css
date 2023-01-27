@@ -1,4 +1,12 @@
 .dmContent {
-  height:535px;
-  overflow: scroll;
+  height:500px;
+  /* height:535px; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0 5px;
+}
+.message {
+  width: fit-content;
+  max-width: 40%;
+  /* min-width: 30%; */
 }

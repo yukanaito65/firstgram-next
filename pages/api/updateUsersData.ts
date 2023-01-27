@@ -1,4 +1,5 @@
 import { sqlExecuter } from "../../modules/database"
+
 export default async (req: any, res: any) => {
     const data = req.body;
 

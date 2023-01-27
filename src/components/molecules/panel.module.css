@@ -10,6 +10,13 @@
   font-size: 1.4rem;
   line-height: 5rem;
 }
+.uploadLabel:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+.input {
+  display: none;
+}
 .deleteButton {
   border-bottom: 1px solid lightgray;
   color: #ED4956;

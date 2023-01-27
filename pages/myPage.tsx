@@ -26,7 +26,9 @@ interface Users {
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 function MyPage() {
-
+  // データ取得
+  // const { data: users, error } = useSWR("/api/users", fetcher);
+  // const { data: users, error } = useSWR("/api/test", fetcher);
 
   //ログインしているとログイン情報を持つ
   const [user, setUser] = useState<any>("");
@@ -60,7 +62,6 @@ function MyPage() {
 
 
 
-
   //ログインページにリダイレクトする
   // const login = async () => {
   //   await signOut(auth);
@@ -68,10 +69,18 @@ function MyPage() {
   // };
 
     // データ取得
+
   const { data: users, error, isLoading } = useSWR(`/api/userData?user_id=${user.uid}`, fetcher);
+  // const { data: users, error } = useSWR("/api/users", fetcher);
+  // const { data: users, error } = useSWR(`/api/test?user_id=${userId}`, fetcher);
+  // const { data: users, error } = useSWR(
+  //   () => `/api/userData?user_id=${user.uid}`,
+  //   fetcher
+  // );
   if (error) {
-    return <p>error!</p>;
+    return <p>error!</p>
   }
+
   if (!users) {
     return <p>error!</p>;
   }
@@ -131,6 +140,10 @@ function MyPage() {
                 )} 
                 </div>
 
+{/* 追加 */}
+<div>
+  <p>{users[0].name}</p>
+</div>
                 <div className="pl-16 py-3 flex flex-col max-h-145 justify-between">
                   <div className="flex">
                     <div className="h-8 pt-1 text-xl">{users[0].user_name}

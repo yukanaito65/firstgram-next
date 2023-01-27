@@ -121,17 +121,17 @@ const PasswordChange = () => {
   console.log("data", userData);
 
   //icon表示するためにURL取得
-  const imageUpload = async () => {
-    const fileRef = ref(
-      storage,
-      `user_icons/${user.uid}/user_icon.png`
-    );
-    const url = await getDownloadURL(fileRef);
-    setIconImgUrl(url);
-  };
-  imageUpload();
+  // const imageUpload = async () => {
+  //   const fileRef = ref(
+  //     storage,
+  //     `user_icons/${user.uid}/user_icon.png`
+  //   );
+  //   const url = await getDownloadURL(fileRef);
+  //   setIconImgUrl(url);
+  // };
+  // imageUpload();
 
-  //   Authenticationを更新(クリックした時の関数)
+  //クリックした時の関数(submit関数)
   const dataUpdate = (e:any) => {
     e.preventDefault();
 
@@ -148,32 +148,49 @@ const PasswordChange = () => {
         cpassword: cNewPassValue,
       }),
     }).then((res) => res.json());
+    //送信後inputを空に戻す
     setNowPassValue("");
     setNewPassValue("");
     setCNewPassValue("");
+
+    //完了メッセージを表示
+    const div = document.getElementById('complete');
+     div?.classList.add(`${styles.active}`);
   };
 
   return (
     <>
     {!loading && (
-    <div className="flex">
+    <div className="md:flex">
       <Header />
-      <div className="flex gap-12 border border-solid border-neutral-300 ml-96 mr-3 my-6 w-3/4">
+      <div className="flex gap-12 border border-solid border-neutral-300 ml-64 my-28 w-3/4 bg-white">
         <SettingMenu />
-        <div className="flex flex-col gap-5 w-full my-7">
-          <div className="flex items-center gap-8 mx-20">
+        <div className="flex flex-col gap-5 w-full mt-20">
+          <div className="flex items-center gap-12 mb-6">
+            <div className="w-48">
+              {userData[0].icon_img !== "" ? (
             <img
-              src={iconImgUrl}
+              src={userData[0].icon_img}
               alt="icon"
               // width={40}
               // height={40}
-              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+              className="bg-white rounded-full border border-solid border-gray-200 w-16 h-16 object-cover mr-0 ml-auto my-0"
             />
+              ) :(
+                <Image
+                  src="/noIcon.png"
+                  alt="icon"
+                  width={40}
+                  height={40}
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-16 h-16 object-cover mr-0 ml-auto my-0"
+                  />
+              )}
+            </div>
             <p>{userData[0].user_name}</p>
           </div>
 
           <form onSubmit={dataUpdate}>
-            <div className="flex items-start gap-8 my-4 relative">
+            <div className="flex items-start gap-12 my-4 relative h-20">
               <label htmlFor="settingPassword" className="font-bold">
                 現在のパスワード
               </label>
@@ -185,7 +202,7 @@ const PasswordChange = () => {
                   value={nowPassValue}
                   onChange={onChangePassword}
                   pattern={userData[0].password}
-                  className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-full"
+                  className="h-16 border-gray-300 border-solid border bg-gray-50 rounded-lg w-full text-xl"
                   placeholder="現在のパスワード"
                   required
                 />
@@ -208,7 +225,7 @@ const PasswordChange = () => {
               </span>
             </div>
 
-            <div className="flex items-start gap-8 my-4 relative">
+            <div className="flex items-start gap-12 my-4 relative h-20">
               <label htmlFor="settingPassword" className="font-bold">
                 新しいパスワード
               </label>
@@ -220,7 +237,7 @@ const PasswordChange = () => {
                   value={newPassValue}
                   onChange={onChangeNewPassword}
                   pattern="(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,15}"
-                  className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-full"
+                  className="h-16 border-gray-300 border-solid border bg-gray-50 rounded-lg w-full text-xl"
                   placeholder="パスワード(半角英小文字、数字を含む6文字以上15文字以内)"
                   required
                 />
@@ -245,7 +262,7 @@ const PasswordChange = () => {
               </span>
             </div>
 
-            <div className="flex items-start gap-8 my-4 relative">
+            <div className="flex items-start gap-12 my-4 relative h-20">
               <label htmlFor="settingPassword" className="font-bold text-right">
                 新しいパスワード
                 <br />
@@ -259,7 +276,7 @@ const PasswordChange = () => {
                   value={cNewPassValue}
                   onChange={onChangeCNewPassword}
                   pattern={newPassValue}
-                  className="h-9 border-gray-300 border-solid border bg-gray-50 rounded w-full"
+                  className="h-16 border-gray-300 border-solid border bg-gray-50 rounded-lg w-full text-xl"
                   placeholder="確認の為もう一度入力"
                   required
                 />
@@ -281,16 +298,31 @@ const PasswordChange = () => {
                 )}
               </span>
             </div>
-            <button
-            className="w-32 bg-blue-300 border-none text-white rounded-lg font-bold py-1.5 my-0 mx-auto"
-          >
+            <div className="mt-20 mb-0 mx-auto w-48">
+              {/* {nowPassValue === userData[0].password && newPassValue === cNewPassValue && cNewPassValue === newPassValue */}
+              {nowPassValue.length >0 && newPassValue.length > 0 && cNewPassValue.length >0
+               ? (
+            <button className={styles.afterPassBtn}>
             パスワード変更
           </button>
+              ) : (
+                <button className={styles.beforePassBtn}>
+            パスワード変更
+          </button>
+               )}
+          </div>
           </form>
         </div>
       </div>
+
     </div>
     )}
+     <div
+     id="complete"
+     className={styles.completeChange}
+     >
+          <p>変更完了しました</p>
+        </div>
     </>
   );
 };
