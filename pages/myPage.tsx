@@ -22,7 +22,7 @@ interface Users {
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
-function myPage() {
+function MyPage() {
   // データ取得
   // const { data: users, error } = useSWR("/api/users", fetcher);
   const { data: users, error } = useSWR("/api/test", fetcher);
@@ -158,4 +158,4 @@ function myPage() {
   );
 }
 
-export default myPage;
+export default MyPage;

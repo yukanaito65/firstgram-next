@@ -1,5 +1,5 @@
 import Head from "next/head";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import { useSession } from "next-auth/react";
 import {
   FaRegHeart,
@@ -10,13 +10,6 @@ import {
   FaHeart,
   FaBookmark,
 } from "react-icons/fa";
-import { storage } from "../../../firebase";
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/postPage.module.css";
 import Image from "next/image";
@@ -29,75 +22,104 @@ import Link from "next/link";
 import { AiOutlineClose } from "react-icons/ai";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
-
 type Props = {
   close?: (e: any) => void;
   post_id: number;
 };
-
 export default function PostDetails(props: Props) {
-  const [postImgUrl, setPostImgUrl] = useState<string>("");
-  const [iconImgUrl, setIconImgUrl] = useState<string>("");
-  // favolitesを格納
-  const [favorites, setFavorites] = useState<any>([
-    "aaa",
-    "bbb",
-    "ccc",
-    "ddd",
-    "LjUrxuIgfwbbmOgoLQXLGQ7GkZs2",
-  ]); //これは消す予定
-  const [keeps, setKeeps] = useState<any>([
-    "aaa",
-    "bbb",
-    "ccc",
-    "ddd",
-    "LjUrxuIgfwbbmOgoLQXLGQ7GkZs2",
-  ]); //これは消す予定
   const [inputComment, setInputComment] = useState<string>("");
   // selectbutton表示非表示
   const [select, setSelect] = useState<boolean>(false);
-  // コメントを取得&管理
-  const { data: comments } = useSWR(`/api/getCommentsData?post_id=22`, fetcher);
-  const [commentData, setCommentData] = useState<any>(comments);
-  const [allData, setAllData] = useState<any>("");
   const { data: session } = useSession();
 
   // ログインユーザー情報
   const auth = getAuth();
   const currentUserId = auth.currentUser?.uid;
+  console.log(`ログインユーザーID:${currentUserId}`);
 
-  // ❶ propsで受け取ったpost_idでpostsテーブルからuser_idを取得
-  const { data: post } = useSWR(`/api/getPostData2Query?post_id=22`, fetcher);
-  console.log(post);
-  // console.log(post[0].user_id);
+  // 結合データ取得
+  const {
+    data: connectData,
+    error: connectDataError,
+    isLoading: connectDataIsLoading,
+  } = useSWR( () => "api/getAllPostIdQuery?post_id=22", fetcher);
 
-  // const otherUserId: string = post[0].user_id;
-  // const favoriteUserIds: string[] = post[0].favorites;
-  // const keepUserIds: string[] = post[0].keeps;
+  // コメントデータ取得
+  const {
+    data: commentsData,
+    error: commentsDataError,
+    isLoading: commentsDataIsLoading,
+  } = useSWR("api/getCommentsData?post_id=22", fetcher);
 
-  // ❷ user_idでusersテーブルからuser情報を取得
-  const { data: user } = useSWR(
-    `/api/getUserData?user_id=LjUrxuIgfwbbmOgoLQXLGQ7GkZs2`,
+  // Favoritesデータ取得
+  const {
+    data: favsData,
+    error: favsDataError,
+    isLoading: favsDataIsLoading,
+  } = useSWR("api/getFavsDataPostIdQuery?post_id=22", fetcher);
+
+  const {
+    data: currentUserFav,
+    error: currentUserFavError,
+    isLoading: currentUserFavIsLoading,
+  } = useSWR(
+    `api/getCuurentUserFavQuery?post_id=22&user_id=${currentUserId}`,
     fetcher
   );
-  console.log(user);
-  // console.log(user[0].user_name);
 
-  // ❸ user_idでStorageからiconを取得
-  const iconUpload = async () => {
-    const fileRef = ref(
-      storage,
-      // `user_icons/${otherUserId}/user_icon`
-      `user_icons/1234567890qwertyuiopyukayuka/icon_users.png`
-    );
-    const url = await getDownloadURL(fileRef);
-    setIconImgUrl(url);
-    console.log(url);
+  // keepsデータ取得
+  const {
+    data: keepsData,
+    error: keepsDataError,
+    isLoading: keppsDataIsLoading,
+  } = useSWR("api/getKeepsDataPostIdQuery?post_id=22", fetcher);
+
+  const {
+    data: currentUserKeep,
+    error: kcurrentUserKeepError,
+    isLoading: currentUserKeepIsLoading,
+  } = useSWR(
+    `api/getCuurentUserKeepQuery?post_id=22&user_id=${currentUserId}`,
+    fetcher
+  );
+
+  const { mutate } = useSWRConfig();
+
+  const inputCommentEl: MutableRefObject<null> = useRef(null);
+  if (
+    connectDataIsLoading ||
+    commentsDataIsLoading ||
+    favsDataIsLoading ||
+    keppsDataIsLoading ||
+    currentUserFavIsLoading ||
+    currentUserKeepIsLoading
+  )
+    return <div>loading...</div>;
+  if (
+    connectDataError |
+    commentsDataError |
+    favsDataError |
+    keepsDataError |
+    currentUserFavError |
+    kcurrentUserKeepError
+  )
+    return <div>failed to load</div>;
+
+  // コメントアイコンクリック時にinputタグにフォーカス
+  const onClickCommentIcon: () => void = () => {
+    if (inputCommentEl.current) {
+      inputCommentEl.current.focus();
+    }
   };
-  iconUpload();
+
+  // postのtimestampの表記を設定
+  const postTimestamp = Date.parse(connectData[0].timestamp);
+  const postTimestampData = new Date(postTimestamp).toLocaleString();
+  const timestampUntilMinits = postTimestampData.slice(0, -3);
 
   // コメントを追加
-  const onClickSendCommnet = (e:any) => {
+  const onClickSendCommnet = (e: any) => {
+    mutate("/api/postCommentsData");
     e.preventDefault();
     fetch("/api/postCommentsData", {
       method: "POST",
@@ -105,136 +127,95 @@ export default function PostDetails(props: Props) {
       body: JSON.stringify({
         comment: inputComment,
         post_id: 22,
-        user_name: "yuka123",
+        user_name: connectData[0].user_name,
       }),
-    })
-      .then(() => {
-        console.log("aaa")
-      })
-      .catch((e) => console.log(e));
-      
-      setInputComment("");
-
-      fetch("/api/comments")
-      .then(response => response.json())
-      .then(data => {
-        const comments = data;
-        console.log(commentData);
-        setCommentData(comments);
-        console.log(commentData);
-      });
+    }).catch((e) => console.log(e));
+    setInputComment("");
   };
-
-  //コメント追加時の表示
-
-  useEffect(() => {
-    // 結合テーブル情報取得
-    fetch("/api/getCommentPostUserId", {
-      method: "GET",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        post_id: 22,
-      }),
-    })
-      .then((data) => {
-        console.log(data);
-        setAllData(data);
-        console.log(allData);
-      })
-      .catch((e) => console.log(e));
-    
-    // Storageデータからpost画像を取得
-    const postImgUpload = async () => {
-      const fileRef = ref(
-        storage,
-        // `post_images/${props.post_id}/post_image`
-        `post_images/22/post_image`
-      );
-      const url = await getDownloadURL(fileRef);
-      setPostImgUrl(url);
-      console.log(url);
-    };
-    postImgUpload();
-    // Storageデータからユーザーアイコンを取得
-    const iconUpload = async () => {
-      const fileRef = ref(
-        storage,
-        // `user_icons/${posts[0].user_id}/user_icon`
-        `user_icons/1234567890qwertyuiopyukayuka/icon_users.png`
-      );
-      const url = await getDownloadURL(fileRef);
-      setIconImgUrl(url);
-      console.log(url);
-    };
-    iconUpload();
-  }, []);
 
   // いいね追加ボタン
-  // const onClickAddGood = () => {
-  //   favoriteUserIds.push(currentUserId);
-  //   fetch("/api/updatePostsFavBody", {
-  //     method: "PUT",
-  //     headers: { "Content-type": "application/json" },
-  //     body: JSON.stringify({
-  //       favorites: favoriteUserIds,
-  //       post_id: 22,
-  //     }),
-  //   })
-  //     .then((res) => console.log(res.json()))
-  //     .catch((e) => console.log(e));
-  // };
-  // いいね解除ボタン
-  // const onClickDeleteGood = (e: any) => {
-  //   var index = favoriteUserIds.indexOf(currentUserId);
-  //   favoriteUserIds.splice(index, 1);
-  //   fetch("/api/updatePostsFavBody", {
-  //     method: "PUT",
-  //     headers: { "Content-type": "application/json" },
-  //     body: JSON.stringify({
-  //       favorites: favoriteUserIds,
-  //       post_id: 22,
-  //     }),
-  //   })
-  //     .then((res) => console.log(res.json()))
-  //     .catch((e) => console.log(e));
-  // };
-
-  // 保存追加ボタン
-  // const onClickAddKeep = () => {
-  //   keepUserIds.push(currentUserId);
-  //   fetch("/api/updatePostsKeepBody", {
-  //     method: "PUT",
-  //     headers: { "Content-type": "application/json" },
-  //     body: JSON.stringify({
-  //       keeps: keepUserIds,
-  //       post_id: 22,
-  //     }),
-  //   })
-  //     .then((res) => console.log(res.json()))
-  //     .catch((e) => console.log(e));
-  // };
-  // // 保存解除ボタン
-  // const onClickDeleteKeep = (e: any) => {
-  //   var index = keepUserIds.indexOf(currentUserId);
-  //   keepUserIds.splice(index, 1);
-  //   fetch("/api/updatePostsKeepBody", {
-  //     method: "PUT",
-  //     headers: { "Content-type": "application/json" },
-  //     body: JSON.stringify({
-  //       keeps: keepUserIds,
-  //       post_id: 22,
-  //     }),
-  //   })
-  //     .then((res) => console.log(res.json()))
-  //     .catch((e) => console.log(e));
-  // };
-
-  // コメントアイコンクリック時にinputタグにフォーカス
-  const inputCommentEl: MutableRefObject<null> = useRef(null);
-  const onClickCommentIcon = () => {
-    inputCommentEl?.current.focus();
+  const onClickAddGood = (e:any) => {
+    e.preventDefault();
+    
+    if (currentUserId) {
+      fetch("/api/postFavsData", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          post_id: 22,
+          user_id: connectData[0].user_id,
+          user_name: connectData[0].user_name,
+        }),
+      })
+      .then((res) => {
+        // res.json();
+        // mutate(`/api/getCuurentUserFavQuery?post_id=22&user_id=${currentUserId}`);
+    //     const div = document.getElementById('redFavBtn');
+    //  div?.classList.add(`${styles.redFavBtnStyle}`);
+        })
+        .catch((e) => console.log(e));
+    }
+    const div = document.getElementById('redFavBtn');
+     div?.classList.add(`${styles.redFavBtnStyle}`);
   };
 
+  // いいね解除ボタン
+  const onClickDeleteGood = (e: any) => {
+    e.preventDefault();
+    const div = document.getElementById('whiteFavBtn');
+     div?.classList.add(`${styles.whiteFavBtn}`);
+    if (currentUserId) {
+      fetch("/api/deleteFavData", {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          post_id: 22,
+          user_id: connectData[0].user_id,
+        }),
+      })
+        .then((res) => {
+          // res.json();
+          // mutate(`/api/getCuurentUserFavQuery?post_id=22&user_id=${currentUserId}`);
+    //       const div = document.getElementById('whiteFavBtn');
+    //  div?.classList.add(`${styles.whiteFavBtn}`);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
+  // 保存追加ボタン
+  const onClickAddKeep = () => {
+      if (currentUserId) {
+        fetch("/api/postKeepsData", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            post_id: 22,
+            user_id: connectData[0].user_id,
+          }),
+        })
+          .then(() => {
+            mutate("/api/postKeepsData");
+          })
+          .catch((e) => console.log(e));
+      }
+  };
+  // 保存解除ボタン
+  const onClickDeleteKeep = (e: any) => {
+    if (currentUserId) {
+      fetch("/api/deleteKeepData", {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          post_id: 22,
+          user_id: connectData[0].user_id,
+        }),
+      })
+        .then(() => {
+          mutate("/api/deleteKeepData");
+        })
+        .catch((e) => console.log(e));
+    }
+  };
   // 右上のセレクトボタン
   const onClickSelectOpen = (e: any) => {
     setSelect(true);
@@ -242,7 +223,6 @@ export default function PostDetails(props: Props) {
   const onClickSelectClose = (e: any) => {
     setSelect(false);
   };
-
   if (session) {
     return (
       <>
@@ -251,12 +231,9 @@ export default function PostDetails(props: Props) {
       </>
     );
   }
-
   return (
     <div>
-      <Head>
-        <title>{}</title>
-      </Head>
+      <Head> <title>{connectData[0].user_name}</title> </Head>
       <div className="h-screen flex relative">
         <IoClose
           size={30}
@@ -265,12 +242,16 @@ export default function PostDetails(props: Props) {
         />
         <div className="w-9/12 bg-black m-auto h-5/6 items-center flex">
           <div className="w-6/12">
-            <img className="w-full" src={postImgUrl} alt="投稿画像" />
+            <img
+              className="w-full"
+              src={connectData[0].post_img}
+              alt="投稿画像"
+            />
           </div>
           <div className="w-6/12 h-full postText bg-white">
             <div className="flex my-3 px-4">
               <img
-                src={iconImgUrl}
+                src={connectData[0].icon_img}
                 className={`w-1/12 bg-white ${styles.userIcon}`}
                 alt="ユーザーアイコン"
               />
@@ -279,15 +260,14 @@ export default function PostDetails(props: Props) {
           <img src={props.icon} alt="icon" className="" />
         ) : (
           <img
-            className=""
+            className={`w-1/12 bg-white ${styles.userIcon}`}
             src={`${process.env.PUBLIC_URL}/noIcon.png`}
             alt="NoImage"
           />
         )} */}
               </div>
-
               <p className="my-auto mx-3 font-medium">
-                {/* {users[0].user_name} */}
+                {connectData[0].user_name}
               </p>
               {select ? (
                 <>
@@ -330,39 +310,32 @@ export default function PostDetails(props: Props) {
               )}
             </div>
             <div className="h-3/4 py-3 px-4 overflow-scroll">
-              {/* <p>{posts[0].caption}</p> */}
-              <p>
-                キャプション(仮)スクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロール
-                テストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテスト
-                スクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテスト
-                スクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテスト
-                スクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテスト
-                テストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテストテストスクロールテストスクロールテストスクロールテストスクロール
-                テストスクロールテストスクロールテストスクロールテストスクロールテストスクロールテスト
-              </p>
-
-              {comments &&
-                comments.map((comment: Comment, index: number) => {
+              <p>{connectData[0].caption}</p>
+              {commentsData &&
+                commentsData.map((comment: any, index: number) => {
                   return (
-                    <div key={index} className="flex py-1">
-                      <p className="mr-1">{comment.user_name}</p>
-                      <p>{comment.comment}</p>
+                    <div key={index} className="py-1">
+                      <div className="flex">
+                        <p className="mr-1 font-medium">{comment.user_name}</p>
+                        <p>{comment.comment}</p>
+                      </div>
+                      <p>{comment.to_char}</p>
                     </div>
                   );
                 })}
             </div>
             <hr />
             <div className="flex pt-3 px-4">
-              {favorites.includes(currentUserId) ? (
-                <button className="my-2 mr-2">
-                  <FaHeart size={25} color={"red"} />
+              {currentUserFav.length > 0 ? (
+                <button id="redFavBtn" type="button" onClick={onClickDeleteGood} className="my-2 mr-2">
+                  <FaHeart size={25} id="redFavBtn"/>
                 </button>
               ) : (
-                <button className="my-2 mr-2">
+                // favoritesに自分のuser_nameがない時
+                <button id="whiteFavBtn" type="button" onClick={onClickAddGood} className="my-2 mr-2">
                   <FaRegHeart size={25} />
                 </button>
               )}
-
               <button onClick={onClickCommentIcon} className="m-2">
                 <FaRegComment size={25} />
               </button>
@@ -375,22 +348,21 @@ export default function PostDetails(props: Props) {
                   </button>
                 </Link>
               )}
-
               <p className="mt-auto mb-auto mx-1">
-                いいね：{favorites.length}人
+                いいね：{favsData.length}人
               </p>
-              {keeps.includes(currentUserId) ? (
-                <button className="ml-auto m-2">
+              {currentUserKeep.length > 0 ? (
+                <button onClick={onClickDeleteKeep} className="ml-auto m-2">
                   <FaBookmark size={25} />
                 </button>
               ) : (
-                <button className="ml-auto m-2">
+                <button onClick={onClickAddKeep} className="ml-auto m-2">
                   <FaRegBookmark size={25} />
                 </button>
               )}
             </div>
             <p className="px-4 pb-3 text-xs text-gray-500">
-              {/* {posts[0].timestamp} */}
+              {timestampUntilMinits}
             </p>
             <hr />
             <form onSubmit={onClickSendCommnet} className="m-auto w-full">
@@ -406,7 +378,7 @@ export default function PostDetails(props: Props) {
               />
               <button
                 className={`w-1/5 font-bold ${styles.addCommentBtn}`}
-                // onClick={onClickSendCommnet}
+                onClick={onClickSendCommnet}
               >
                 投稿する
               </button>
