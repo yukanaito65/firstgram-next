@@ -1,9 +1,12 @@
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { auth } from "../firebase";
 import useSWR, { useSWRConfig } from "swr";
 import Image from "next/image";
 import Link from "next/link";
+import UserName from "../src/components/atoms/userName";
+import PostList from "./postList";
+import { auth } from "../firebase.js";
+import PostLength from "./postLength";
 
 interface Users {
   userId: string;
@@ -31,26 +34,18 @@ function MyPage() {
   //ログイン判定が終わるまでリダイレクトさせないようにする(ログイン判定するには時間がかかるから、ページ遷移を先にされてしまうと表示がおかしくなってしまう)
   const [loading, setLoading] = useState(true);
 
-  //取得してきたデータを保持
-  // const [posts, setPosts] = useState<QuerySnapshot[]>([]);
-  const [posts, setPosts] = useState<any>([]);
-  // const [followList, setFollowList] = useState<any>({ follow: [] });
-  const [followList, setFollowList] = useState<any>([]);
-  // const [followerList, setFollowerList] = useState<any>({ follower: [] });
-  const [followerList, setFollowerList] = useState<any>([]);
-  const [userName,setUserName] = useState("");
-  const [name,setName] = useState("");
-  const [profile,setProfile] = useState("");
-
-  const [userId,setUserId] = useState("");
-
   // const { mutate } = useSWRConfig();
+
+  // const auth = getAuth();
+  // const currentUserId = auth.currentUser?.uid;
+
+  // console.log(currentUserId)
 
   // ログインしているかどうか判定
   //ログインしていればuserにユーザー情報が代入される
   //currentUserプロパティを使用して、現在サインインしているユーザーを取得する(サインインしていなければnull)
   useEffect(() => {
-    
+
     onAuthStateChanged(auth, async (currentUser: any) => {
       if (!currentUser) {
         <></>;
@@ -58,11 +53,13 @@ function MyPage() {
         setUser(currentUser);
         //ログイン判定が終わったタイミングでloadingはfalseに変わる
         setLoading(false);
-        setUserId(user.uid)
       }
     });
 
   }, []);
+
+
+
 
   //ログインページにリダイレクトする
   // const login = async () => {
@@ -71,56 +68,32 @@ function MyPage() {
   // };
 
     // データ取得
-  // const { data: users, error } = useSWR("/api/users", fetcher);
-  const { data: users, error } = useSWR(`/api/test?user_id=${userId}`, fetcher);
-
+  const { data: users, error, isLoading } = useSWR(`/api/userData?user_id=${user.uid}`, fetcher);
   if (error) {
     return <p>error!</p>;
   }
   if (!users) {
-    //   // users.map(
-    //   //     (user: Users)=>{JSON.stringify(user)}
-    //   // )
-    //   setFollowList([1,2]);
-    //   setFollowerList([1]);
-
-    //   // const postDataArray = users[0].posts.map((users[0].userid) => users[0].userid);
-    //   // setPosts(postDataArray);
-
-    //   setPosts([1,2]);
-    <p>loading</p>;
+    return <p>error!</p>;
+  }
+  if(isLoading ){
+    return <p>loading</p>
   }
 
-  
+  // const { data: posts, error:postserror, isLoading:postsisLoading } = useSWR(`/api/userPostData?user_id=${user.uid}`, fetcher);
+  // if (postserror) {
+  //   return <p>error!</p>;
+  // }
+  // if (posts) {
+  //   return <p>error!</p>;
+  // }
+  // if(postsisLoading ){
+  //   return <p>loading</p>
+  // }
 
-  // useEffect (() =>{
-  //   mutate(`/api/test?user_id=${userId}`)
-  const data = () => {
-    setUserName(users[0].user_name)
-    setName(users[0].name)
-    setProfile(users[0].profile)
-    {users[0].follow ? (
-      setFollowList(users[0].follow)
-    ):(
-      setFollowList([])
-    )}
-
-    {users[0].follower ? (
-      setFollowerList(users[0].follower)
-    ):(
-      setFollowerList([])
-    )}
-  
-    {users[0].follower ? (
-      setPosts(users[0].posts)
-    ):(
-      setPosts([])
-    )}
-  }
-  // },[]);
 
   return (
     <>
+
       {/* loadingがfalseのときのみマイページを表示する設定。loadingがfalseのときのみ */}
       {!loading && (
         <>
@@ -133,23 +106,36 @@ function MyPage() {
             </>
           ) : (
             <>
+            
               {/* {users.map(
             <div>{users[0].userName}</div>
             )} */}
               <div className="flex pt-7 mx-auto w-max ">
                 <div className="border-border-rounded-fullmt-7 pt-3">
+                {users[0].icon_img ? (
                   <Image
-                    src="/noIcon.png"
-                    alt="アイコン"
-                    width={145}
-                    height={145}
-                    className=" border border-gray-300 bg-gray-300 rounded-full "
-                  />
+                  src={users[0].icon_img}
+                  alt="アイコン"
+                  width={80}
+                  height={80}
+                  className=" border border-gray-300 bg-gray-300 rounded-full "
+                />
+                ):(
+                  <Image
+                  src="/noIcon.png"
+                  alt="アイコン"
+                  width={80}
+                  height={80}
+                  className=" border border-gray-300 bg-gray-300 rounded-full "
+                />
+                )} 
                 </div>
 
                 <div className="pl-16 py-3 flex flex-col max-h-145 justify-between">
                   <div className="flex">
-                    <div className="h-8 pt-1 text-xl">{userName}</div>
+                    <div className="h-8 pt-1 text-xl">{users[0].user_name}
+                      {/* <UserName uid={userId}/> */}
+                      </div>
                     <button
                       className="
             border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
@@ -161,21 +147,52 @@ function MyPage() {
                   </div>
 
                   <div className="flex">
-                    <div>投稿{posts.length}件</div>
-                    <Link href="follow"><button className="ml-9">フォロー{followList.length}人</button></Link>
+                    <div>投稿<PostLength /></div>
+                    <Link href="follow"><button className="ml-9">フォロー{0}人</button></Link>
                     <Link href="follower"><button className="ml-9">
-                      フォロワー{followerList.length}人
+                      フォロワー{0}人
                     </button></Link>
                   </div>
 
                   <div>
-                    <div className="font-bold">{name} </div>
-                    <div className="text-sm">{profile}</div>
+                    <div className="font-bold">{users[0].name} </div>
+                    <div className="text-sm">{users[0].profile}</div>
                   </div>
                 </div>
               </div>
+
               <div>
-                <button onClick={data}>データ取得</button>
+    {/* <PostList userId={user.uid} /> */}
+              {/* <Image
+                  src="/img.jpeg"
+                  alt="img"
+                  width={200}
+                  height={200}
+                  className="w-[calc(100%_-_6px /3)] aspect-square"
+                />
+                            <Image
+                  src="/img.jpeg"
+                  alt="img"
+                  width={200}
+                  height={200}
+                  className="w-[calc(100%_-_6px /3)] aspect-square"
+                />
+                  <Image
+                  src="/img.jpeg"
+                  alt="img"
+                  width={200}
+                  height={200}
+                  className="w-[calc(100%_-_6px /3)] aspect-square"
+                />
+                                <Image
+                  src="/img.jpeg"
+                  alt="img"
+                  width={200}
+                  height={200}
+                  className="w-[calc(100%_-_6px /3)] aspect-square"
+                /> */}
+         
+           
               </div>
             </>
           )}

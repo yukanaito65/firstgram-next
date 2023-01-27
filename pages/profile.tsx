@@ -1,5 +1,8 @@
 import React from 'react'
 import Image from 'next/image';
+import AddFollowButton from '../src/components/atoms/button/addFollowButton';
+import Link from 'next/link';
+import RemoveFollowButton from '../src/components/atoms/button/RemoveFollowButton';
 
 function profile() {
   return (
@@ -16,12 +19,26 @@ function profile() {
 
             <div className="flex">
             <div className="h-8 pt-1 text-xl">ringo_yasuo</div>
-            <button className="
+
+            {/* <AddFollowButton /> */}
+            {/* <button className="
             border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
-            ">フォロー中</button>
-            <button className="
+            ">フォロー中</button> */}
+           
+   {/* {{user.uid}.includes (user.uid) ? ( */}
+  {/* profileuserのフォローに, ログインしているユーザーのidが、 */}
+                <>
+                  <RemoveFollowButton />
+                </>
+              {/* ) : ( */}
+                <>
+                  <AddFollowButton />
+                </>
+              {/* )} */}
+<Link  href="/dmPage"><button className="
             border border-gray-100  rounded  ml-2 h-8 px-3 py-1 text-sm font-bold bg-gray-100
-            ">メッセージを送信</button>
+            ">メッセージを送信</button></Link>
+
             </div>
           
 
