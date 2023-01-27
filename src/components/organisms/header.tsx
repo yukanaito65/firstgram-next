@@ -95,8 +95,9 @@ function Header() {
           <Image
             src="/logo_transparent.png"
             alt="logo"
-            width={60}
-            height={60}
+            width={70}
+            height={70}
+            className={styles.logo_img}
           />
         </div>
 
@@ -143,17 +144,17 @@ function Header() {
 
           {currentPath === "/newPost" ? (
             //クリックされた方
-            <li className={styles.header_li}>
-              <div className={styles.onListContent}>
+            <li className={styles.commonHeader_li}>
+              <div className={styles.commonOnListContent}>
                 <BsPlusSquareFill size={30} />
                 <p>作成</p>
               </div>
             </li>
           ) : (
             //クリックされてない方
-            <li className={styles.header_li}>
-              <button type="button" onClick={toggleModal} className={styles.listContent}>
-                <div className={styles.listContent}>
+            <li className={styles.commonHeader_li}>
+              <button type="button" onClick={toggleModal} className={styles.commonListContent}>
+                <div className={styles.commonListContent}>
                   <BsPlusSquare size={30} />
                   <p>作成</p>
                 </div>
@@ -161,17 +162,18 @@ function Header() {
             </li>
           )}
 
-          {currentPath === "/mypage" ? (
+          {currentPath === "/myPage" ? (
             //クリックされた方
             <li className={styles.header_li}>
               <div className={styles.onListContent}>
+                {/* <div className="w-"> */}
               {users[0].icon_img !== "" ? (
               <img
               src={users[0].icon_img}
               alt="icon"
               // width={40}
               // height={40}
-              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+              className="bg-white rounded-full border border-solid border-gray-200 w-12 h-12 object-cover"
             />
                 ) : (
                   <Image
@@ -179,10 +181,11 @@ function Header() {
                   alt="icon"
                   width={40}
                   height={40}
-                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-12 h-12 object-cover"
                   />
                 )
               }
+              {/* </div> */}
                 <p>プロフィール</p>
               </div>
             </li>
@@ -197,7 +200,7 @@ function Header() {
               alt="icon"
               // width={40}
               // height={40}
-              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+              className="bg-white rounded-full border border-solid border-gray-200 w-12 h-12 object-cover"
             />
                 ) : (
                   <Image
@@ -205,7 +208,7 @@ function Header() {
                   alt="icon"
                   width={40}
                   height={40}
-                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-12 h-12 object-cover"
                   />
                 )
               }

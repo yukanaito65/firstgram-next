@@ -50,7 +50,7 @@ function MyPage() {
   //ログインしていればuserにユーザー情報が代入される
   //currentUserプロパティを使用して、現在サインインしているユーザーを取得する(サインインしていなければnull)
   useEffect(() => {
-    
+
     onAuthStateChanged(auth, async (currentUser: any) => {
       if (!currentUser) {
         <></>;
@@ -58,11 +58,13 @@ function MyPage() {
         setUser(currentUser);
         //ログイン判定が終わったタイミングでloadingはfalseに変わる
         setLoading(false);
-        setUserId(user.uid)
+        // setUserId(user.uid)
       }
     });
 
   }, []);
+
+  console.log(user.uid)
 
   //ログインページにリダイレクトする
   // const login = async () => {
@@ -72,26 +74,34 @@ function MyPage() {
 
     // データ取得
   // const { data: users, error } = useSWR("/api/users", fetcher);
-  const { data: users, error } = useSWR(`/api/test?user_id=${userId}`, fetcher);
+  // const { data: users, error } = useSWR(`/api/test?user_id=${userId}`, fetcher);
+  const { data: users, error } = useSWR(
+    () => `/api/userData?user_id=${user.uid}`,
+    fetcher
+  );
 
   if (error) {
-    return <p>error!</p>;
+    return <p>error!</p>
   }
+  // if (!users) {
+  //   //   // users.map(
+  //   //   //     (user: Users)=>{JSON.stringify(user)}
+  //   //   // )
+  //   //   setFollowList([1,2]);
+  //   //   setFollowerList([1]);
+
+  //   //   // const postDataArray = users[0].posts.map((users[0].userid) => users[0].userid);
+  //   //   // setPosts(postDataArray);
+
+  //   //   setPosts([1,2]);
+  //   <p>loading</p>;
+  // }
+
   if (!users) {
-    //   // users.map(
-    //   //     (user: Users)=>{JSON.stringify(user)}
-    //   // )
-    //   setFollowList([1,2]);
-    //   setFollowerList([1]);
-
-    //   // const postDataArray = users[0].posts.map((users[0].userid) => users[0].userid);
-    //   // setPosts(postDataArray);
-
-    //   setPosts([1,2]);
-    <p>loading</p>;
+    return <p>loading</p>
   }
 
-  
+  console.log(users)
 
   // useEffect (() =>{
   //   mutate(`/api/test?user_id=${userId}`)
@@ -110,7 +120,7 @@ function MyPage() {
     ):(
       setFollowerList([])
     )}
-  
+
     {users[0].follower ? (
       setPosts(users[0].posts)
     ):(
@@ -147,6 +157,10 @@ function MyPage() {
                   />
                 </div>
 
+{/* 追加 */}
+<div>
+  <p>{users[0].name}</p>
+</div>
                 <div className="pl-16 py-3 flex flex-col max-h-145 justify-between">
                   <div className="flex">
                     <div className="h-8 pt-1 text-xl">{userName}</div>

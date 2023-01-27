@@ -6,7 +6,8 @@ interface Props {
   title: string;
   name: string;
   pattern: string;
-  message: string;
+  message?: any;
+  countMessage?: any;
   setValue: Dispatch<SetStateAction<string>>;
 }
 
@@ -36,12 +37,14 @@ function UpdateInput(props: Props) {
             onChange={onChangeValue}
             className={`${styles.input} h-12 border-gray-300 border-solid border rounded w-full text-xl`}
             pattern={props.pattern}
+            required
           />
           <span className={`${styles.error_message} ${styles.messageBox}`}>
             正しい形式で入力してください
           </span>
         </div>
         <p className="text-lg text-gray-400 my-5">{props.message}</p>
+        {props.countMessage}
       </div>
     </div>
   );
