@@ -1,13 +1,13 @@
 import { sqlExecuter } from "../../modules/database"
 
  export default async (req: any, res: any) => {
-	const data = req.query;
 
-	const currentUserData = await sqlExecuter.any(
+	const comments = await sqlExecuter.any(
               //  "select 'DB参照したデータ' as any_column"
-              `SELECT * FROM users WHERE user_id = $1`, [data.user_id]
+              "SELECT * FROM comments"
         );
 	res.status(200).json(
-		currentUserData
+		comments
 	);
 };
+// export default apiRoutes;

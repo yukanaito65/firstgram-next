@@ -1,15 +1,15 @@
-import { storage } from "../firebase";
+import { storage } from "../../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { BsImages } from "react-icons/bs";
-import styles from "../src/styles/newPost.module.css";
+import styles from "../../styles/newPost.module.css";
 import { IoClose } from "react-icons/io5";
 import useSWR from "swr";
-import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import Header from "../src/components/organisms/header";
+import Header from "../organisms/header";
 import { getAuth } from "@firebase/auth";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -34,27 +34,23 @@ export default function NewPost(props: any) {
   const currentUserId = auth.currentUser?.uid;
 
   const handleChangeFile = (e: any) => {
-    // const { files } = e.target.files[0];
     setFile(e.target.files[0]);
-    console.log(files)
-    // if (typeof files === "undefined") return;
-    // setPreview(window.URL.createObjectURL(files));
-    // setIsUploaded(true);
+    console.log(files);
   };
 
   const { data: currentUserData } = useSWR(
     `/api/getCurrentUserData?user_id=${currentUserId}`,
     fetcher
   );
+  console.log(currentUserData);
   const router = useRouter();
-
 
   // 閉じるボタン
   const closeModal = () => {
     const result = window.confirm(
       "投稿を破棄しますか？このまま移動すると、編集内容は保存されません。"
     );
-    console.log(result)
+    console.log(result);
     if (result) {
       props.close();
     }
@@ -64,7 +60,7 @@ export default function NewPost(props: any) {
     if (typeof files === "undefined") return;
     setPreview(window.URL.createObjectURL(files));
     setIsUploaded(true);
-  },[files])
+  }, [files]);
 
   useEffect(() => {
     const imageUpload = async () => {
@@ -79,8 +75,8 @@ export default function NewPost(props: any) {
     imageUpload();
   }, []);
 
-  // postテーブルからcurrentUserの最新のpostのpost_idを取得
   const getPostsId = () => {
+    // Storageに保存した画像URLを取得するため、postテーブルからcurrentUserの最新のpostのpost_idを取得
     fetch("/api/getPostData", {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -91,8 +87,6 @@ export default function NewPost(props: any) {
       .then((res) => res.json())
       .then((res) => {
         //  post画像をStorageに保存
-        // const file = e.target.files[0];
-
         const storageRef = ref(
           storage,
           `post_images/${res[0].post_id}/post_image`
@@ -118,23 +112,23 @@ export default function NewPost(props: any) {
       });
   };
 
-  //  postテーブルにpostデータを追加
   const onClickRegister = () => {
+    //  postテーブルにpostデータを追加
     fetch("/api/postPostsData", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         user_id: currentUserId,
         caption: caption,
-        favorites: null,
-        keeps: null,
+        favorites: {},
+        post_img: postImgSrc,
       }),
     })
       .then((res) => console.log(res.json()))
       .catch((e) => console.log(e));
     getPostsId();
-    // onFileUploadToFirebase(preview);
-    router.push('/');
+    // router.push("/");
+    window.location.reload();
   };
 
   if (loading) {
@@ -186,7 +180,6 @@ export default function NewPost(props: any) {
               </div>
               <div className="flex h-full">
                 <div className="w-6/12 w-full flex m-auto">
-                  {/* <img src={postImgSrc} className="m-auto" /> */}
                   <img src={preview} alt="preview" className="m-auto" />
                 </div>
                 <div>
@@ -227,7 +220,7 @@ export default function NewPost(props: any) {
       />
 
       <div className="flex h-screen">
-        <div className={`w-5/12 text-white ${styles.container}  m-auto h-3/4`}>
+        <div className={` text-white ${styles.container}  m-auto h-3/4`}>
           <div className="">
             <div className="w-full">
               <p className={`text-center font-semibold ${styles.title}`}>
@@ -236,14 +229,13 @@ export default function NewPost(props: any) {
             </div>
             <div className="text-center m-auto">
               <div className="imageLogoAndText">
-                <BsImages className="m-auto" size={80} />
+                <img className="m-auto" />
                 <p>ここに写真や動画をドラッグ</p>
               </div>
               <label htmlFor="inputFile">
                 コンピュータから選択
                 <input
                   type="file"
-                  // onChange={onFileUploadToFirebase}
                   onChange={handleChangeFile}
                   accept=".png, .jpeg, .jpg"
                   id="inputFile"

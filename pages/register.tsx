@@ -83,7 +83,7 @@ function Register() {
   //ログアウトが成功するとログインページにリダイレクトする
   const logout = async () => {
     await signOut(auth);
-    navigate("/login/");
+    // navigate("/login/");
   };
 
   const emailChange = (e: { target: HTMLButtonElement }) => {

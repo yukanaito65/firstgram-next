@@ -11,7 +11,8 @@ import { BsPlusSquare, BsPlusSquareFill } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 import styles from "./header.module.css";
 import Nav from "../molecules/Nav";
-import NewPost from "../../../pages/newPost";
+import NewPost from "../templates/newPost";
+import NewPostModal from "../molecules/NewPostModal";
 import { getDownloadURL, ref } from "firebase/storage";
 import { auth, storage } from "../../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -142,6 +143,7 @@ function Header() {
             </li>
           )}
 
+
           {currentPath === "/newPost" ? (
             //クリックされた方
             <li className={styles.commonHeader_li}>
@@ -160,7 +162,6 @@ function Header() {
                 </div>
               </button>
             </li>
-          )}
 
           {currentPath === "/myPage" ? (
             //クリックされた方
@@ -234,9 +235,11 @@ function Header() {
     )}
       {navDisplay ? <Nav /> : <></>}
       {isOpenModal && (
-        <div className="bg-black bg-opacity-70">
+        // <div className="bg-black bg-opacity-70">
+        <NewPostModal close={toggleModal}>
           <NewPost close={toggleModal} />
-        </div>
+          </NewPostModal>
+        // </div>
       )}
     {/* // )} */}
     </>
