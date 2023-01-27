@@ -1,0 +1,30 @@
+.title {
+  border-bottom: 1px solid lightgray;
+  font-size: 2rem;
+  line-height: 7rem;
+}
+.uploadButton {
+  border-bottom: 1px solid lightgray;
+  color: #1596F7;
+  font-weight: bold;
+  font-size: 1.4rem;
+  line-height: 5rem;
+}
+.uploadLabel:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+.input {
+  display: none;
+}
+.deleteButton {
+  border-bottom: 1px solid lightgray;
+  color: #ED4956;
+  font-weight: bold;
+  font-size: 1.4rem;
+  line-height: 5rem;
+}
+.cancelButton {
+  line-height: 5rem;
+  font-size: 1.4rem;
+}

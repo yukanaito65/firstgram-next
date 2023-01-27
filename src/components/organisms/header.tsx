@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { HiOutlineHome, HiHome } from "react-icons/hi";
 import { FiSearch, FiPlusSquare } from "react-icons/fi";
@@ -13,10 +13,31 @@ import styles from "./header.module.css";
 import Nav from "../molecules/Nav";
 import NewPost from "../templates/newPost";
 import NewPostModal from "../molecules/NewPostModal";
+import { getDownloadURL, ref } from "firebase/storage";
+import { auth, storage } from "../../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import useSWR from "swr";
+
+const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 function Header() {
   const router = useRouter();
   const currentPath = router.pathname;
+
+  const [user, setUser] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async (currentUser: any) => {
+      if (!currentUser) {
+        console.log("ログアウト状態");
+      } else {
+        setUser(currentUser);
+        //ログイン判定が終わったタイミングでloadingはfalseに変わる
+        setLoading(false);
+      }
+    });
+  },[]);
 
   const [navDisplay, setNavDisplay] = useState<boolean>(false);
 
@@ -41,8 +62,35 @@ function Header() {
     setNavDisplay(!navDisplay);
   };
 
+  //icon表示用URL
+  // const [iconImgUrl, setIconImgUrl] = useState("");
+
+
+  //   const imageUpload = async () => {
+  //     const fileRef = ref(
+  //       storage,
+  //       `user_icons/${user.uid}/user_icon.png`
+  //     );
+  //     const url = await getDownloadURL(fileRef);
+  //     setIconImgUrl(url);
+  //     console.log(url);
+  //   };
+  //   imageUpload();
+
+  //ログインユーザーの情報取得
+  const { data: users, error } = useSWR(() => `/api/userData?user_id=${user.uid}`,fetcher);
+
+  if (error) {
+    return <p>error!</p>;
+  }
+  if (!users) {
+    return <p>loading...</p>;
+  }
+// console.log(users);
+// console.log(props.users);
   return (
     <>
+    {!loading && (
       <header className={styles.header}>
         <div className={styles.logo}>
           <Image
@@ -107,13 +155,24 @@ function Header() {
             //クリックされた方
             <li className={styles.header_li}>
               <div className={styles.onListContent}>
-                <Image
+              {users[0].icon_img !== "" ? (
+              <img
+              src={users[0].icon_img}
+              alt="icon"
+              // width={40}
+              // height={40}
+              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+            />
+                ) : (
+                  <Image
                   src="/noIcon.png"
                   alt="icon"
-                  width={30}
-                  height={30}
-                  className="bg-gray-300"
-                />
+                  width={40}
+                  height={40}
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+                  />
+                )
+              }
                 <p>プロフィール</p>
               </div>
             </li>
@@ -122,13 +181,24 @@ function Header() {
             <li className={styles.header_li}>
               <Link href="/mypage" id={styles.link}>
                 <div className={styles.listContent}>
+                  {users[0].icon_img !== "" ? (
+              <img
+              src={users[0].icon_img}
+              alt="icon"
+              // width={40}
+              // height={40}
+              className="bg-white rounded-full border border-solid border-gray-200 w-1/4 object-cover"
+            />
+                ) : (
                   <Image
-                    src="/noIcon.png"
-                    alt="icon"
-                    width={30}
-                    height={30}
-                    className="bg-gray-300"
+                  src="/noIcon.png"
+                  alt="icon"
+                  width={40}
+                  height={40}
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover"
                   />
+                )
+              }
                   <p>プロフィール</p>
                 </div>
               </Link>
@@ -148,6 +218,7 @@ function Header() {
           </button>
         )}
       </header>
+    )}
       {navDisplay ? <Nav /> : <></>}
       {isOpenModal && (
         // <div className="bg-black bg-opacity-70">
@@ -156,10 +227,9 @@ function Header() {
           </NewPostModal>
         // </div>
       )}
+    {/* // )} */}
     </>
   );
 }
 
 export default Header;
-
-// FiPlusSquare

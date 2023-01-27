@@ -1,6 +1,6 @@
 .setting {
   width: 200px;
-  height: 100vh;
+  /* height: 100vh; */
   max-width: 350px;
   min-width: 200px;
   border-right: 1px solid lightgray;

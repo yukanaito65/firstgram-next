@@ -1,4 +1,5 @@
 .dmContent {
-  height:450px;
-  margin-top: 80px;
+  height:535px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
