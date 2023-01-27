@@ -131,7 +131,7 @@ const PasswordChange = () => {
   // };
   // imageUpload();
 
-  //Authenticationを更新(クリックした時の関数)
+  //クリックした時の関数(submit関数)
   const dataUpdate = (e:any) => {
     e.preventDefault();
 
@@ -148,15 +148,20 @@ const PasswordChange = () => {
         cpassword: cNewPassValue,
       }),
     }).then((res) => res.json());
+    //送信後inputを空に戻す
     setNowPassValue("");
     setNewPassValue("");
     setCNewPassValue("");
+
+    //完了メッセージを表示
+    const div = document.getElementById('complete');
+     div?.classList.add(`${styles.active}`);
   };
 
   return (
     <>
     {!loading && (
-    <div className="flex">
+    <div className="md:flex">
       <Header />
       <div className="flex gap-12 border border-solid border-neutral-300 ml-64 my-28 w-3/4 bg-white">
         <SettingMenu />
@@ -177,7 +182,7 @@ const PasswordChange = () => {
                   alt="icon"
                   width={40}
                   height={40}
-                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover mr-0 ml-auto my-0"
+                  className="bg-gray-200 rounded-full border border-solid border-gray-200 w-16 h-16 object-cover mr-0 ml-auto my-0"
                   />
               )}
             </div>
@@ -294,15 +299,30 @@ const PasswordChange = () => {
               </span>
             </div>
             <div className="mt-20 mb-0 mx-auto w-48">
-            <button className={styles.passChangeBtn}>
+              {/* {nowPassValue === userData[0].password && newPassValue === cNewPassValue && cNewPassValue === newPassValue */}
+              {nowPassValue.length >0 && newPassValue.length > 0 && cNewPassValue.length >0
+               ? (
+            <button className={styles.afterPassBtn}>
             パスワード変更
           </button>
+              ) : (
+                <button className={styles.beforePassBtn}>
+            パスワード変更
+          </button>
+               )}
           </div>
           </form>
         </div>
       </div>
+
     </div>
     )}
+     <div
+     id="complete"
+     className={styles.completeChange}
+     >
+          <p>変更完了しました</p>
+        </div>
     </>
   );
 };

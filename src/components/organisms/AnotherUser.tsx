@@ -42,46 +42,48 @@ function AnotherUser(props: any) {
 
   //icon表示するためにURL取得
   // useEffect(() => {
-  const imageUpload = async () => {
-    const fileRef = ref(storage, `user_icons/${data[0].user_id}/user_icon.png`);
-    const url = await getDownloadURL(fileRef);
-    setIconImgUrl(url);
-    // console.log(url);
-  };
-  imageUpload();
+  // const imageUpload = async () => {
+  //   const fileRef = ref(storage, `user_icons/${data[0].user_id}/user_icon.png`);
+  //   const url = await getDownloadURL(fileRef);
+  //   setIconImgUrl(url);
+  //   // console.log(url);
+  // };
+  // imageUpload();
   // }, []);
-  console.log(iconImgUrl);
+  // console.log(iconImgUrl);
   console.log(data);
 
   return (
     <>
     {/* {!loading && ( */}
     <div
-      className={`${styles.titleWrapper} flex items-center gap-3 px-8 bg-white py-0 px-11`}
+      className={`${styles.titleWrapper} flex items-center gap-5 px-8 bg-white py-5 px-11`}
     >
-      <Link href="">
-        <div className="w-20">
-          {iconImgUrl !== "" ? (
+      <Link href={{ pathname:"/profile",
+        query: {userId : props.userId}}}>
+        <div className="w-16 h-16">
+          {data[0].icon_img !== "" ? (
           <img
-            src={iconImgUrl}
+            src={data[0].icon_img}
             alt="icon"
             // width={25}
             // height={25}
             className="rounded-full border border-solid border-gray-200 w-full bg-white object-cover"
           />
           ) : (
-            <img
+            <Image
             src="/noIcon.png"
             alt="icon"
-            // width={100}
-            // height={100}
+            width={40}
+            height={40}
             className="bg-gray-200 rounded-full border border-solid border-gray-200 w-full object-cover"
             />
           )
         }
         </div>
       </Link>
-      <Link href="" id={styles.title_link}>
+      <Link href={{ pathname:"/profile",
+        query: {userId : props.userId}}} id={styles.title_link}>
         <div>
           <p className="font-bold">{data[0].name}さん</p>
         </div>

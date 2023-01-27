@@ -12,6 +12,7 @@ import IconModal from "../src/components/organisms/IconModal";
 import Panel from "../src/components/molecules/Panel";
 import Image from "next/image";
 import styles from "./profileChange.module.css";
+import completeStyles from "./passwordChange.module.css"
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -100,6 +101,10 @@ const ProfileChange = () => {
         profile: profile.value,
       }),
     }).then((res) => res.json());
+
+    //完了メッセージを表示
+    const div = document.getElementById('complete');
+     div?.classList.add(`${completeStyles.active}`);
   };
 
   return (
@@ -129,7 +134,7 @@ const ProfileChange = () => {
                       alt="icon"
                       width={40}
                       height={40}
-                      className="bg-gray-200 rounded-full border border-solid border-gray-200 w-1/4 object-cover mr-0 ml-auto my-0"
+                      className="bg-gray-200 rounded-full border border-solid border-gray-200 w-16 h-16 object-cover mr-0 ml-auto my-0"
                     />
                   )}
                 </div>
@@ -171,11 +176,12 @@ const ProfileChange = () => {
                   title={"プロフィール"}
                   name={"profile"}
                   pattern={"{,200}"}
-                  message={"200文字以内で自由に記述できます"}
+                  countMessage={<p className="text-lg text-gray-400 my-5">{profileValue.length} / 200</p>}
                   setValue={setProfileValue}
                 />
               </div>
 
+              {/* どれか一つでも変更されたら色を変える */}
               {users[0].name === nameValue &&
               users[0].user_name === userNameValue &&
               users[0].profile === profileValue ? (
@@ -188,6 +194,12 @@ const ProfileChange = () => {
           </div>
         </div>
       )}
+       <div
+     id="complete"
+     className={completeStyles.completeChange}
+     >
+          <p>変更完了しました</p>
+        </div>
     </>
   );
 };

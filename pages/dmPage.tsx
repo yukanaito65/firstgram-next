@@ -16,7 +16,7 @@ function DmPage() {
   //入力されるメッセージ
   const [message, setMessage] = useState("");
 
-  //プロフィールページからuser_idを引き継ぐ
+  //プロフィールページ,投稿詳細ページからuser_idを引き継ぐ
   const router = useRouter();
   const userId = router.query.userId;
   console.log(userId);
@@ -71,11 +71,12 @@ function DmPage() {
   if (!messages) {
     return <p>loading...</p>;
   }
+  console.log(messages)
 
   return (
     <>
       <Header />
-      <div className="border border-solid border-neutral-300 ml-96 mr-3 my-6 w-3/5">
+      <div className="border border-solid border-neutral-300 ml-96  mt-7 w-1/2 bg-white">
         <AnotherUser userId={userId} />
         <div className={styles.dmContent} id="container">
           {messages === undefined ? (
@@ -85,18 +86,20 @@ function DmPage() {
               return (
                 <>
                   {data.user_id === currentUser ? (
-                    <div className="w-2/5 my-3 mr-3 ml-auto" key={data.user_id}>
-                      <p className="rounded-2xl bg-gray-200 p-4">
+                    //送信メッセージ
+                    <div className={`${styles.message} my-3 mr-3 ml-auto`} key={data.user_id}>
+                      <p className="rounded-2xl bg-gray-200 p-4 text-xl">
                         {data.message}
                       </p>
-                      <p>{data.to_char}</p>
+                      <p className="text-lg text-right">{data.to_char}</p>
                     </div>
                   ) : (
-                    <div className="w-2/5 my-3 mr-auto ml-3" key={data.user_id}>
-                      <p className="rounded-2xl border border-solid border-gray-200 p-4">
+                    //受信メッセージ
+                    <div className={`${styles.message} my-3 mr-auto ml-3`} key={data.user_id}>
+                      <p className="rounded-2xl border border-solid border-gray-200 p-4 text-xl">
                         {data.message}
                       </p>
-                      <p>{data.to_char}</p>
+                      <p className="text-lg text-left">{data.to_char}</p>
                     </div>
                   )}
                 </>
@@ -107,11 +110,11 @@ function DmPage() {
         {/* form入力をし、enterキーを押したときにonSubmitの中の関数が実行される */}
         <form
           onSubmit={(e) => handleSendMessage(e)}
-          className="my-2 mx-2 bg-white h-10 text-center"
+          className=" bg-white h-20 text-center items-center flex gap-3"
           id="form"
         >
           <input
-            className="w-10/12 border border-solid border-neutral-200 rounded-2xl py-0.5 px-2.5 h-8"
+            className="w-10/12 border border-solid border-neutral-200 rounded-2xl py-0.5 px-2.5 h-4/5 text-xl my-1 mx-2"
             placeholder="メッセージを入力..."
             onChange={(e) => setMessage(e.target.value)}
             value={message}
