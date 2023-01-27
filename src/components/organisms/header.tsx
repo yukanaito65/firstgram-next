@@ -11,7 +11,8 @@ import { BsPlusSquare, BsPlusSquareFill } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 import styles from "./header.module.css";
 import Nav from "../molecules/Nav";
-import NewPost from "../../../pages/newPost";
+import NewPost from "../templates/newPost";
+import NewPostModal from "../molecules/NewPostModal";
 import { getDownloadURL, ref } from "firebase/storage";
 import { auth, storage } from "../../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -141,16 +142,6 @@ function Header() {
             </li>
           )}
 
-          {currentPath === "/newPost" ? (
-            //クリックされた方
-            <li className={styles.header_li}>
-              <div className={styles.onListContent}>
-                <BsPlusSquareFill size={30} />
-                <p>作成</p>
-              </div>
-            </li>
-          ) : (
-            //クリックされてない方
             <li className={styles.header_li}>
               <button type="button" onClick={toggleModal} className={styles.listContent}>
                 <div className={styles.listContent}>
@@ -159,7 +150,6 @@ function Header() {
                 </div>
               </button>
             </li>
-          )}
 
           {currentPath === "/mypage" ? (
             //クリックされた方
@@ -231,9 +221,11 @@ function Header() {
     )}
       {navDisplay ? <Nav /> : <></>}
       {isOpenModal && (
-        <div className="bg-black bg-opacity-70">
+        // <div className="bg-black bg-opacity-70">
+        <NewPostModal close={toggleModal}>
           <NewPost close={toggleModal} />
-        </div>
+          </NewPostModal>
+        // </div>
       )}
     {/* // )} */}
     </>
