@@ -1,7 +1,7 @@
 import { sqlExecuter } from "../../modules/database"
 
  export default async (req: any, res: any) => {
-	const data = req.body;
+	const data = req.query;
 
 	const allData = await sqlExecuter.any(
             `SELECT * FROM posts FULL OUTER JOIN users ON posts.user_id = users.user_id FULL OUTER JOIN follows ON posts.user_id = follows.user_id WHERE users.user_id = $1`,[data.user_id]

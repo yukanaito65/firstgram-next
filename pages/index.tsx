@@ -63,7 +63,7 @@ const Page: NextPage = () => {
       data: topConnectApi,
       error: topConnectApiError,
       isLoading: topConnectApiIsLoading,
-    } = useSWR(`/api/topConnectApi?user_id="LjUrxuIgfwbbmOgoLQXLGQ7GkZs2"`, fetcher);
+    } = useSWR(`api/topConnectApi?user_id='LjUrxuIgfwbbmOgoLQXLGQ7GkZs2'`, fetcher);
     console.log(topConnectApi)
   
     // 結合データ取得
@@ -136,7 +136,7 @@ const Page: NextPage = () => {
   )
     return <div>failed to load</div>;
 
-    console.log(topConnectApi)
+    console.log(currentUserFav)
 
   // コメントアイコンクリック時にinputタグにフォーカス
   const onClickCommentIcon: () => void = () => {
