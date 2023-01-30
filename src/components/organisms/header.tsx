@@ -162,7 +162,7 @@ function Header() {
                 </div>
               </button>
             </li>
-
+          )}
           {currentPath === "/myPage" ? (
             //クリックされた方
             <li className={styles.header_li}>

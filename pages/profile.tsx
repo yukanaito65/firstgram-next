@@ -7,6 +7,10 @@ import RemoveFollowButton from '../src/components/atoms/button/RemoveFollowButto
 
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import PostLength from './postLength';
+import FollowLength from './followLength';
+import FollowerLength from './followerLength';
+import PostList from './postList';
 
 
 const fetcher = (resource: any, init: any) =>
@@ -83,16 +87,24 @@ function Profile() {
         </div>
 
         <div className="flex">
-          <div>投稿{2}件</div>
-          <div className="ml-9">フォロー{2}人</div>
-          <div className="ml-9">フォロワー{2}人</div>
+        <div><PostLength /></div>
+        <Link href="followPage"><button className="ml-9"><FollowLength /></button></Link>
+        <Link href="followerPage"><button className="ml-9"><FollowerLength /></button></Link>
         </div>
 
-        <div className="font-bold">えみり</div>
-        <div>Tokyo 1996</div>
+        <div className="font-bold">{data[0].name}</div>
+        <div>{data[0].profile}</div>
       </div>
 
+      <div>
+<PostList 
+// userId={user.uid}
+ />
+</div>
+
     </div>
+
+
   );
 }
 
