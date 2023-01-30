@@ -28,6 +28,7 @@ export default function NewPost(props: any) {
   const [caption, setCaption] = useState("");
   // post画像のプレビュー管理
   const [preview, setPreview] = useState("/img/no_image.png");
+  const [postId, setPostId] = useState<any>("")
 
   // ログインユーザー情報
   const auth = getAuth();
@@ -75,8 +76,10 @@ export default function NewPost(props: any) {
     imageUpload();
   }, []);
 
+  // ❷
   const getPostsId = () => {
     // Storageに保存した画像URLを取得するため、postテーブルからcurrentUserの最新のpostのpost_idを取得
+    // ❷-1
     fetch("/api/getPostData", {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -86,6 +89,10 @@ export default function NewPost(props: any) {
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log(res[0].post_id);
+        // ❷-1
+        setPostId(res[0].post_id);
+        console.log(postId)
         //  post画像をStorageに保存
         const storageRef = ref(
           storage,
@@ -105,14 +112,34 @@ export default function NewPost(props: any) {
             setLoading(false);
             setIsUploaded(true);
             getDownloadURL(storageRef).then((url: string) => {
-              setPostImgSrc(url);
+              console.log(url)
+              // setPostImgSrc(url);
+              fetch("/api/updatePostsBodyData", {
+                method: "PUT",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                  post_img: url,
+                  post_id: res[0].post_id
+                }),
+              })
+                .then((res) => {
+                  console.log(postId);
+                  console.log(res.json());
+                })
+                .catch((e) => console.log(e))
             });
           }
         );
-      });
+        
+      })
+      // .then((res) => {
+      //   // ❷-3
+      //   ;
+      // });
   };
 
   const onClickRegister = () => {
+    // ❶
     //  postテーブルにpostデータを追加
     fetch("/api/postPostsData", {
       method: "POST",
@@ -120,15 +147,17 @@ export default function NewPost(props: any) {
       body: JSON.stringify({
         user_id: currentUserId,
         caption: caption,
-        favorites: {},
         post_img: postImgSrc,
       }),
     })
-      .then((res) => console.log(res.json()))
+      .then((res) => 
+      {
+        console.log(res.json())
+        getPostsId(); // ❷
+      })
       .catch((e) => console.log(e));
-    getPostsId();
     // router.push("/");
-    window.location.reload();
+    // window.location.reload();
   };
 
   if (loading) {
