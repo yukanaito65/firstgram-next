@@ -36,7 +36,9 @@ const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 const Page: NextPage = () => {
   const [inputComment, setInputComment] = useState<string>("");
-  const [currentUserData, setCurrentUserData] = useState<any>("");
+  const [currentUserData, setCurrentUserData] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
+
   // selectbutton表示非表示
   const [select, setSelect] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -48,8 +50,9 @@ const Page: NextPage = () => {
       }
       else {
         setCurrentUserData(currentUser);
+        setLoading(false);
       }
-    }); 
+    });
   }, []);
 
 
@@ -63,9 +66,9 @@ const Page: NextPage = () => {
       data: topConnectApi,
       error: topConnectApiError,
       isLoading: topConnectApiIsLoading,
-    } = useSWR(`/api/topConnectApi?user_id="LjUrxuIgfwbbmOgoLQXLGQ7GkZs2"`, fetcher);
+    } = useSWR(`/api/topConnectApi?user_id=${currentUserData.uid}`, fetcher);
     console.log(topConnectApi)
-  
+
     // 結合データ取得
     const {
       data: connectData,
@@ -105,7 +108,7 @@ const Page: NextPage = () => {
 
   const {
     data: currentUserKeep,
-    error: kcurrentUserKeepError,
+    error: currentUserKeepError,
     isLoading: currentUserKeepIsLoading,
   } = useSWR(
     `api/getCuurentUserKeepQuery?post_id=22&user_id=${currentUserData.uid}`,
@@ -145,7 +148,7 @@ const Page: NextPage = () => {
     }
   };
 
-  
+
   // コメントを追加
   const onClickSendCommnet = (e: any) => {
     mutate("/api/postCommentsData");
@@ -235,12 +238,13 @@ const Page: NextPage = () => {
 
   return (
     <>
+    {!loading && (
     <div id="root">
       <Head>
         <title>secondgram</title>
       </Head>
       <Header />
-      
+
 
       <div className="mt-5">
       {connectData && connectData.map((data: any, index: number) => {
@@ -306,10 +310,10 @@ const Page: NextPage = () => {
         <hr className="mb-5" />
       </div>
         )
-        
+
       })}
-        
-      
+
+
         {/* <div className="flex ml-5">
           <Image width={30} src="" alt="自分のアイコン"  className={`mr-1 w-1/12 bg-white ${styles.userIcon}`} />
           <div>
@@ -319,6 +323,7 @@ const Page: NextPage = () => {
         </div> */}
       </div>
     </div>
+    )}
     </>
 
   );
