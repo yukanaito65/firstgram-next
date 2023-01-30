@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import type { MutableRefObject } from "react";
 import { useSession } from "next-auth/react";
+import { auth } from "../firebase";
 
 
 interface Message {
@@ -35,21 +36,42 @@ const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
 const Page: NextPage = () => {
   const [inputComment, setInputComment] = useState<string>("");
+  const [currentUserData, setCurrentUserData] = useState<any>("");
   // selectbutton表示非表示
   const [select, setSelect] = useState<boolean>(false);
   const { data: session } = useSession();
 
+  useEffect(() => {
+    onAuthStateChanged(auth, async (currentUser: any) => {
+      if (!currentUser) {
+        <Link href="/login">ログインしてください</Link>;
+      }
+      else {
+        setCurrentUserData(currentUser);
+      }
+    }); 
+  }, []);
+
+
+  console.log(currentUserData.uid)
     // ログインユーザー情報
-    const auth = getAuth();
-    const currentUserId = auth.currentUser?.uid;
-    console.log(`ログインユーザーID:${currentUserId}`);
+    // const auth = getAuth();
+    // const currentUserData = auth.currentUser?.uid;
+    // console.log(`ログインユーザーID:${currentUserData}`);
+
+    const {
+      data: topConnectApi,
+      error: topConnectApiError,
+      isLoading: topConnectApiIsLoading,
+    } = useSWR(`/api/topConnectApi?user_id="LjUrxuIgfwbbmOgoLQXLGQ7GkZs2"`, fetcher);
+    console.log(topConnectApi)
   
     // 結合データ取得
     const {
       data: connectData,
       error: connectDataError,
       isLoading: connectDataIsLoading,
-    } = useSWR("api/getAllPostIdQuery?post_id=22", fetcher);
+    } = useSWR(`api/getUsersPostsQueryData?user_id=${currentUserData.uid}`, fetcher);
 
     // コメントデータ取得
   const {
@@ -70,7 +92,7 @@ const Page: NextPage = () => {
     error: currentUserFavError,
     isLoading: currentUserFavIsLoading,
   } = useSWR(
-    `api/getCuurentUserFavQuery?post_id=22&user_id=${currentUserId}`,
+    `api/getCuurentUserFavQuery?post_id=22&user_id=${currentUserData.uid}`,
     fetcher
   );
 
@@ -86,7 +108,7 @@ const Page: NextPage = () => {
     error: kcurrentUserKeepError,
     isLoading: currentUserKeepIsLoading,
   } = useSWR(
-    `api/getCuurentUserKeepQuery?post_id=22&user_id=${currentUserId}`,
+    `api/getCuurentUserKeepQuery?post_id=22&user_id=${currentUserData.uid}`,
     fetcher
   );
 
@@ -99,7 +121,8 @@ const Page: NextPage = () => {
     favsDataIsLoading ||
     keppsDataIsLoading ||
     currentUserFavIsLoading ||
-    currentUserKeepIsLoading
+    currentUserKeepIsLoading ||
+    topConnectApiIsLoading
   )
     return <div>loading...</div>;
   if (
@@ -108,9 +131,12 @@ const Page: NextPage = () => {
     favsDataError |
     keepsDataError |
     currentUserFavError |
-    kcurrentUserKeepError
+    kcurrentUserKeepError |
+    topConnectApiError
   )
     return <div>failed to load</div>;
+
+    console.log(topConnectApi)
 
   // コメントアイコンクリック時にinputタグにフォーカス
   const onClickCommentIcon: () => void = () => {
@@ -119,11 +145,7 @@ const Page: NextPage = () => {
     }
   };
 
-  // postのtimestampの表記を設定
-  const postTimestamp = Date.parse(connectData[0].timestamp);
-  const postTimestampData = new Date(postTimestamp).toLocaleString();
-  const timestampUntilMinits = postTimestampData.slice(0, -3);
-
+  
   // コメントを追加
   const onClickSendCommnet = (e: any) => {
     mutate("/api/postCommentsData");
@@ -142,7 +164,7 @@ const Page: NextPage = () => {
 
   // いいね追加ボタン
   const onClickAddGood = () => {
-    if (currentUserId) {
+    if (currentUserData.uid) {
       fetch("/api/postFavsData", {
         method: "POST",
         headers: { "Content-type": "application/json" },
@@ -161,7 +183,7 @@ const Page: NextPage = () => {
 
   // いいね解除ボタン
   const onClickDeleteGood = (e: any) => {
-    if (currentUserId) {
+    if (currentUserData.uid) {
       fetch("/api/deleteFavData", {
         method: "PUT",
         headers: { "Content-type": "application/json" },
@@ -178,7 +200,7 @@ const Page: NextPage = () => {
   };
   // 保存追加ボタン
   const onClickAddKeep = () => {
-      if (currentUserId) {
+      if (currentUserData.uid) {
         fetch("/api/postKeepsData", {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -195,7 +217,7 @@ const Page: NextPage = () => {
   };
   // 保存解除ボタン
   const onClickDeleteKeep = (e: any) => {
-    if (currentUserId) {
+    if (currentUserData.uid) {
       fetch("/api/deleteKeepData", {
         method: "PUT",
         headers: { "Content-type": "application/json" },
@@ -220,16 +242,21 @@ const Page: NextPage = () => {
       <Header />
       
 
-      <div className="flex mt-5">
+      <div className="mt-5">
       {connectData && connectData.map((data: any, index: number) => {
+        {console.log(data.icon_img)}
+        return(
         <div className="mr-auto ml-auto w-3/5" key={index}>
         <div className="flex">
           <img src={data.icon_img} alt={`${data.user_name}のアイコン`} className={`mr-1 w-1/12 bg-white ${styles.userIcon}`} />
           <p className="font-semibold mr-1">{data.user_name}</p>
-          <p className={styles.timestamp}>・{data.timestamp}</p>
+          <p className={styles.timestamp}>・{data.to_char}</p>
         </div>
         <img src={data.post_img} alt="投稿画像" className="w-full" />
-        <div className="flex pt-3 px-4">
+        <div>
+          {data.caption}
+          </div>
+        <div className="flex pt-3">
               {currentUserFav.length > 0 ? (
                 <button onClick={onClickDeleteGood} className="my-2 mr-2">
                   <FaHeart size={25} color={"red"} />
@@ -243,7 +270,7 @@ const Page: NextPage = () => {
               <button onClick={onClickCommentIcon} className="m-2">
                 <FaRegComment size={25} />
               </button>
-              {"otherUserId" === currentUserId ? (
+              {"otherUserId" === currentUserData.uid ? (
                 <></>
               ) : (
                 <Link href="/dmPage?user_id=otherUserId">
@@ -256,11 +283,11 @@ const Page: NextPage = () => {
                 いいね：{favsData.length}人
               </p>
               {currentUserKeep.length > 0 ? (
-                <button onClick={onClickDeleteKeep} className="ml-auto m-2">
+                <button onClick={onClickDeleteKeep} className="ml-auto">
                   <FaBookmark size={25} />
                 </button>
               ) : (
-                <button onClick={onClickAddKeep} className="ml-auto m-2">
+                <button onClick={onClickAddKeep} className="ml-auto">
                   <FaRegBookmark size={25} />
                 </button>
               )}
@@ -276,18 +303,20 @@ const Page: NextPage = () => {
           {/* );
               })} */}
         </div>
-        <hr />
+        <hr className="mb-5" />
       </div>
+        )
+        
       })}
         
       
-        <div className="flex ml-5">
+        {/* <div className="flex ml-5">
           <Image width={30} src="" alt="自分のアイコン"  className={`mr-1 w-1/12 bg-white ${styles.userIcon}`} />
           <div>
             <p className="font-semibold mr-1">ユーザーネーム</p>
             <p className="timestamp">ネーム</p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
     </>
