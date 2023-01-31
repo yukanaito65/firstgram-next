@@ -4,7 +4,7 @@ import  useSWR  from 'swr';
 import { auth } from '../firebase';
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
-function PostLength() {
+function FollowerLength() {
 
     //ログインしているとログイン情報を持つ
   const [user, setUser] = useState<any>("");
@@ -24,22 +24,22 @@ function PostLength() {
       }, []);
 
       // propsでuseridを指定するようにする（stateでprofileのuidを渡せるようにする）
-    const { data: posts, error:error, isLoading:isLoading } = useSWR(`/api/myPagePost?user_id=${user.uid}`, fetcher);
+    const { data: follows, error:error, isLoading:isLoading } = useSWR(`/api/myPageFollower?user_id=${user.uid}`, fetcher);
     if (error) {
-      return <p>error!</p>;
+      return <p>フォロワー0人</p>;
     }
-    if (!posts) {
-      return <p>loading</p>;
+    if (!follows) {
+      return <p>0</p>;
     }
     if(isLoading ){
       return <p>loading</p>
     }
 
-    console.log(posts)
+    console.log(follows)
   return (
     <>
 {!loading ? (
-    <div>投稿{posts.length}件</div>
+    <div>フォロワー{follows.length}人</div>
   ):(
 <></>
   )}
@@ -47,4 +47,4 @@ function PostLength() {
   )
 }
 
-export default PostLength
+export default FollowerLength

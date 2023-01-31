@@ -48,7 +48,7 @@ function RemoveFollowButton() {
       {followBtn === true ? (
         <>
           <button  onClick={remove}
-          className="border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
+          className="border border-blue-500 rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-blue-500
         ">
             フォロー中
           </button>
