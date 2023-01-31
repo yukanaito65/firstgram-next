@@ -1,25 +1,58 @@
 .container {
-    background-color: #262626;
+    /* background-color: #262626; */
+    background-color: #ffff;
+    border-radius: 10px;
+    width: 500px;
+}
+
+.editContainer {
+    background-color: #ffff;
     border-radius: 10px;
 }
 
 .title {
-    border-bottom: 1px solid #363636;
+    border-bottom: 1px solid lightgray;
     line-height: 40px;
+}
+
+.editTitle {
+    margin-left: 350px;
+}
+
+.photoIcon {
+    margin: 0 auto;
+}
+
+.selectLabel {
+    background-color: #1596F7;
 }
 
 .inputFile {
     display: none;
 }
 
+.picture {
+    width: 400px;
+    height: 400px;
+}
+.picture_img {
+    object-fit: cover;
+}
 .userIcon {
     border-radius: 50%;
     aspect-ratio: 1/1;
 }
 
 .inputCaption {
-    background-color: #262626;
+    background-color: #ffff;
     resize: none;
+    font-size: 1.5rem;
+}
+.inputCaption::placeholder {
+    color: #c7c7c7;
+}
+.inputCaption:focus {
+    outline: none;
 }
 
 .inputCaption:focus {

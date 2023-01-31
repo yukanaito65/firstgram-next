@@ -31,3 +31,9 @@
   margin: 0 auto;
   font-size: 1.4rem;
 }
+
+@media screen and (max-width: 768px){
+  .wrapper {
+   height: 650px;
+  }
+}

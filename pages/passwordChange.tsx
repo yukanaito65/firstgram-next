@@ -14,6 +14,9 @@ import Header from "../src/components/organisms/header";
 import Image from "next/image";
 import { getDownloadURL, ref } from "firebase/storage";
 import styles from "./passwordChange.module.css";
+import MobileHeader from "../src/components/organisms/MobileHeader";
+import { getWindowSize } from "../src/components/utils/GetWindowSize";
+import MobileFooter from "../src/components/organisms/MobileFooter";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -112,6 +115,9 @@ const PasswordChange = () => {
     fetcher
   );
 
+   //画面幅取得
+   const { height, width } = getWindowSize();
+
   if (error) {
     return <p>error!</p>;
   }
@@ -162,10 +168,18 @@ const PasswordChange = () => {
     <>
     {!loading && (
     <div className="md:flex">
+      {width > 768 ? (
       <Header />
-      <div className="flex gap-12 border border-solid border-neutral-300 ml-64 my-28 w-3/4 bg-white">
+      ) : (
+        <MobileHeader />
+      )}
+      <div className={`md:flex md:gap-12 md:border md:border-solid md:border-neutral-300 md:ml-64 md:my-28 md:w-3/4 bg-white ${styles.wrapper}`}>
+      {width > 768 ? (
         <SettingMenu />
-        <div className="flex flex-col gap-5 w-full mt-20">
+      ) :(
+        <></>
+      )}
+        <div className="flex flex-col gap-5 w-full md:mt-20 mt-10">
           <div className="flex items-center gap-12 mb-6">
             <div className="w-48">
               {userData[0].icon_img !== "" ? (
@@ -190,11 +204,11 @@ const PasswordChange = () => {
           </div>
 
           <form onSubmit={dataUpdate}>
-            <div className="flex items-start gap-12 my-4 relative h-20">
+            <div className={`md:flex items-start gap-12 my-4 relative md:h-20 ${styles.formContent}`}>
               <label htmlFor="settingPassword" className="font-bold">
                 現在のパスワード
               </label>
-              <div className="w-7/12">
+              <div className={`md:w-7/12 ${styles.inputForm}`}>
                 <input
                   name="settingPassword"
                   id="settingPassword"
@@ -225,11 +239,11 @@ const PasswordChange = () => {
               </span>
             </div>
 
-            <div className="flex items-start gap-12 my-4 relative h-20">
+            <div className={`md:flex items-start gap-12 my-4 relative md:h-20 ${styles.formContent}`}>
               <label htmlFor="settingPassword" className="font-bold">
                 新しいパスワード
               </label>
-              <div className="w-7/12">
+              <div className={`md:w-7/12 ${styles.inputForm}`}>
                 <input
                   name="settingPassword"
                   id="settingPassword"
@@ -238,7 +252,7 @@ const PasswordChange = () => {
                   onChange={onChangeNewPassword}
                   pattern="(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,15}"
                   className="h-16 border-gray-300 border-solid border bg-gray-50 rounded-lg w-full text-xl"
-                  placeholder="パスワード(半角英小文字、数字を含む6文字以上15文字以内)"
+                  placeholder="半角英小文字、数字を含む6文字以上15文字以内"
                   required
                 />
                 <span
@@ -262,13 +276,13 @@ const PasswordChange = () => {
               </span>
             </div>
 
-            <div className="flex items-start gap-12 my-4 relative h-20">
+            <div className={`md:flex items-start gap-12 my-4 relative md:h-20  ${styles.formContent}`}>
               <label htmlFor="settingPassword" className="font-bold text-right">
                 新しいパスワード
                 <br />
                 を確認
               </label>
-              <div className="w-7/12">
+              <div className={`md:w-7/12 ${styles.inputForm}`}>
                 <input
                   name="settingPassword"
                   id="settingPassword"
@@ -290,6 +304,7 @@ const PasswordChange = () => {
                 onClick={toggleConfirmCNewPassword}
                 role="presentation"
                 className={styles.isRevealPasswordIcon}
+                id={styles.isRevealPasswordIconMobile}
               >
                 {isRevealConfirmCNewPassword ? (
                   <AiFillEye />
@@ -314,7 +329,11 @@ const PasswordChange = () => {
           </form>
         </div>
       </div>
-
+      {width > 768 ? (
+        <></>
+      ): (
+        <MobileFooter />
+      )}
     </div>
     )}
      <div

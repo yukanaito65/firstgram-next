@@ -37,7 +37,7 @@ function MobileHeader() {
         setLoading(false);
       }
     });
-  },[]);
+  }, []);
 
   const [navDisplay, setNavDisplay] = useState<boolean>(false);
 
@@ -53,9 +53,9 @@ function MobileHeader() {
 
   const toggleModal = (e: any) => {
     // if (e.target === e.currentTarget) {
-      setIsOpenModal(!isOpenModal);
+    setIsOpenModal(!isOpenModal);
     // }
-    console.log(isOpenModal)
+    console.log(isOpenModal);
   };
 
   const navActive = () => {
@@ -63,7 +63,10 @@ function MobileHeader() {
   };
 
   //ログインユーザーの情報取得
-  const { data: users, error } = useSWR(() => `/api/userData?user_id=${user.uid}`,fetcher);
+  const { data: users, error } = useSWR(
+    () => `/api/userData?user_id=${user.uid}`,
+    fetcher
+  );
 
   if (error) {
     return <p>error!</p>;
@@ -74,50 +77,48 @@ function MobileHeader() {
 
   return (
     <>
-    {!loading && (
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <Image
-            src="/logo_transparent.png"
-            alt="logo"
-            width={70}
-            height={70}
-            className={styles.logo_img}
-          />
-        </div>
+      {!loading && (
+        <header className={styles.header}>
+          <div className={styles.logo}>
+             <Image
+              src="/ml.png"
+              alt="logo"
+              width={70}
+              height={70}
+              className={styles.logo_img}
+            />
+          </div>
 
-<div className="flex">
-        <div className={styles.header_ul}>
+          <div className="flex">
+            <div className={styles.header_ul}>
               <Link href="/newPost" id={styles.link}>
                 <div className={styles.listContent}>
                   <BsPlusSquare size={30} />
                 </div>
               </Link>
-        </div>
+            </div>
 
-        {navDisplay ? (
-          <button className={styles.otherBtn} onClick={() => navActive()}>
-            <GiHamburgerMenu size={30} />
-            <p className={`font-bold ${styles.menuTitle}`}>その他</p>
-          </button>
-        ) : (
-          <button className={styles.otherBtn} onClick={() => navActive()}>
-            <GrMenu size={30} />
-            <p className={styles.menuTitle}>その他</p>
-          </button>
-        )}
-        </div>
-      </header>
-    )}
+            {navDisplay ? (
+              <button className={styles.otherBtn} onClick={() => navActive()}>
+                <GiHamburgerMenu size={30} />
+              </button>
+            ) : (
+              <button className={styles.otherBtn} onClick={() => navActive()}>
+                <GrMenu size={30} />
+              </button>
+            )}
+          </div>
+        </header>
+      )}
       {navDisplay ? <Nav /> : <></>}
       {isOpenModal && (
         // <div className="bg-black bg-opacity-70">
         <NewPostModal close={toggleModal}>
           <NewPost close={toggleModal} />
-          </NewPostModal>
+        </NewPostModal>
         // </div>
       )}
-    {/* // )} */}
+      {/* // )} */}
     </>
   );
 }

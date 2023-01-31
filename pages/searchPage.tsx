@@ -12,6 +12,7 @@ import React, {
 import useSWR from "swr";
 import { auth } from "../firebase";
 import Header from "../src/components/organisms/header";
+import MobileFooter from "../src/components/organisms/MobileFooter";
 import MobileHeader from "../src/components/organisms/MobileHeader";
 import { getWindowSize } from "../src/components/utils/GetWindowSize";
 import { User } from "../types/types";
@@ -110,6 +111,7 @@ function SearchPage() {
 
   // console.log(windowDimensions.width);
 
+  //getWindowSize()関数を呼び出してwindowサイズをリアルタイムで取得する
   const { height, width } = getWindowSize();
   console.log(width)
 
@@ -188,6 +190,11 @@ function SearchPage() {
           )}
         </div>
       </div>
+      {width > 768 ? (
+        <></>
+      ): (
+        <MobileFooter />
+      )}
     </div>
     )}
     </>
