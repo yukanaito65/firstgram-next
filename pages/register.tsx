@@ -149,7 +149,7 @@ function Register() {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       {user ? (
         <div>
           <Link href="myPage">myPage</Link>
@@ -158,9 +158,11 @@ function Register() {
         </div>
       ) : (
         <>
-          <div className="mx-auto my-10 w-96 ">
+          <div className="mx-auto my-10 w-1/2"
+          style={{height: "550px"}}>
             <form onSubmit={handleSubmit}>
-              <div className="border border-gray-300">
+              <div className="border border-gray-300 bg-white"
+              style={{height:"550px"}}>
                 <div className="w-48 mx-auto">
                   <Image
                     src="/logo_transparent.png"
@@ -219,11 +221,11 @@ function Register() {
             </form>
           </div>
 
-          <div className="mx-auto my-10 w-96 ">
+          <div className="mx-auto my-10 w-1/2 bg-white">
             <div className="border border-gray-300 mt-3 h-16 flex">
               <div className="mx-auto my-auto">
                 アカウントをお持ちですか？
-                <Link className="text-blue-600 ml-1" href="/login">
+                <Link className="text-blue-600 ml-1 font-bold" href="/login">
                   ログインする
                 </Link>
               </div>

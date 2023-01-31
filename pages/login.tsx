@@ -13,7 +13,7 @@ import InputPass from "../src/components/atoms/input/inputPass";
 import LoginButton from "../src/components/atoms/button/loginButton";
 import Header from "../src/components/organisms/header";
 
-function login() {
+function Login() {
   const [user, setUser] = useState();
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -51,24 +51,29 @@ function login() {
     });
   });
 
-  
+
 
   return (
     <div>
       {user ? (
         <div>
-           <Header />
+           {/* <Header /> */}
           <Link href="/myPage">myPage</Link>
           <br />
           <button onClick={logout}>ログアウト</button>
         </div>
-          
+
       ) : (
         <>
-           <Header />
-        <div className="mx-auto my-10 w-96 ">
+           {/* <Header /> */}
+        <div
+        className="mx-auto my-10 w-1/2"
+        style={{height: "500px"}}>
           <form onSubmit={handleSubmit}>
-            <div className="border border-gray-300">
+            <div
+            className="border border-gray-300 h-3/4 bg-white"
+            style={{height: "400px"}}
+            >
               <div className="w-48 mx-auto">
                 <Image src="/logo_transparent.png" alt="ロゴ" width={192} height={192} />
               </div>
@@ -79,7 +84,7 @@ function login() {
               </div>
             </div>
           </form>
-          <div className="border border-gray-300 mt-3 h-16 flex">
+          <div className="border border-gray-300 mt-3 h-24 flex bg-white">
             <div className="mx-auto my-auto">
             アカウントをお持ちでないですか？
             <Link className="text-blue-600 ml-1" href="/register">登録する</Link>
@@ -89,8 +94,8 @@ function login() {
         </>
       )}
     </div>
- 
+
   );
 }
 
-export default login;
+export default Login;

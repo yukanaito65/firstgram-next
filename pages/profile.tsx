@@ -36,6 +36,7 @@ function Profile() {
     });
   };
 
+
   if (error) {
     return <p>error!</p>;
   }
@@ -45,9 +46,10 @@ function Profile() {
 
 
 
+
   return (
-    <>     
-    <Header />   
+    <>
+    <Header />
     <div className="pt-7 mx-auto w-max">
     <div className="flex pt-7 mx-auto w-max ">
 
@@ -113,7 +115,7 @@ function Profile() {
 
 
       <div className="mt-16">
-<PostList 
+<PostList
 userId={userId}
  />
 </div>
