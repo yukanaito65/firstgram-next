@@ -134,7 +134,7 @@ const Page: NextPage = () => {
     favsDataError |
     keepsDataError |
     currentUserFavError |
-    kcurrentUserKeepError |
+    currentUserKeepError |
     topConnectApiError
   )
     return <div>failed to load</div>;

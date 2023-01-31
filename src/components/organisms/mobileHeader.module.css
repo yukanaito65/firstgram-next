@@ -12,12 +12,11 @@
   justify-content: space-between;
   padding: 0 15px;
 }
-.logo{
+.logo {
   /* text-align: center; */
-  /* margin-top: 20px; */
-  width: 90px;
+  margin-top: 20px;
+  width: 150px;
   /* margin: 20px auto 0 auto; */
-
 }
 .logo_img {
   width: 100%;
@@ -53,7 +52,7 @@
 }
 .listContent:hover {
   background-color: #f5f5f5;
-  opacity: 1.0;
+  opacity: 1;
 }
 
 .onListContent {
@@ -76,19 +75,15 @@
   text-decoration: none;
 }
 .otherBtn {
-      width: 90%;
-      padding-left: 10px;
-      background: none;
-      border: none;
-      display: flex;
-      align-items: center;
-      gap: 10%;
-  }
-.otherBtn:hover{
-    cursor: pointer;
-    background-color: #f5f5f5;
-  }
-
-.menuTitle {
-  display: none;
+  width: 90%;
+  padding-left: 10px;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10%;
+}
+.otherBtn:hover {
+  cursor: pointer;
+  background-color: #f5f5f5;
 }
