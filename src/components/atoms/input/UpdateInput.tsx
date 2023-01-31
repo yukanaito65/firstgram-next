@@ -7,6 +7,7 @@ interface Props {
   name: string;
   pattern: string;
   message?: any;
+  description?: string;
   countMessage?: any;
   setValue: Dispatch<SetStateAction<string>>;
 }
@@ -43,7 +44,10 @@ function UpdateInput(props: Props) {
             正しい形式で入力してください
           </span>
         </div>
-        <p className="text-lg text-gray-400 my-5">{props.message}</p>
+        <p className="text-lg text-gray-400 my-5">
+        {props.message}
+          <p className={styles.description}>{props.description}</p>
+        </p>
         {props.countMessage}
       </div>
     </div>

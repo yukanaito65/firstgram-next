@@ -164,7 +164,7 @@ function Header() {
             </li>
             )}
 
-          {currentPath === "/myPage" ? (
+          {currentPath === "/mypage" ? (
             //クリックされた方
             <li className={styles.header_li}>
               <div className={styles.onListContent}>

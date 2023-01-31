@@ -5,6 +5,9 @@ import useSWR, { useSWRConfig } from "swr";
 import { auth } from "../firebase";
 import AnotherUser from "../src/components/organisms/AnotherUser";
 import Header from "../src/components/organisms/header";
+import MobileFooter from "../src/components/organisms/MobileFooter";
+import MobileHeader from "../src/components/organisms/MobileHeader";
+import { getWindowSize } from "../src/components/utils/GetWindowSize";
 import styles from "./dmPage.module.css";
 
 const fetcher = (resource: any, init: any) =>
@@ -65,6 +68,8 @@ function DmPage() {
     setMessage("");
   };
 
+  const { height, width } = getWindowSize();
+
   if (error) {
     return <p>error!</p>;
   }
@@ -75,8 +80,14 @@ function DmPage() {
 
   return (
     <>
+    {width > 768 ? (
       <Header />
-      <div className="border border-solid border-neutral-300 ml-96  mt-7 w-1/2 bg-white">
+    ) : (
+<MobileHeader />
+    )}
+      <div className="md:border md:border-solid md:border-neutral-300 md:ml-96  mt-7 md:w-1/2 bg-white"
+        style={{ height: "650px" }}
+        >
         <AnotherUser userId={userId} />
         <div className={styles.dmContent} id="container">
           {messages === undefined ? (
@@ -125,6 +136,11 @@ function DmPage() {
           </button>
         </form>
       </div>
+      {width > 768 ? (
+        <></>
+      ): (
+        <MobileFooter />
+      )}
     </>
   );
 }
