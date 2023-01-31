@@ -49,7 +49,7 @@ export default function PostDetails(props: Props) {
     data: commentsData,
     error: commentsDataError,
     isLoading: commentsDataIsLoading,
-  } = useSWR("api/getCommentsData?post_id=22", fetcher);
+  } = useSWR("api/getCommentsDataQuery?post_id=22", fetcher);
 
   // Favoritesデータ取得
   const {
