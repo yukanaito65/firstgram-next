@@ -115,7 +115,7 @@ function MyPage() {
             </>
           ) : (
             <>
-            
+
               {/* {users.map(
             <div>{users[0].userName}</div>
             )} */}
@@ -137,7 +137,7 @@ function MyPage() {
                   height={80}
                   className=" border border-gray-300 bg-gray-300 rounded-full "
                 />
-                )} 
+                )}
                 </div>
 
 {/* 追加 */}
@@ -149,6 +149,7 @@ function MyPage() {
                     <div className="h-8 pt-1 text-xl">{users[0].user_name}
                       {/* <UserName uid={userId}/> */}
                       </div>
+                      <Link href="/profileChange">
                     <button
                       className="
             border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
@@ -156,6 +157,7 @@ function MyPage() {
                     >
                       プロフィールを編集
                     </button>
+                    </Link>
                     <button className="ml-2">○</button>
                   </div>
 
@@ -204,8 +206,8 @@ function MyPage() {
                   height={200}
                   className="w-[calc(100%_-_6px /3)] aspect-square"
                 /> */}
-         
-           
+
+
               </div>
             </>
           )}

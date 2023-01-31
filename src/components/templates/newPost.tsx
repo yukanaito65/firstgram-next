@@ -10,6 +10,7 @@ import Header from "../organisms/header";
 import { getAuth } from "@firebase/auth";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { HiOutlinePhotograph } from "react-icons/hi";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -130,7 +131,7 @@ export default function NewPost(props: any) {
             });
           }
         );
-        
+
       })
       // .then((res) => {
       //   // ❷-3
@@ -150,7 +151,7 @@ export default function NewPost(props: any) {
         post_img: postImgSrc,
       }),
     })
-      .then((res) => 
+      .then((res) =>
       {
         console.log(res.json())
         getPostsId(); // ❷
@@ -185,7 +186,7 @@ export default function NewPost(props: any) {
   if (isUploaded) {
     return (
       <>
-        <Header />
+        {/* <Header /> */}
         <IoClose
           onClick={closeModal}
           size={30}
@@ -194,22 +195,24 @@ export default function NewPost(props: any) {
 
         <div className="flex h-screen">
           <div
-            className={`w-10/12 text-white ${styles.container}  m-auto h-3/4`}
+            className={`w-11/12 text-black ${styles.editContainer}  m-auto`}
           >
-            <div className="">
+
               <div className={`w-full flex ${styles.title}`}>
-                <p className={`text-center font-semibold `}>新規投稿を作成</p>
+                <p className={`text-center font-semibold ${styles.editTitle}`}>新規投稿を作成</p>
                 <button
                   type="button"
                   onClick={onClickRegister}
-                  className={`ml-auto font-bold ${styles.shareBtn}`}
+                  className={`ml-auto  mr-3 font-bold  ${styles.shareBtn}`}
                 >
                   シェア
                 </button>
               </div>
-              <div className="flex h-full">
-                <div className="w-6/12 w-full flex m-auto">
-                  <img src={preview} alt="preview" className="m-auto" />
+              <div className="flex ">
+                <div
+                // className="w-1/2 h-full"
+                className={styles.picture}>
+                  <img src={preview} alt="preview" className={`w-full h-full ${styles.picture_img}`} />
                 </div>
                 <div>
                   <div className="flex my-3 px-4 ">
@@ -223,7 +226,7 @@ export default function NewPost(props: any) {
                     </p>
                   </div>
                   <textarea
-                    className={`w-full h-full border-0 ${styles.inputCaption}`}
+                    className={`w-full h-10/12 border-0 ${styles.inputCaption}`}
                     cols={20}
                     rows={10}
                     wrap="soft"
@@ -232,16 +235,17 @@ export default function NewPost(props: any) {
                   />
                 </div>
               </div>
-            </div>
+
           </div>
         </div>
       </>
     );
   }
 
+  //最初に表示される画面
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <IoClose
         size={30}
         className="absolute top-8 text-white right-8"
@@ -249,19 +253,20 @@ export default function NewPost(props: any) {
       />
 
       <div className="flex h-screen">
-        <div className={` text-white ${styles.container}  m-auto h-3/4`}>
+        <div className={` text-black ${styles.container}  m-auto h-3/4`}>
           <div className="">
             <div className="w-full">
               <p className={`text-center font-semibold ${styles.title}`}>
                 新規投稿を作成
               </p>
             </div>
-            <div className="text-center m-auto">
-              <div className="imageLogoAndText">
+            <div className="text-center m-auto items-center mt-56">
+              <div className="mb-9">
+              <HiOutlinePhotograph size={70} className={styles.photoIcon} />
                 <img className="m-auto" />
-                <p>ここに写真や動画をドラッグ</p>
+                <p className="mt-5 text-3xl font-light">ここに写真をドラッグ</p>
               </div>
-              <label htmlFor="inputFile">
+              <label htmlFor="inputFile" className={` text-white py-3 px-5 rounded-xl font-bold ${styles.selectLabel}`}>
                 コンピュータから選択
                 <input
                   type="file"

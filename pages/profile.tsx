@@ -32,6 +32,7 @@ function Profile() {
     });
   };
 
+
   if (error) {
     return <p>error!</p>;
   }
@@ -51,7 +52,7 @@ function Profile() {
         />
       </div>
 
-           
+
 
 
       <div className="pl-16 py-5 flex flex-col max-h-145 justify-between">

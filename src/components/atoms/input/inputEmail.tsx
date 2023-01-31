@@ -6,12 +6,12 @@ interface Props {
 
 function InputEmail(props: Props) {
   return (
-    <div className="w-full mt-1 flex">
+    <div className="w-full my-3 flex">
       <div className="text-xs text-red-500 my-auto">
       {props.requiredIcon}
       </div>
       <input
-        className="border border-gray-300 rounded w-full h-8 pl-2"
+        className="border border-gray-300 rounded w-full h-16 pl-2 bg-gray-100"
         id="email"
         type="email"
         name="email"
