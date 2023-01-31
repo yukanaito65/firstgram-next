@@ -12,6 +12,9 @@ import React, {
 import useSWR from "swr";
 import { auth } from "../firebase";
 import Header from "../src/components/organisms/header";
+import MobileFooter from "../src/components/organisms/MobileFooter";
+import MobileHeader from "../src/components/organisms/MobileHeader";
+import { getWindowSize } from "../src/components/utils/GetWindowSize";
 import { User } from "../types/types";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
@@ -86,6 +89,32 @@ function SearchPage() {
   };
   console.log(searchQuery);
 
+  // 画面サイズが変わるたびに state の windowDimensions にリアルタイムで反映され、幅、高さの値はそれぞれ windowDimensions.width と windowDimensions.height で取得できる
+  // const getWindowDimensions = () => {
+  //   if(typeof window !== "object"){
+  //   const { innerWidth: width, innerHeight: height } = window;
+  //   return {
+  //     width,
+  //     height
+  //   };
+  // }}
+
+  // const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  // useEffect(() => {
+  //   const onResize = () => {
+  //     setWindowDimensions(getWindowDimensions());
+  //   }
+  //   window.addEventListener('resize', onResize);
+  //   return () => window.removeEventListener('resize', onResize);
+  // }, []);
+
+
+  // console.log(windowDimensions.width);
+
+  //getWindowSize()関数を呼び出してwindowサイズをリアルタイムで取得する
+  const { height, width } = getWindowSize();
+  console.log(width)
+
   if (error) {
     return <p>error!</p>;
   }
@@ -96,10 +125,14 @@ function SearchPage() {
   return (
     <>
     {!loading && (
-    <div className="flex">
+    <div className="md:flex">
+      {width > 768 ? (
       <Header />
+      ): (
+        <MobileHeader />
+      )}
       <div
-        className="ml-96 my-8 w-3/5 bg-white border border-solid border-neutral-300 items-center"
+        className="md:ml-96 md:my-8 md:w-3/5 bg-white md:border md:border-solid md:border-neutral-300 items-center"
         style={{ height: "650px" }}
       >
         <div className="font-bold text-4xl mt-10 ml-10">検索</div>
@@ -157,6 +190,11 @@ function SearchPage() {
           )}
         </div>
       </div>
+      {width > 768 ? (
+        <></>
+      ): (
+        <MobileFooter />
+      )}
     </div>
     )}
     </>

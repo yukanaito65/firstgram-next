@@ -137,7 +137,7 @@ const Panel: React.FC<Props> = (props) => {
   };
 
   return (
-    <section className="relative w-full bg-white rounded-2xl overflow-hidden text-center">
+    <section className={`relative w-4/5 md:w-full bg-white rounded-2xl overflow-hidden text-center ${styles.section}`}>
       <div className={styles.title}>
         <p>プロフィール写真を変更</p>
       </div>

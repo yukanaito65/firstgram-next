@@ -146,24 +146,26 @@ function Header() {
 
           {currentPath === "/newPost" ? (
             //クリックされた方
-            <li className={styles.commonHeader_li}>
-              <div className={styles.commonOnListContent}>
+            <li className={styles.header_li}>
+              <div className={styles.onListContent}>
                 <BsPlusSquareFill size={30} />
-                <p>作成</p>
+                <p className="font-bold">作成</p>
               </div>
             </li>
           ) : (
             //クリックされてない方
-            <li className={styles.commonHeader_li}>
-              <button type="button" onClick={toggleModal} className={styles.commonListContent}>
-                <div className={styles.commonListContent}>
+            <li className={styles.header_li}>
+              <button type="button" onClick={toggleModal} className={styles.listContent}>
+                <div className={styles.listContent}>
                   <BsPlusSquare size={30} />
                   <p>作成</p>
                 </div>
               </button>
             </li>
+
           )}
           {currentPath === "/myPage" ? (
+
             //クリックされた方
             <li className={styles.header_li}>
               <div className={styles.onListContent}>

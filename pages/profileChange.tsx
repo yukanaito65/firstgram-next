@@ -13,6 +13,9 @@ import Panel from "../src/components/molecules/Panel";
 import Image from "next/image";
 import styles from "./profileChange.module.css";
 import completeStyles from "./passwordChange.module.css"
+import MobileHeader from "../src/components/organisms/MobileHeader";
+import MobileFooter from "../src/components/organisms/MobileFooter";
+import { getWindowSize } from "../src/components/utils/GetWindowSize";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
@@ -69,6 +72,9 @@ const ProfileChange = () => {
   //   };
   // imageUpload();
 
+  //画面幅取得
+  const { height, width } = getWindowSize();
+
   if (error) {
     return <p>error!</p>;
   }
@@ -110,12 +116,21 @@ const ProfileChange = () => {
   return (
     <>
       {!loading && (
-        <div className="flex" id="root">
+        <div className="md:flex" id="root">
+      {width > 768 ? (
           <Header />
-          <div className="flex gap-12 border border-solid border-neutral-300 ml-64  my-28 w-3/4 bg-white h-1/2">
+      ) : (
+          <MobileHeader />
+      )}
+          <div className={`md:flex md:gap-12 md:border md:border-solid md:border-neutral-300 md:ml-64  md:my-28 md:w-3/4 bg-white md:h-1/2 ${styles.wrapper}`}
+        >
+      {width > 768 ? (
             <SettingMenu />
+      ) :(
+        <></>
+      )}
             <form
-              className="flex flex-col gap-2.5 w-full mt-16"
+              className="flex flex-col gap-2.5 w-full md:mt-16 mt-10"
               onSubmit={handleSubmit}
             >
               <div className="flex items-center gap-12 h-20 mb-6">
@@ -159,8 +174,9 @@ const ProfileChange = () => {
                   name={"name"}
                   pattern={"[!-~]{1,30}"}
                   message={
-                    "周りから知られている名前(氏名、ニックネーム)を使用すると、他の人があなたのアカウントを見つけやすくなります。(1文字以上30文字以内)"
+                    "1文字以上30文字以内"
                   }
+                  description={"周りから知られている名前(氏名、ニックネーム)を使用すると、他の人があなたのアカウントを見つけやすくなります。"}
                   setValue={setNameValue}
                 />
                 <UpdateInput
@@ -168,7 +184,7 @@ const ProfileChange = () => {
                   title={"ユーザーネーム"}
                   name={"userName"}
                   pattern={"^([a-zA-Z0-9]{4,15})$"}
-                  message={"半角英数字4文字以上15文字以内で入力して下さい"}
+                  message={"半角英数字4文字以上15文字以内"}
                   setValue={setUserNameValue}
                 />
                 <UpdateInput
@@ -192,6 +208,11 @@ const ProfileChange = () => {
 
             </form>
           </div>
+          {width > 768 ? (
+        <></>
+      ): (
+        <MobileFooter />
+      )}
         </div>
       )}
        <div
