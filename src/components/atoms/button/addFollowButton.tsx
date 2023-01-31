@@ -48,18 +48,14 @@ function AddFollowButton() {
       {followBtn === true ? (
         <>
           <button  onClick={add}
-          className="border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
+          className="border  border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
         ">
             フォローする
           </button>
         </>
       ) : (
-      // <RemoveFollowButton />
-      <button  
-      className="border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100
-    ">
-        フォロー中
-      </button>
+      <RemoveFollowButton />
+
       )}
     </>
 )
