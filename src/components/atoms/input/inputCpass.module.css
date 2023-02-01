@@ -1,0 +1,40 @@
+.isRevealPasswordIcon {
+  position: absolute;
+  top: 55%;
+  left: 68%;
+}
+.error_message {
+  color: red;
+  font-size: 13px;
+}
+/* 正規表現に一致していない場合 */
+input:invalid ~ .error_message {
+  display: block;
+  height: 30px;
+  line-height: 1.5rem;
+  margin-top: 5px;
+}
+/* 正規表現に一致している場合 */
+input:valid ~ .error_message {
+  display: none;
+}
+/* placeholderが表示されている時=入力されていない時 */
+input:placeholder-shown ~ .messageBox {
+  display: none;
+}
+
+@media screen and (max-width: 768px){
+  .inputForm {
+    width: 95%;
+    margin: 0 auto;
+  }
+  .isRevealPasswordIcon {
+    top: 58%;
+    left: 88%;
+  }
+  #isRevealPasswordIconMobile {
+    position: absolute;
+    top: 70%;
+    left: 88%;
+  }
+}
