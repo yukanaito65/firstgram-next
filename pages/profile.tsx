@@ -66,8 +66,8 @@ function Profile() {
         <img
         src="/noIcon.png"
         alt="アイコン"
-        width={80}
-        height={80}
+        // width={80}
+        // height={80}
         className=" border border-gray-300 bg-gray-300 rounded-full "
         />
         )}
@@ -77,10 +77,6 @@ function Profile() {
       <div className="pl-16 py-5 flex flex-col max-h-145 justify-between">
         <div className="flex">
           <div className="h-8 pt-1 text-xl">{data[0].user_name}</div>
-          <button
-            className="border border-gray-100  rounded  ml-5 h-8 px-3 py-1 text-sm font-bold bg-gray-100">
-            フォロー中
-          </button>
              {/* {{user.uid}.includes (user.uid) ? ( */}
   {/* profileuserのフォローに, ログインしているユーザーのidが、 */}
   <>
@@ -114,11 +110,11 @@ function Profile() {
       </div>
 
 
-      <div className="mt-16">
+      {/* <div className="mt-16"> */}
 <PostList
 userId={userId}
  />
-</div>
+{/* </div> */}
 
     </div>
     </>

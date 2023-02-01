@@ -12,6 +12,7 @@ import InputEmail from "../src/components/atoms/input/inputEmail";
 import InputPass from "../src/components/atoms/input/inputPass";
 import LoginButton from "../src/components/atoms/button/loginButton";
 import Header from "../src/components/organisms/header";
+import MyPage from "./myPage";
 
 function Login() {
   const [user, setUser] = useState();
@@ -39,10 +40,10 @@ function Login() {
   };
 
   //ログアウトが成功するとログインページにリダイレクトする
-  const logout = async () => {
-    await signOut(auth);
-    navigate("/login/");
-  };
+  // const logout = async () => {
+  //   await signOut(auth);
+  //   navigate("/login/");
+  // };
 
   //onAuthStateChangedでログインしているかどうかを監視
   useEffect(() => {
@@ -58,14 +59,14 @@ function Login() {
       {user ? (
         <div>
            {/* <Header /> */}
-          <Link href="/myPage">myPage</Link>
-          <br />
-          <button onClick={logout}>ログアウト</button>
+       <MyPage />
+          {/* <br />
+          <button onClick={logout}>ログアウト</button> */}
         </div>
 
       ) : (
         <>
-           {/* <Header /> */}
+           <Header />
         <div
         className="mx-auto my-10 w-1/2"
         style={{height: "500px"}}>

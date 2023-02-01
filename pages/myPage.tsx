@@ -81,14 +81,14 @@ function MyPage() {
               <div className="pt-7 mx-auto w-3/4">
                 <div className="flex pt-7 mx-auto  ">
 
-                  <div className="border-border-rounded-fullmt-7 pt-3">
+                  <div className="border-border-rounded-fullmt-7 pt-3 w-44 h-44">
                     {users[0].icon_img ? (
                       <img
                         src={users[0].icon_img}
                         alt="アイコン"
-                        width={80}
-                        height={80}
-                        className=" border rounded-full "
+                        // width={80}
+                        // height={80}
+                        className=" border border-gray-300 bg-gray-300 rounded-full "
                       />
                     ) : (
                       <img
