@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import styles from "./inputCPass.module.css";
 
 
 function InputCPass(props: any) {
@@ -12,6 +14,7 @@ function InputCPass(props: any) {
   return (
     <div className="flex my-3">
 <div className="text-xs text-red-500 my-auto">＊</div>
+    <div className="w-full relative">
       <input
         className="border border-gray-300 rounded w-full h-16 pl-2  bg-gray-100"
         type={isRevealConfirmPassword ? "text" : "password"}
@@ -23,15 +26,18 @@ function InputCPass(props: any) {
         value={props.value}
         onChange={props.onChange}
       />
+        <span className={`${styles.error_message} ${styles.messageBox}`}>
+        パスワードが一致しません
+      </span>
+      </div>
       <span
         onClick={toggleConfirmPassword}
         role="presentation"
+        className={styles.isRevealPasswordIcon}
       >
-        {isRevealConfirmPassword ? <span>●</span> : <span>×</span>}
+        {isRevealConfirmPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
       </span>
-      {/* <span>
-        パスワードが一致しません
-      </span> */}
+
     </div>
   );
 }
