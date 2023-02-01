@@ -81,7 +81,7 @@ function MobileHeader() {
         <header className={styles.header}>
           <div className={styles.logo}>
              <Image
-              src="/ml.png"
+              src="/mobileLogo.png"
               alt="logo"
               width={70}
               height={70}
