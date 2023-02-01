@@ -1,0 +1,17 @@
+.dmContent {
+  /* height:500px; */
+  /* height:535px; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0 5px;
+}
+.message {
+  width: fit-content;
+  max-width: 40%;
+  /* min-width: 30%; */
+}
+@media screen and (max-width: 768px){
+  .dmContent {
+    height: 540px;
+  }
+}

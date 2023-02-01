@@ -1,0 +1,39 @@
+.iconChangeBtn {
+  color: #1596f7;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.iconChangeBtn:hover {
+  color: rgb(3, 55, 107);
+  opacity: 1;
+}
+
+.beforeUpdateBtn {
+  background-color: #67b6fa;
+  font-weight: bold;
+  color: #ffff;
+  border-radius: 14%;
+  width: 90px;
+  padding: 3px 10px;
+  margin: 0 auto;
+  font-size: 1.4rem;
+}
+.beforeUpdateBtn:hover {
+  opacity: 1;
+}
+.afterUpdateBtn {
+  background-color: #1596f7;
+  font-weight: bold;
+  color: #ffff;
+  border-radius: 14%;
+  width: 90px;
+  padding: 3px 10px;
+  margin: 0 auto;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 768px){
+  .wrapper {
+   height: 650px;
+  }
+}

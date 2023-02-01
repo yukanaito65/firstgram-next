@@ -1,0 +1,8 @@
+.titleWrapper {
+  --tw-border-opacity: 1;
+  border-bottom: 1px solid rgba(212, 212, 212, var(--tw-border-opacity));
+}
+#title_link {
+  text-decoration: none;
+  color: black;
+}
