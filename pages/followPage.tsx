@@ -1,27 +1,23 @@
-import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import  useSWR  from 'swr'
-import { auth } from '../firebase';
 import AddFollowButton from '../src/components/atoms/button/addFollowButton';
 import RemoveFollowButton from '../src/components/atoms/button/RemoveFollowButton';
 import Header from "../src/components/organisms/header";
 
+// interface Props{
+//   id:any
+// }
+
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 function FollowPage() {
-      //ログインしているとログイン情報を持つ
-      const [user, setUser] = useState<any>("");
-        useEffect(() => {
-            onAuthStateChanged(auth, async (currentUser: any) => {
-              if (!currentUser) {
-                <></>;
-              } else {
-                setUser(currentUser);
-              }
-            }); 
-          }, []);
+    //各ページからuser_idを引き継ぎ、userIdに代入
+  const router = useRouter();
+  const userId = router.query.userId;
+  console.log(userId);
 
-  const { data: datas, error:error, isLoading:isLoading } = useSWR(`/api/myPageFollow?user_id=${user.uid}`, fetcher);
+  const { data: datas, error:error, isLoading:isLoading } = useSWR(`/api/myPageFollow?user_id=${userId}`, fetcher);
   if (error) {
     return <p>{error}</p>;
   }
@@ -39,7 +35,7 @@ function FollowPage() {
       {datas.map((data:any)=>{
         return(
           <div className="flex m-14">
-                <Link href={{ pathname:data.user_id === user.uid ? "/myPage":"/profile" ,
+                <Link href={{ pathname:data.user_id === userId ? "/profile":"/myPage" ,
                 query: {userId : data.user_id}}}>
            
            <div className=" w-32 h-32">
@@ -63,7 +59,7 @@ function FollowPage() {
             </div>
             </Link>
 
-            <Link href={{ pathname:data.user_id === user.uid ? "/myPage":"/profile" ,
+            <Link href={{ pathname:data.user_id === userId ? "/profile":"/myPage" ,
                 query: {userId : data.user_id}}}>
             <div className="pl-4 py-3 flex flex-col max-h-80 content-between">
             <div>{data.user_name}</div>
@@ -85,16 +81,3 @@ function FollowPage() {
 }
 
 export default FollowPage
-
-//               <div className="flex">
-//             {/* {ログインしてるユーザーのフォロー配列に.includes(profileuserのuseridがあったら) ? (
-//                 <>
-//                   <RemoveFollowButton/>
-//                 </>
-//               ) : (
-//                 <>
-//                   <AddFollowButton />
-//                 </>
-//               )} */}
-//               <div className="ml-20">×</div>
-//             </div>

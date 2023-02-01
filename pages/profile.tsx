@@ -96,9 +96,9 @@ function Profile() {
         </div>
 
         <div className="flex">
-        <div><PostLength /></div>
-        <Link href="followPage"><button className="ml-9"><FollowLength /></button></Link>
-        <Link href="followerPage"><button className="ml-9"><FollowerLength /></button></Link>
+        <div><PostLength id={data[0].user_id}/></div>
+        <Link href="followPage"><button className="ml-9"><FollowLength id={data[0].user_id}/></button></Link>
+        <Link href="followerPage"><button className="ml-9"><FollowerLength id={data[0].user_id}/></button></Link>
         </div>
 
 <div>

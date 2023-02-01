@@ -88,7 +88,7 @@ function MyPage() {
                         alt="アイコン"
                         // width={80}
                         // height={80}
-                        className=" border border-gray-300 bg-gray-300 rounded-full "
+                        className="bg-white rounded-full border border-solid border-gray-200 object-cover w-full h-full"
                       />
                     ) : (
                       <img
@@ -119,16 +119,16 @@ function MyPage() {
 
                     <div className="flex">
                       <div>
-                        <PostLength />
+                        <PostLength id={user.uid}/>
                       </div>
-                      <Link href="followPage">
+                      <Link href="followList">
                         <button className="ml-9">
-                          <FollowLength />
+                          <FollowLength id={user.uid}/>
                         </button>
                       </Link>
-                      <Link href="followerPage">
+                      <Link href="followerList">
                         <button className="ml-9">
-                          <FollowerLength />
+                          <FollowerLength id={user.uid}/>
                         </button>
                       </Link>
                     </div>
