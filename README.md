@@ -33,6 +33,7 @@ snsの画像投稿アプリを作成(instagram参考)
 
 
 ## ディレクトリ構造
+<pre>
 .
 ├── Dockerfile
 ├── README.md
@@ -87,7 +88,7 @@ snsの画像投稿アプリを作成(instagram参考)
 ├── tsconfig.server.json
 ├── types
 └── yarn.lock
-
+</pre>
 
 <!-- ## プロジェクトのスクリーンショット -->
 
