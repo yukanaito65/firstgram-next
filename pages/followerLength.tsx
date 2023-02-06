@@ -21,9 +21,12 @@ function FollowerLength(props:Props) {
     }
 
     console.log(follows)
+const follower =follows.map((id:any)=>{return(id.follower_user_id)})
+console.log(follower)
+
   return (
     <>
-    <div>フォロワー{follows.length}人</div>
+    <div>フォロワー{follower.length}人</div>
   </>
   )
 }

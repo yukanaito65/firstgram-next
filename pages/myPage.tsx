@@ -96,8 +96,7 @@ function MyPage() {
                         alt="アイコン"
                         width={80}
                         height={80}
-                        className="bg-white rounded-full border border-solid border-gray-200 object-cover w-full h-full"
-                        // className=" border border-gray-300 bg-gray-300 rounded-full "
+                        className=" border border-gray-300 bg-gray-300 rounded-full "
                       />
                     )}
                   </div>

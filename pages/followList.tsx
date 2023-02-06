@@ -74,9 +74,9 @@ function FollowList() {
             <div>{data.name}</div>
             </div>
             </Link>
-<div className='m-10'>
+{/* <div className='m-10'>
             <RemoveFollowButton/>
-            </div>
+            </div> */}
 
             </div>
         )

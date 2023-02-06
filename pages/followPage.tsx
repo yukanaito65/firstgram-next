@@ -28,6 +28,11 @@ function FollowPage() {
     return <p>loading</p>
   }
   console.log(datas)
+
+const profileUserFollow =datas.map((id:any)=>{return(id.user_id)})
+console.log(profileUserFollow)
+
+
   return (
     <div>
       <Header />
@@ -66,9 +71,18 @@ function FollowPage() {
             <div>{data.name}</div>
             </div>
             </Link>
-<div className='m-10'>
-            <RemoveFollowButton/>
-            </div>
+{/* <div className='m-10'> */}
+  {/* {profileUserFollow .includes(data.user_id) ? (
+    <>
+     <RemoveFollowButton/>
+     </>
+     ):(
+      <>
+      <AddFollowButton />
+      </>
+     )} */}
+            {/* <RemoveFollowButton/> */}
+            {/* </div> */}
 
             </div>
         )

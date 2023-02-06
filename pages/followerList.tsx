@@ -71,9 +71,9 @@ function FollowerList() {
             </div>
             </Link>
             
-            <div className='m-10'>
+            {/* <div className='m-10'>
             <AddFollowButton />
-            </div>
+            </div> */}
 
             </div>
         )

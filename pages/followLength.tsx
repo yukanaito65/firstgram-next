@@ -41,11 +41,14 @@ function FollowLength(props:Props) {
       return <p>loading</p>
     }
 
-    console.log(follows)
+console.log(follows)
+const follow =follows.map((id:any)=>{return(id.follow_user_id)})
+console.log(follow)
+
   return (
     <>
 {/* {!loading ? ( */}
-    <div>フォロー中{follows.length}人</div>
+    <div>フォロー中{follow.length}人</div>
   {/* ):(
 <></>
   )} */}

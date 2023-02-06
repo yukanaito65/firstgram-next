@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import AddFollowButton from '../src/components/atoms/button/addFollowButton';
 import Link from 'next/link';
@@ -12,11 +12,25 @@ import FollowLength from './followLength';
 import FollowerLength from './followerLength';
 import PostList from './postList';
 import Header from "../src/components/organisms/header";
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const fetcher = (resource: any, init: any) =>
   fetch(resource, init).then((res) => res.json());
 
 function Profile() {
+        //ログインしているとログイン情報を持つ
+        const [user, setUser] = useState<any>("");
+        useEffect(() => {
+            onAuthStateChanged(auth, async (currentUser: any) => {
+              if (!currentUser) {
+                <></>;
+              } else {
+                setUser(currentUser);
+              }
+            }); 
+          }, []);
+
   //各ページからuser_idを引き継ぎ、userIdに代入
   const router = useRouter();
   const userId = router.query.userId;
@@ -27,6 +41,17 @@ function Profile() {
     () => `/api/userData?user_id=${userId}`,
     fetcher
   );
+ 
+   const { data: datas, error:error2, isLoading:isLoading2 } = useSWR(`/api/myPageFollow?user_id=${userId}`, fetcher);
+   if (error2) {
+     return <p>{error}</p>;
+   }
+   if (!datas) {
+     return <p>エラ-</p>;
+   }
+   if(isLoading2){
+     return <p>loading</p>
+   }
 
   //dmページにuserIdを保持したまま遷移する
   const dmButton = () => {
@@ -45,6 +70,9 @@ function Profile() {
   }
 
 
+console.log(datas)
+const profileUserFollow =datas.map((id:any)=>{return(id.user_id)})
+console.log(profileUserFollow)
 
 
   return (
@@ -77,16 +105,15 @@ function Profile() {
       <div className="pl-16 py-5 flex flex-col max-h-145 justify-between">
         <div className="flex">
           <div className="h-8 pt-1 text-xl">{data[0].user_name}</div>
-             {/* {{user.uid}.includes (user.uid) ? ( */}
-  {/* profileuserのフォローに, ログインしているユーザーのidが、 */}
-  <>
+            {profileUserFollow.includes(user.uid)? (
+                <>
                   <RemoveFollowButton />
                 </>
-              {/* ) : ( */}
+              ) : (
                 <>
                   <AddFollowButton />
                 </>
-              {/* )} */}
+              )}
           <button
             className="border border-gray-100  rounded  ml-2 h-8 px-3 py-1 text-sm font-bold bg-gray-100"
             onClick={dmButton}
