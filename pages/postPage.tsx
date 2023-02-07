@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PostDetails from "../src/components/templates/PostDetails";
+import PostDetails from "./PostDetails";
 import { useModal } from "react-hooks-use-modal";
 import { Modal } from "flowbite";
 import Header from "../src/components/organisms/header";
@@ -62,11 +62,9 @@ export default function MypagePost() {
   </button>
 
   {isOpenModal && (
-    // <div className="bg-black bg-opacity-70">
     <PostDetailsModal close={toggleModal}>
       <PostDetails post_id={22} close={toggleModal} />
       </PostDetailsModal>
-      // </div>
   )}
   </div>
   </>

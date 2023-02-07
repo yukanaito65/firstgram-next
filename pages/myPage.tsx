@@ -42,6 +42,7 @@ function MyPage() {
       }
     });
   }, []);
+  
 
   //ログインページにリダイレクトする
   // const login = async () => {

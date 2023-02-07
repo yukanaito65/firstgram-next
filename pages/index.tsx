@@ -62,20 +62,14 @@ const Page: NextPage = () => {
     data: connectData,
     error: connectDataError,
     isLoading: connectDataIsLoading,
-  } = useSWR(
-    `api/getUsersPostsQueryData?user_id=${currentUserData.uid}`,
-    fetcher
-  );
+  } = useSWR(`api/getTotalDataQuery?user_id=${currentUserData.uid}`, fetcher);
 
-  // currentuserのフォローしてるuser_id配列を取得
+  // currentUserの投稿情報
   const {
-    data: currentUserFollows,
-    error: currentUserFollowsError,
-    isLoading: currentUserFollowsIsLoading,
-  } = useSWR(
-    `api/getFollowsDataQuery?user_id=${currentUserData.uid}`,
-    fetcher
-  );
+    data: currentUserPostsData,
+    error: currentUserPostsDataError,
+    isLoading: currentUserPostsDataIsLoading,
+  } = useSWR(`api/getPostData3Query?user_id=${currentUserData.uid}`, fetcher);
 
   // Favoritesデータ取得
   const {
@@ -103,36 +97,25 @@ const Page: NextPage = () => {
     fetcher
   );
 
-  const {
-    data: currentUserKeep,
-    error: currentUserKeepError,
-    isLoading: currentUserKeepIsLoading,
-  } = useSWR(
-    `api/getCuurentUserKeepQuery?post_id=22&user_id=${currentUserData.uid}`,
-    fetcher
-  );
-
   const { mutate } = useSWRConfig();
 
   const inputCommentEl: MutableRefObject<null> = useRef(null);
   if (
     connectDataIsLoading ||
+    currentUserPostsDataIsLoading ||
     favsDataIsLoading ||
     keppsDataIsLoading ||
     currentUserFavIsLoading ||
-    currentUserKeepIsLoading ||
-    topConnectApiIsLoading ||
-    currentUserFollowsIsLoading
+    topConnectApiIsLoading
   )
     return <div>loading...</div>;
   if (
     connectDataError |
+    currentUserPostsDataError |
     favsDataError |
     keepsDataError |
     currentUserFavError |
-    currentUserKeepError |
-    topConnectApiError |
-    currentUserFollowsError
+    topConnectApiError
   )
     return <div>failed to load</div>;
 
@@ -154,85 +137,25 @@ const Page: NextPage = () => {
     postFavs.push(data.post_id);
   });
 
-  console.log(currentUserFollows);
+  const displayAllData: any[] = [];
+  currentUserPostsData.map((data: any) => {
+    displayAllData.push(data);
+  });
+  connectData.map((data: any) => {
+    console.log(data);
+    displayAllData.push(data);
+  });
+  console.log(displayAllData);
 
-  // cusrrentUserのフォローしてるユーザーのuser_idの配列
-  const currentUserFollowUserIds:string[] = [];
-  currentUserFollows.map((data: any) => {
-    currentUserFollowUserIds.push(data.follow_user_id);
-    currentUserFollowUserIds.push(currentUserData.uid);
+  displayAllData.sort(function (a, b) {
+    return a.to_char < b.to_char ? 1 : -1;
   });
 
-  // const connectData:any[] = [];
-  // currentUserFollowUserIds.map((currentUserFollowUserId:string) => {
-  //   fetch("/api/getUsersPostsBodyData", {
-  //     method: "POST",
-  //     headers: { "Content-type": "application/json" },
-  //     body: JSON.stringify({
-  //       user_id: currentUserFollowUserId,
-  //     }),
-  //   }).then((res) => {
-  //     res.json();
-  //     connectData.push(res);
-  //   })
-  //     .catch((e) => console.log(e));
-  // })
-  console.log(connectData)
+  console.log(displayAllData);
 
   // コメントアイコンクリック時
   const onClickCommentIcon: () => void = () => {
     setCommentTggle(!commentTggle);
-  };
-
-  // コメントを追加
-  // const onClickSendCommnet = (e: any) => {
-  //   mutate("/api/postCommentsData");
-  //   e.preventDefault();
-  //   fetch("/api/postCommentsData", {
-  //     method: "POST",
-  //     headers: { "Content-type": "application/json" },
-  //     body: JSON.stringify({
-  //       comment: inputComment,
-  //       post_id: 22,
-  //       user_name: connectData[0].user_name,
-  //     }),
-  //   }).catch((e) => console.log(e));
-  //   setInputComment("");
-  // };
-
-  // 保存追加ボタン
-  const onClickAddKeep = () => {
-    if (currentUserData.uid) {
-      fetch("/api/postKeepsData", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          post_id: 22,
-          user_id: connectData[0].user_id,
-        }),
-      })
-        .then(() => {
-          mutate("/api/postKeepsData");
-        })
-        .catch((e) => console.log(e));
-    }
-  };
-  // 保存解除ボタン
-  const onClickDeleteKeep = (e: any) => {
-    if (currentUserData.uid) {
-      fetch("/api/deleteKeepData", {
-        method: "PUT",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          post_id: 22,
-          user_id: connectData[0].user_id,
-        }),
-      })
-        .then(() => {
-          mutate("/api/deleteKeepData");
-        })
-        .catch((e) => console.log(e));
-    }
   };
 
   return (
@@ -245,27 +168,65 @@ const Page: NextPage = () => {
           <Header />
 
           <div className="mt-5">
-            {connectData &&
-              connectData.map((data: any, index: number) => {
+            {displayAllData &&
+              displayAllData.map((data: any, index: number) => {
                 {
                   console.log(data.icon_img);
                 }
                 return (
                   <div className="mr-auto ml-auto w-3/5 mt-7" key={index}>
                     <div className="flex">
-                      <img
-                        src={data.icon_img}
-                        alt={`${data.user_name}のアイコン`}
-                        className={`mr-1 w-1/12 bg-white ${styles.userIcon}`}
-                      />
-                      <p className="font-semibold mr-1">{data.user_name}</p>
+                      {!data.follow_user_id ? (
+                        <>
+                          <Link className="w-1/12" href={`/mypage`}>
+                            {data.icon_img ? (
+                              <img
+                                src={data.icon_img}
+                                alt={`${data.user_name}のアイコン`}
+                                className={`mr-1 w-full bg-white ${styles.userIcon}`}
+                              />
+                            ) : (
+                              <img
+                                src="/noIcon.png"
+                                alt="アイコン"
+                                className={`mr-1 w-full bg-white ${styles.userIcon}`}
+                              />
+                            )}
+                          </Link>
+                          <Link href={`/mypage`} className="font-semibold mr-1">
+                            {data.user_name}
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            className="w-1/12"
+                            href={`/profile?userId=${data.follow_user_id}`}
+                          >
+                            <img
+                              src={data.icon_img}
+                              alt={`${data.user_name}のアイコン`}
+                              className={`mr-1 w-full bg-white ${styles.userIcon}`}
+                            />
+                          </Link>
+                          <Link
+                            href={`/profile?userId=${data.follow_user_id}`}
+                            className="font-semibold mr-1"
+                          >
+                            {data.user_name}
+                          </Link>
+                        </>
+                      )}
+
                       <p className={styles.timestamp}>・{data.to_char}</p>
                     </div>
-                    <img
-                      src={data.post_img}
-                      alt="投稿画像"
-                      className="w-full"
-                    />
+                    <Link href={`/PostDetails?postId=${data.post_id}`}>
+                      <img
+                        src={data.post_img}
+                        alt="投稿画像"
+                        className="w-full"
+                      />
+                    </Link>
                     <div>{data.caption}</div>
                     <div className="flex pt-3 mb-7">
                       {currentUserFavs.includes(data.post_id) ? (
@@ -317,10 +278,10 @@ const Page: NextPage = () => {
                       <button onClick={onClickCommentIcon} className="m-2">
                         <FaRegComment size={25} />
                       </button>
-                      {data.user_id === currentUserData.uid ? (
+                      {!data.follow_user_id ? (
                         <></>
                       ) : (
-                        <Link href={`/dmPage?user_id=${data.user_id}`}>
+                        <Link href={`/dmPage?userId=${data.follow_user_id}`}>
                           <button className="m-2">
                             <FaTelegramPlane size={25} />
                           </button>
@@ -410,7 +371,6 @@ const Page: NextPage = () => {
                           />
                           <button
                             className={`w-1/5 font-bold ${styles.addCommentBtn}`}
-                            // onClick={onClickSendCommnet}
                           >
                             投稿する
                           </button>
