@@ -8,20 +8,19 @@ snsの画像投稿アプリを作成(instagram参考)
 - Next.js
 - TypeScript
 - Tailwind CSS
-- Firebase(Authentication, storage)
+- Firebase(Authentication, Storage)
 - PostgreSQL
 - Docker
 
 ### 機能一覧
 - 画像・キャプションの投稿機能
 - 投稿された画像・キャプションの閲覧機能
-- 投稿の編集/削除機能
 - 新規ユーザー登録機能
 - ログイン/ログアウト機能
 - 投稿に対するいいね機能
 - 投稿に対するコメント機能
 - ダイレクトメッセージ機能
-- フォロー機能
+- フォロー/フォロー解除機能
 - 登録ユーザーの検索機能
 - 投稿の保存機能
 - プロフィール編集機能
