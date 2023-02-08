@@ -1,7 +1,9 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import  useSWR  from 'swr'
+import { auth } from '../firebase';
 import AddFollowButton from '../src/components/atoms/button/addFollowButton';
 import RemoveFollowButton from '../src/components/atoms/button/RemoveFollowButton';
 import Header from "../src/components/organisms/header";
@@ -11,11 +13,27 @@ import Header from "../src/components/organisms/header";
 // }
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
-function FollowPage() {
+
+function FollowerPage() {
     //各ページからuser_idを引き継ぎ、userIdに代入
   const router = useRouter();
   const userId = router.query.userId;
   console.log(userId);
+
+  
+      //ログインしているとログイン情報を持つ
+      const [user, setUser] = useState<any>("");
+        useEffect(() => {
+            onAuthStateChanged(auth, async (currentUser: any) => {
+              if (!currentUser) {
+                <></>;
+              } else {
+                setUser(currentUser);
+              }
+            });
+          }, []);
+
+
 
   const { data: datas, error:error, isLoading:isLoading } = useSWR(`/api/myPageFollower?user_id=${userId}`, fetcher);
   if (error) {
@@ -27,7 +45,6 @@ function FollowPage() {
   if(isLoading){
     return <p>loading</p>
   }
-  console.log(datas)
   return (
     <div>
       <Header />
@@ -54,8 +71,10 @@ function FollowPage() {
                 alt="アイコン"
                 width={80}
                 height={80}
-                className=" border border-gray-300 bg-gray-300 rounded-full "/>
+                className=" border border-gray-300 bg-gray-300 rounded-full "
+                />
                 )}
+
             </div>
             </Link>
 
@@ -66,13 +85,15 @@ function FollowPage() {
             <div>{data.name}</div>
             </div>
             </Link>
+
 {/* <div className='m-10'>
             <RemoveFollowButton/>
             </div> */}
 
+
             </div>
         )
-      
+
 
       })}
       </div>
@@ -80,4 +101,4 @@ function FollowPage() {
   )
 }
 
-export default FollowPage
+export default FollowerPage

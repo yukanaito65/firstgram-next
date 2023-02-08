@@ -1,5 +1,6 @@
 import { useState } from "react";
-// import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import styles from "./inputPass.module.css";
 
 interface Props {
   passChange: any;
@@ -24,13 +25,13 @@ function InputPass(props: Props) {
         onChange={props.passChange}
         required
       />
-      {/* <span
+      <span
         onClick={toggleConfirmPassword}
         role="presentation"
-        className="passForm__isRevealPasswordIcon"
+        className={styles.isRevealPasswordIcon}
       >
         {isRevealConfirmPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
-      </span> */}
+      </span>
     </div>
   );
 }
