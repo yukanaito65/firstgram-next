@@ -14,11 +14,14 @@ import Header from "../src/components/organisms/header";
 
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
 
+
 function FollowerPage() {
+
     //各ページからuser_idを引き継ぎ、userIdに代入
   const router = useRouter();
   const userId = router.query.userId;
   console.log(userId);
+
 
   
       //ログインしているとログイン情報を持つ
@@ -45,6 +48,7 @@ function FollowerPage() {
   if(isLoading){
     return <p>loading</p>
   }
+
   return (
     <div>
       <Header />
@@ -71,10 +75,8 @@ function FollowerPage() {
                 alt="アイコン"
                 width={80}
                 height={80}
-                className=" border border-gray-300 bg-gray-300 rounded-full "
-                />
+                className=" border border-gray-300 bg-gray-300 rounded-full "/>
                 )}
-
             </div>
             </Link>
 
@@ -86,14 +88,16 @@ function FollowerPage() {
             </div>
             </Link>
 
+
 {/* <div className='m-10'>
             <RemoveFollowButton/>
             </div> */}
 
 
+
             </div>
         )
-
+      
 
       })}
       </div>

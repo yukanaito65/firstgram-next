@@ -10,4 +10,3 @@ import { sqlExecuter } from "../../modules/database"
 		allData
 	);
 };
-// export default apiRoutes;
