@@ -17,6 +17,7 @@ import RegisterButton from "../src/components/atoms/button/registerButton";
 import InputCPass from "../src/components/atoms/input/inputCPass";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Header from "../src/components/organisms/header";
+import MyPage from "./myPage";
 
 
 function Register() {
@@ -152,9 +153,7 @@ function Register() {
       {/* <Header /> */}
       {user ? (
         <div>
-          <Link href="myPage">myPage</Link>
-          <br />
-          <button onClick={logout}>ログアウト</button>
+  <MyPage />
         </div>
       ) : (
         <>

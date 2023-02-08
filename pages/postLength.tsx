@@ -3,28 +3,32 @@ import React, { useEffect, useState } from 'react'
 import  useSWR  from 'swr';
 import { auth } from '../firebase';
 
+interface Props {
+  id: any;
+}
+
 const fetcher = (resource: string) => fetch(resource).then((res) => res.json());
-function PostLength() {
+function PostLength(props:Props) {
 
-    //ログインしているとログイン情報を持つ
-  const [user, setUser] = useState<any>("");
-  //ログイン判定が終わるまでリダイレクトさせないようにする(ログイン判定するには時間がかかるから、ページ遷移を先にされてしまうと表示がおかしくなってしまう)
-  const [loading, setLoading] = useState(true);
+  //   //ログインしているとログイン情報を持つ
+  // const [user, setUser] = useState<any>("");
+  // //ログイン判定が終わるまでリダイレクトさせないようにする(ログイン判定するには時間がかかるから、ページ遷移を先にされてしまうと表示がおかしくなってしまう)
+  // const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        onAuthStateChanged(auth, async (currentUser: any) => {
-          if (!currentUser) {
-            <></>;
-          } else {
-            setUser(currentUser);
-            //ログイン判定が終わったタイミングでloadingはfalseに変わる
-            setLoading(false);
-          }
-        }); 
-      }, []);
+    // useEffect(() => {
+    //     onAuthStateChanged(auth, async (currentUser: any) => {
+    //       if (!currentUser) {
+    //         <></>;
+    //       } else {
+    //         setUser(currentUser);
+    //         //ログイン判定が終わったタイミングでloadingはfalseに変わる
+    //         setLoading(false);
+    //       }
+    //     }); 
+    //   }, []);
 
       // propsでuseridを指定するようにする（stateでprofileのuidを渡せるようにする）
-    const { data: posts, error:error, isLoading:isLoading } = useSWR(`/api/myPagePost?user_id=${user.uid}`, fetcher);
+    const { data: posts, error:error, isLoading:isLoading } = useSWR(`/api/myPagePost?user_id=${props.id}`, fetcher);
     if (error) {
       return <p>error!</p>;
     }
@@ -38,11 +42,11 @@ function PostLength() {
     console.log(posts)
   return (
     <>
-{!loading ? (
+{/* {!loading ? ( */}
     <div>投稿{posts.length}件</div>
-  ):(
+  {/* ):(
 <></>
-  )}
+  )} */}
   </>
   )
 }

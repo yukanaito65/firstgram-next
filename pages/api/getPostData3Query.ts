@@ -4,12 +4,9 @@ import { sqlExecuter } from "../../modules/database"
 	const data = req.query;
 
 		const posts = await sqlExecuter.any(
-				//  "select 'DB参照したデータ' as any_column"
-				//   `SELECT * FROM posts WHERE user_id = $1 ORDER BY timestamp DESC limit 1`, [data.user_id]
-				`SELECT * FROM posts WHERE user_id = $1 IN`, [[data.follow]]
+				`SELECT  posts.post_id, posts.caption, TO_CHAR(posts.timestamp, 'YYYY/MM/DD/ HH24:MI'), posts.post_img, users.user_id, users.user_name, users.icon_img FROM posts LEFT JOIN users ON users.user_id = posts.user_id WHERE users.user_id = $1 ORDER BY posts.timestamp`, [data.user_id]
         );
 	res.status(200).json(
 		posts
 	);
 };
-// export default apiRoutes;
