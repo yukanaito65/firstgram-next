@@ -80,4 +80,4 @@ function FollowPage() {
   )
 }
 
-export default FollowPage
+export default FollowerPage
