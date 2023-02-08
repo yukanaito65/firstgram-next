@@ -82,14 +82,14 @@ function MyPage() {
               <div className="pt-7 mx-auto w-3/4">
                 <div className="flex pt-7 mx-auto  ">
 
-                  <div className="border-border-rounded-fullmt-7 pt-3">
+                  <div className="border-border-rounded-fullmt-7 pt-3 w-44 h-44">
                     {users[0].icon_img ? (
                       <img
                         src={users[0].icon_img}
                         alt="アイコン"
-                        width={80}
-                        height={80}
-                        className=" border rounded-full "
+                        // width={80}
+                        // height={80}
+                        className="bg-white rounded-full border border-solid border-gray-200 object-cover w-full h-full"
                       />
                     ) : (
                       <img
@@ -97,8 +97,7 @@ function MyPage() {
                         alt="アイコン"
                         width={80}
                         height={80}
-                        className="bg-white rounded-full border border-solid border-gray-200 object-cover w-full h-full"
-                        // className=" border border-gray-300 bg-gray-300 rounded-full "
+                        className=" border border-gray-300 bg-gray-300 rounded-full "
                       />
                     )}
                   </div>
@@ -120,16 +119,16 @@ function MyPage() {
 
                     <div className="flex">
                       <div>
-                        <PostLength />
+                        <PostLength id={user.uid}/>
                       </div>
-                      <Link href="followPage">
+                      <Link href="followList">
                         <button className="ml-9">
-                          <FollowLength />
+                          <FollowLength id={user.uid}/>
                         </button>
                       </Link>
-                      <Link href="followerPage">
+                      <Link href="followerList">
                         <button className="ml-9">
-                          <FollowerLength />
+                          <FollowerLength id={user.uid}/>
                         </button>
                       </Link>
                     </div>
