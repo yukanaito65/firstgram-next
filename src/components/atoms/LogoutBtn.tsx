@@ -15,6 +15,4 @@ function LogoutBtn() {
     <button onClick={logout} className={styles.nav_li_logout}>ログアウト</button>
     )
 }
-
-
 export default LogoutBtn
