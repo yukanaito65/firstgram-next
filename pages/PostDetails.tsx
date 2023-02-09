@@ -252,7 +252,7 @@ export default function PostDetails(props: Props) {
   return (
     <>
       {!loading && (
-        <div>
+        <div id="margin-left">
           <Head>
             {" "}
             <title>{connectData[0].users_name}</title>{" "}
