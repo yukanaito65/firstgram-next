@@ -8,7 +8,7 @@ snsの画像投稿アプリを作成(instagram参考)
 - Next.js
 - TypeScript
 - Tailwind CSS
-- Firebase(Authentication, storage)
+- Firebase(Authentication, Storage)
 - PostgreSQL
 - Docker
 
